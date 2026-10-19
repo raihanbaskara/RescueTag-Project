@@ -53,10 +53,35 @@ $RECYCLE.BIN/
 diff_*.txt
 full_diff_audit.txt
 log_firmware_50hz_backup_*.txt
- 
 .agents/
 
- 
 # Ignore extracted large/redundant zip web folders
 **/extracted/
 
+# =========================================================
+# PRIVATE & SENSITIVE DOCUMENTS (Banned from public repo)
+# =========================================================
+*.docx
+*.doc
+*.pptx
+*.ppt
+*.pdf
+*.xlsx
+*.xls
+*.csv
+!dataset_*.csv
+LOMBA EEJ JAM kedua/
+*NOTA*
+*nota*
+*Struk*
+*struk*
+*Kwitansi*
+*kwitansi*
+*Sertifikat*
+*sertifikat*
+*Undangan*
+*undangan*
+*Naskah*
+*naskah*
+*Proposal*
+*proposal*
