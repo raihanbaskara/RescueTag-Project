@@ -81,6 +81,65 @@ flowchart LR
 
 ---
 
+## 🛠️ Hardware Engineering & 3D Mechanical Design
+
+Rescue-Tag dirancang sebagai perangkat jam tangan taktis (*rugged wearable*) yang modular, ergonomis di pergelangan tangan, dan memiliki pelindung benturan.
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><b>Tampak Perspektif Atas & Strap</b></td>
+      <td align="center"><b>Tampak Bawah (Sensor Kontak Kulit)</b></td>
+    </tr>
+    <tr>
+      <td align="center"><img src="docs/3d_watch_front.png" width="420" alt="3D Watch Perspective"/></td>
+      <td align="center"><img src="docs/3d_watch_bottom.png" width="420" alt="3D Watch Bottom"/></td>
+    </tr>
+  </table>
+</div>
+
+### 1. Struktur Susunan Komponen Bertingkat (Exploded Assembly View)
+Untuk menjaga dimensi perangkat tetap kompak di tangan korban bencana, komponen ditumpuk (*stacked sandwich topology*) ke dalam 3 layer PCB prototipe:
+
+<div align="center">
+  <img src="docs/3d_exploded_layers.png" width="85%" alt="3D Exploded Layer Assembly"/>
+  <p><i>Gambar 2: Susunan arsitektur mekanikal internal Rescue-Tag (Exploded View).</i></p>
+</div>
+
+| No | Komponen / Modul | Fungsi Utama dalam Sistem |
+|:---:|---|---|
+| **1** | **OLED Display 0.96" (I2C SSD1306)** | Menampilkan status triase langsung di tangan korban, visualisasi detak jantung, SpO2, dan hitung mundur pembatalan FSM 30 detik. |
+| **2** | **Emergency Push Button** | Tombol konfirmasi manual untuk membatalkan alarm false-fall atau mentrigger sinyal SOS instan. |
+| **3** | **TP4056 Type-C LiPo Charger** | Modul manajemen daya & pengisian ulang baterai dengan proteksi overcharge/overdischarge. |
+| **4** | **STM32F401CCU6 (BlackPill)** | Main Processing Unit (MCU ARM Cortex-M4 84 MHz) yang menjalankan TinyML Decision Tree & FSM imobilitas. |
+| **5** | **BMI160 (6-DOF IMU)** | Sensor inersia ultra-low power 50 Hz (Akselerometer & Giroskop) untuk deteksi benturan dan aktivitas. |
+| **6** | **MLX90614 (GY-906)** | Sensor suhu inframerah non-kontak medis untuk pemantauan hipotermia/demam korban bencana. |
+| **7** | **MAX30102 / MAX30105** | Sensor biosensor optik fotopletismografi (PPG) untuk mengukur denyut nadi (*Heart Rate*) dan saturasi oksigen darah (*SpO2*). |
+| **8** | **SX1278 (Ra-02 LoRa 915 MHz)** | Transceiver radio modulasi Chirp Spread Spectrum (CSS) untuk transmisi data darurat jarak jauh nirkabel. |
+| **9** | **Helical LoRa Spring Antenna** | Antena spiral kompak 915 MHz terintegrasi di dalam sasis casing. |
+| **10** | **Modular PCB Stacking Shields (40x60 mm)** | Tiga papan perantara bertingkat untuk interkoneksi bus I2C, SPI, dan jalur daya DC. |
+
+---
+
+### 2. Skematik Elektronika & Diagram Pengkabelan (Schematic & Wiring)
+
+Sistem menggunakan arsitektur dual-bus: **I2C Bus** bersama untuk sensorik biomedis (OLED, BMI160, MAX30102, MLX90614) dan **High-Speed SPI Bus** khusus untuk radio LoRa SX1278.
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><b>Skematik Rangkaian (EasyEDA)</b></td>
+      <td align="center"><b>Diagram Perkabelan Prototipe (Fritzing)</b></td>
+    </tr>
+    <tr>
+      <td align="center"><img src="docs/schematic_easyeda.png" width="440" alt="EasyEDA Schematic"/></td>
+      <td align="center"><img src="docs/hardware_wiring_diagram.png" width="440" alt="Hardware Wiring Diagram"/></td>
+    </tr>
+  </table>
+</div>
+
+---
+
 ## 🧠 Personalized Edge Intelligence & TinyML Engine
 
 ### 1. Orientation-Invariant Feature Pipeline
