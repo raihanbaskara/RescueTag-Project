@@ -1,0 +1,239 @@
+[
+  {
+    "id": "flow_rescue_tag_tab",
+    "type": "tab",
+    "label": "Rescue-Tag Gateway & MQTT",
+    "disabled": false,
+    "info": "Alur Integrasi Telemetri LoRa 50 Hz Rescue-Tag: ESP32 Serial -> JSON Parser -> MQTT Broker -> Web Command Center"
+  },
+  {
+    "id": "serial_config_esp32",
+    "type": "serial-port",
+    "serialport": "COM14",
+    "serialbaud": "115200",
+    "databits": "8",
+    "parity": "none",
+    "stopbits": "1",
+    "waitfor": "",
+    "dtr": "none",
+    "rts": "none",
+    "cts": "none",
+    "dsr": "none",
+    "newline": "\\n",
+    "bin": "false",
+    "out": "char",
+    "addchar": "",
+    "responsetimeout": "10000"
+  },
+  {
+    "id": "mqtt_config_emqx",
+    "type": "mqtt-broker",
+    "name": "EMQX Public Broker",
+    "broker": "broker.emqx.io",
+    "port": "1883",
+    "clientid": "rescue_tag_nodered_gateway",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "node_serial_in",
+    "type": "serial in",
+    "z": "flow_rescue_tag_tab",
+    "name": "ESP32 LoRa Gateway (COM14)",
+    "serial": "serial_config_esp32",
+    "x": 170,
+    "y": 140,
+    "wires": [["node_parser_feat"]]
+  },
+  {
+    "id": "inject_sim_green",
+    "type": "inject",
+    "z": "flow_rescue_tag_tab",
+    "name": "🟢 Test: HIJAU (Normal / Diam)",
+    "props": [
+      {
+        "p": "payload",
+        "v": "FEAT,1.0125,2.150,1.0250,0.9920,3.120,0.0045,6.500,0.1200,0.2100,0.9850,0,0,74,98,36.5",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 180,
+    "y": 220,
+    "wires": [["node_parser_feat"]]
+  },
+  {
+    "id": "inject_sim_yellow",
+    "type": "inject",
+    "z": "flow_rescue_tag_tab",
+    "name": "🟡 Test: KUNING (Kerja Aktif)",
+    "props": [
+      {
+        "p": "payload",
+        "v": "FEAT,1.1450,88.450,1.7500,0.8600,105.200,0.2250,195.400,0.3200,0.4500,0.8500,1,1,98,96,36.9",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 180,
+    "y": 280,
+    "wires": [["node_parser_feat"]]
+  },
+  {
+    "id": "inject_sim_orange",
+    "type": "inject",
+    "z": "flow_rescue_tag_tab",
+    "name": "🟠 Test: ORANYE (Waspada / HR Tinggi)",
+    "props": [
+      {
+        "p": "payload",
+        "v": "FEAT,1.2100,115.600,1.9800,0.7800,128.400,0.3150,225.800,0.4100,0.5500,0.7800,1,2,128,94,37.8",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 200,
+    "y": 340,
+    "wires": [["node_parser_feat"]]
+  },
+  {
+    "id": "inject_sim_red",
+    "type": "inject",
+    "z": "flow_rescue_tag_tab",
+    "name": "🔴 Test: MERAH (Darurat Jatuh SOS)",
+    "props": [
+      {
+        "p": "payload",
+        "v": "FEAT,0.9850,5.120,4.8500,0.2800,18.500,0.0150,32.400,0.0500,0.1200,0.9900,3,3,138,86,38.6",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 190,
+    "y": 400,
+    "wires": [["node_parser_feat"]]
+  },
+  {
+    "id": "node_parser_feat",
+    "type": "function",
+    "z": "flow_rescue_tag_tab",
+    "name": "Parser FEAT -> JSON Terstruktur",
+    "func": "let raw = msg.payload;\nif (typeof raw !== 'string') {\n    raw = JSON.stringify(raw);\n}\nraw = raw.trim();\n\n// Format: FEAT,a_total,g_total,a_max,a_min,g_mean,a_std,g_max,ax,ay,az,model_pred,triage_pred,hr,spo2,temp\nif (!raw.startsWith(\"FEAT,\")) {\n    return null;\n}\n\nconst parts = raw.split(',').map(s => s.trim());\nif (parts.length < 13) {\n    return null;\n}\n\nconst a_total = parseFloat(parts[1]) || 1.0;\nconst g_total = parseFloat(parts[2]) || 0.0;\nconst a_max   = parseFloat(parts[3]) || 1.0;\nconst a_min   = parseFloat(parts[4]) || 1.0;\nconst g_mean  = parseFloat(parts[5]) || 0.0;\nconst a_std   = parseFloat(parts[6]) || 0.0;\nconst g_max   = parseFloat(parts[7]) || 0.0;\nconst ax      = parseFloat(parts[8]) || 0.0;\nconst ay      = parseFloat(parts[9]) || 0.0;\nconst az      = parseFloat(parts[10]) || 1.0;\nconst model_pred  = parseInt(parts[11]) || 0;\nconst triage_pred = parseInt(parts[12]) || 0;\n\nconst hr   = (parts.length > 13) ? parseInt(parts[13]) || 0 : 0;\nconst spo2 = (parts.length > 14) ? parseInt(parts[14]) || 0 : 0;\nconst temp = (parts.length > 15) ? parseFloat(parts[15]) || 36.6 : 36.6;\n\nconst triageInfo = {\n    0: { code: 0, label: \"HIJAU - Normal\", status: \"NORMAL\", color: \"#10B981\", badge: \"pill-green\" },\n    1: { code: 1, label: \"KUNING - Kerja Aktif\", status: \"KERJA_AKTIF\", color: \"#F59E0B\", badge: \"pill-amber\" },\n    2: { code: 2, label: \"ORANYE - Waspada Dini\", status: \"WASPADA_DINI\", color: \"#F97316\", badge: \"pill-orange\" },\n    3: { code: 3, label: \"MERAH - Darurat SOS\", status: \"DARURAT_JATUH\", color: \"#EF4444\", badge: \"pill-red\" },\n    4: { code: 4, label: \"STANDBY - Jam Dilepas\", status: \"STANDBY\", color: \"#94A3B8\", badge: \"pill-gray\" }\n};\n\nconst tri = triageInfo[triage_pred] || triageInfo[0];\n\nconst telemetry = {\n    device_id: \"RESCUE-TAG-02\",\n    worker_id: \"WRK-002\",\n    worker_name: \"Agus Salim\",\n    sector: \"Sektor 7 (Lorong C-4)\",\n    location: {\n        name: \"Sektor 7 (C-4 Level -120m)\",\n        lat: -8.2498,\n        lng: 113.7012\n    },\n    triage: {\n        code: triage_pred,\n        label: tri.label,\n        status: tri.status,\n        color: tri.color,\n        is_emergency: (triage_pred === 3)\n    },\n    vitals: {\n        hr: hr,\n        spo2: spo2,\n        temp: temp,\n        hr_text: (hr > 0) ? hr + \" BPM\" : \"Mengukur...\",\n        spo2_text: (spo2 > 0) ? spo2 + \"%\" : \"--%\",\n        temp_text: temp.toFixed(1) + \"°C\"\n    },\n    kinematics: {\n        a_total: a_total,\n        g_total: g_total,\n        a_max: a_max,\n        a_min: a_min,\n        g_mean: g_mean,\n        a_std: a_std,\n        g_max: g_max,\n        tinyml_pred: model_pred\n    },\n    network: {\n        route: \"1-Hop LoRa Relay via Jam #01\",\n        rssi: -68,\n        frequency: 433.0\n    },\n    timestamp: new Date().toISOString()\n};\n\nmsg.payload = telemetry;\nmsg.topic = \"rescue/tag/data\";\n\nif (triage_pred === 3) {\n    const alertMsg = {\n        topic: \"rescue/tag/alert\",\n        payload: {\n            alert_type: \"SOS_FALL_CRITICAL\",\n            worker: \"Agus Salim (Jam Tangan #02)\",\n            sector: \"Sektor 7 (C-4)\",\n            triage: telemetry.triage,\n            vitals: hr + \" BPM · \" + spo2 + \"% SpO2 · \" + temp + \"°C\",\n            kinematics: \"Benturan \" + a_max.toFixed(2) + \"g + Imobilitas >30s\",\n            timestamp: telemetry.timestamp\n        }\n    };\n    return [msg, alertMsg];\n}\n\nreturn [msg, null];",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 520,
+    "y": 280,
+    "wires": [
+      ["node_mqtt_out_data", "node_debug_telemetry"],
+      ["node_mqtt_out_alert", "node_debug_alert"]
+    ]
+  },
+  {
+    "id": "node_mqtt_out_data",
+    "type": "mqtt out",
+    "z": "flow_rescue_tag_tab",
+    "name": "MQTT Publish -> rescue/tag/data",
+    "topic": "rescue/tag/data",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "mqtt_config_emqx",
+    "x": 840,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "node_mqtt_out_alert",
+    "type": "mqtt out",
+    "z": "flow_rescue_tag_tab",
+    "name": "MQTT Publish -> rescue/tag/alert",
+    "topic": "rescue/tag/alert",
+    "qos": "1",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "mqtt_config_emqx",
+    "x": 840,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "node_debug_telemetry",
+    "type": "debug",
+    "z": "flow_rescue_tag_tab",
+    "name": "Live Telemetry JSON",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 810,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "node_debug_alert",
+    "type": "debug",
+    "z": "flow_rescue_tag_tab",
+    "name": "EMERGENCY ALERT (SOS)",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 830,
+    "y": 380,
+    "wires": []
+  }
+]

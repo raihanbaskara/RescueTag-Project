@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue-Tag · Smart Mine Safety & Triage Dashboard</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- MQTT & Chart.js -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              dark: '#0f172a',
+            },
+            ui: {
+              bg: '#f3f5f8',
+              card: '#ffffff',
+              border: '#e5e9f0',
+              textMain: '#1e293b',
+              textMuted: '#64748b',
+              textLight: '#94a3b8',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'card': '0 2px 12px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02)',
+            'card-hover': '0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 8px rgba(15, 23, 42, 0.03)',
+            'pill': '0 2px 6px rgba(0, 0, 0, 0.04)',
+          },
+          borderRadius: {
+            'xl': '14px',
+            '2xl': '20px',
+            '3xl': '28px',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #f3f5f8;
+      color: #1e293b;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Clean Card */
+    .app-card {
+      background-color: #ffffff;
+      border: 1px solid #e9edf3;
+      border-radius: 22px;
+      box-shadow: 0 2px 14px -2px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.02);
+      transition: all 0.2s ease;
+    }
+    .app-card:hover {
+      border-color: #d1d9e6;
+      box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.06);
+    }
+
+    /* Green Brand Highlight Card */
+    .app-hero-card {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      color: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 10px 25px -4px rgba(22, 163, 74, 0.35);
+    }
+
+    /* Sidebar Button */
+    .nav-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .nav-btn:hover {
+      color: #16a34a;
+      background-color: #f0fdf4;
+    }
+    .nav-btn.active {
+      background-color: #16a34a;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #16a34a; }
+  </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 flex items-center justify-center">
+
+  <!-- MAIN WRAPPER CONTAINER -->
+  <div class="w-full max-w-[1480px] bg-[#f8fafc] border border-[#e2e8f0] rounded-3xl p-3 md:p-6 shadow-xl flex flex-col md:flex-row gap-5 min-h-[92vh]">
+
+    <!-- ═══════════════════════════════════════════
+         LEFT SLIM FLOATING SIDEBAR
+    ════════════════════════════════════════════ -->
+    <aside class="w-full md:w-16 bg-white border border-[#e9edf3] rounded-2xl md:rounded-3xl p-3 flex md:flex-col justify-between items-center shrink-0 shadow-sm">
+      <!-- Logo -->
+      <div class="flex items-center gap-2 mb-0 md:mb-6">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22c55e] to-[#15803d] flex items-center justify-center text-white shadow-md shadow-green-500/20">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Navigation Icons -->
+      <div class="flex md:flex-col gap-2.5">
+        <button class="nav-btn active" title="Dashboard Utama">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+        </button>
+
+        <button onclick="showRelayModal()" class="nav-btn" title="Topologi LoRa 2-Hop Relay">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </button>
+
+        <button class="nav-btn" title="Monitoring Sensor">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </button>
+
+        <button class="nav-btn" title="Peta Terowongan">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Bottom Settings -->
+      <div class="flex md:flex-col gap-2 mt-0 md:mt-auto">
+        <button class="nav-btn" title="Pengaturan">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN CONTENT BODY
+    ════════════════════════════════════════════ -->
+    <main class="flex-1 flex flex-col gap-5 min-w-0">
+
+      <!-- TOP APP BAR -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-1">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-bold text-slate-800 tracking-tight">Rescue-Tag Monitoring</h1>
+            <span class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
+              DISASTER MITIGATION
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">Sistem Triage START Otomatis & LoRa Two-Hop Relay Pekerja Tambang Bawah Tanah</p>
+        </div>
+
+        <!-- Search, Time, Profile -->
+        <div class="flex items-center gap-3">
+          <!-- Search Box -->
+          <div class="hidden sm:flex items-center gap-2 px-3.5 py-2 bg-white border border-[#e2e8f0] rounded-full text-xs text-slate-400 w-56 shadow-sm">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" placeholder="Cari ID pekerja / tag..." class="bg-transparent border-none outline-none text-xs text-slate-700 w-full placeholder-slate-400 font-sans"/>
+          </div>
+
+          <!-- Time Pill -->
+          <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#e2e8f0] rounded-full text-xs font-mono text-slate-600 shadow-sm">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span id="live-clock">00:00:00 WIB</span>
+          </div>
+
+          <!-- Notification Bell -->
+          <div class="relative w-9 h-9 rounded-full bg-white border border-[#e2e8f0] flex items-center justify-center cursor-pointer shadow-sm hover:border-green-400 transition">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+          </div>
+
+          <!-- Profile -->
+          <div class="flex items-center gap-2 pl-1 pr-3 py-1 bg-white border border-[#e2e8f0] rounded-full shadow-sm">
+            <div class="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold font-mono">
+              RY
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Rizaldy (SAR Lead)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           ROW 1: 4 TOP METRIC CARDS
+      ════════════════════════════════════════════ -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- CARD 1: GREEN HERO CARD (TOTAL PEKERJA AKTIF) -->
+        <div class="app-hero-card p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-white/90">
+            <span class="text-xs font-semibold uppercase tracking-wider">Total Tag Terpantau</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/20 text-white">100% ONLINE</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <span class="text-3xl font-extrabold font-mono">3 Node</span>
+            <span class="text-xs text-green-100 font-medium">Bawah Tanah</span>
+          </div>
+        </div>
+
+        <!-- CARD 2: STATUS TRIAGE START (IMMEDIATE / MERAH) -->
+        <div class="app-card p-5 flex flex-col justify-between border-l-4 border-l-red-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Triage Merah (Kritis)</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <span class="text-3xl font-bold font-mono text-red-600" id="red-count">1 Korban</span>
+            <span class="text-[11px] font-mono text-red-600 bg-red-50 px-2 py-0.5 rounded-full font-semibold">Prioritas SAR</span>
+          </div>
+        </div>
+
+        <!-- CARD 3: TWO-HOP RELAY STATUS -->
+        <div class="app-card p-5 flex flex-col justify-between border-l-4 border-l-cyan-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">LoRa 2-Hop Relay</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-50 text-cyan-700 font-semibold">Opportunistic</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <span class="text-3xl font-bold font-mono text-slate-800" id="relay-count">1 Jalur</span>
+            <span class="text-xs font-mono text-cyan-600">via Node-02 (Estafet)</span>
+          </div>
+        </div>
+
+        <!-- CARD 4: TINYML NOISE FILTERING ACCURACY -->
+        <div class="app-card p-5 flex flex-col justify-between border-l-4 border-l-green-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Akurasi TinyML (STM32)</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-green-50 text-green-700 font-semibold">Edge AI</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <span class="text-3xl font-bold font-mono text-slate-800">98.2%</span>
+            <span class="text-xs text-green-600 font-medium">Noise Getaran Filtered</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           ROW 2: VISUAL OVERVIEW & SAR ACTION CHECKLIST
+      ════════════════════════════════════════════ -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- LEFT 2 COLUMNS: UNDERGROUND SECTOR 3D VISUALIZATION -->
+        <div class="lg:col-span-2 app-card p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="text-sm font-bold text-slate-800">Pemetaan Sektor Terowongan & Posisi Korban</h2>
+              <p class="text-xs text-slate-500">Monitoring real-time kedalaman lorong tambang dan stasiun relay</p>
+            </div>
+            <span class="text-xs font-mono px-3 py-1 bg-slate-100 text-slate-700 rounded-full font-medium">Sektor Aktif: C-4 & Poros B</span>
+          </div>
+
+          <!-- ISOMETRIC / CLEAN TUNNEL ILLUSTRATION CONTAINER -->
+          <div class="relative w-full h-52 bg-gradient-to-br from-slate-800 to-slate-950 rounded-2xl overflow-hidden p-4 flex flex-col justify-between text-white shadow-inner">
+            <!-- Background Grid Lines -->
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10 flex justify-between items-start">
+              <span class="text-xs font-mono px-2.5 py-1 bg-black/40 backdrop-blur rounded-lg border border-white/10 text-green-400">
+                ● Surface Command Gateway (ESP32) Active
+              </span>
+              <span class="text-xs font-mono text-slate-300">Kedalaman: -250 Meter</span>
+            </div>
+
+            <!-- Visual Nodes in Tunnel -->
+            <div class="relative z-10 grid grid-cols-3 gap-3 my-auto text-center font-mono text-xs">
+              <!-- Surface Posko -->
+              <div class="p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/15">
+                <div class="text-cyan-300 font-bold mb-1">POSKO GATEWAY</div>
+                <div class="text-[11px] text-slate-300">Surface Control (ESP32)</div>
+                <div class="text-[10px] text-green-400 mt-1">MQTT Link Online ✓</div>
+              </div>
+
+              <!-- Relay Node -->
+              <div class="p-3 bg-white/10 backdrop-blur-md rounded-xl border border-cyan-400/40 shadow-lg shadow-cyan-500/10">
+                <div class="text-cyan-400 font-bold mb-1">NODE 2 (RELAY)</div>
+                <div class="text-[11px] text-slate-300">Poros Tengah B (Pekerja #02)</div>
+                <div class="text-[10px] text-cyan-300 mt-1">Estafet Aktif (Hop 1)</div>
+              </div>
+
+              <!-- Victim Node -->
+              <div class="p-3 bg-red-950/60 backdrop-blur-md rounded-xl border border-red-500/60 shadow-lg shadow-red-500/20">
+                <div class="text-red-400 font-bold mb-1">NODE 1 (KORBAN)</div>
+                <div class="text-[11px] text-slate-200">Lorong C-4 (Pekerja #03)</div>
+                <div class="text-[10px] text-red-300 font-semibold mt-1">JATUH & IMOBIL (Hop 2)</div>
+              </div>
+            </div>
+
+            <div class="relative z-10 flex justify-between items-center text-[11px] font-mono text-slate-400">
+              <span>Protokol Transmisi: LoRa 433 MHz (SF12 / BW 125 kHz)</span>
+              <span class="text-green-400">PDR Keberhasilan Paket: 98.4%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT 1 COLUMN: CRITICAL ALERT & SAR CHECKLIST (MATCHING REFERENCE WIDGET) -->
+        <div class="app-card p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-800">Critical Alert & Triage Checklist</h3>
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+          </div>
+
+          <!-- CHECKLIST PILLS -->
+          <div class="flex flex-col gap-2.5 my-3">
+            <div class="p-3 rounded-xl bg-red-50 border border-red-200 flex items-start gap-2.5">
+              <span class="text-red-600 font-bold text-sm">⚠</span>
+              <div class="text-xs">
+                <div class="font-bold text-red-800">Pekerja #03 Terdeteksi Kritis</div>
+                <div class="text-red-600 font-mono mt-0.5">SpO2: 88% | BPM: 134 | Jatuh Bebas</div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-green-50 border border-green-200 flex items-start gap-2.5">
+              <span class="text-green-600 font-bold text-sm">✓</span>
+              <div class="text-xs">
+                <div class="font-bold text-green-800">Two-Hop Relay Stabil</div>
+                <div class="text-green-700 font-mono mt-0.5">Paket estafet lolos via Node-02</div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5">
+              <span class="text-slate-600 font-bold text-sm">●</span>
+              <div class="text-xs">
+                <div class="font-bold text-slate-800">Filter Getaran Mesin Aktif</div>
+                <div class="text-slate-600 font-mono mt-0.5">Noise alat bor tambang dieliminasi</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTON -->
+          <button onclick="showRelayModal()" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold transition flex items-center justify-center gap-2">
+            <span>Lihat Topologi Estafet LoRa</span>
+            <span>→</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           ROW 3: DEVICE NODE LIST & VITAL TELEMETRY TRENDS
+      ════════════════════════════════════════════ -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- LEFT 1 COLUMN: WORKER NODE CARDS -->
+        <div class="app-card p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-800">Daftar Tag Pekerja (START)</h3>
+            <span class="text-xs font-mono text-slate-400">Live Status</span>
+          </div>
+
+          <div class="flex flex-col gap-2.5 my-3" id="worker-list-container">
+            <!-- Populated via JS -->
+          </div>
+
+          <div class="text-[11px] font-mono text-slate-400 text-center pt-2 border-t border-slate-100">
+            MQTT WebSocket: broker.emqx.io:8084
+          </div>
+        </div>
+
+        <!-- RIGHT 2 COLUMNS: VITAL TELEMETRY CHART (CHART.JS) -->
+        <div class="lg:col-span-2 app-card p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <h3 class="text-sm font-bold text-slate-800">Tren Real-time Tanda Vital & Deteksi Anomali</h3>
+              <p class="text-xs text-slate-500">Perbandingan Heart Rate (BPM) dan SpO2 (%) dengan batas kritis START</p>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-mono">
+              <span class="flex items-center gap-1.5 text-green-600 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Heart Rate</span>
+              <span class="flex items-center gap-1.5 text-cyan-600 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> SpO2 Level</span>
+            </div>
+          </div>
+
+          <!-- Canvas -->
+          <div class="w-full h-52 relative">
+            <canvas id="lightTrendChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TWO-HOP RELAY MODAL
+  ════════════════════════════════════════════ -->
+  <div id="relay-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-xl w-full shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <h3 class="text-base font-bold text-slate-800">Skema LoRa Two-Hop Opportunistic Relay</h3>
+        </div>
+        <button onclick="closeRelayModal()" class="text-slate-400 hover:text-slate-700 text-sm font-mono">✕</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 my-5 font-mono text-xs text-center">
+        <div class="p-3.5 rounded-2xl bg-red-50 border border-red-200">
+          <span class="text-red-700 font-bold block mb-1">NODE 1 (KORBAN)</span>
+          <span class="text-slate-600">STM32-03 (Sektor C)</span>
+          <div class="text-[10px] text-red-600 mt-2 bg-red-100 py-0.5 rounded">RSSI: -98 dBm (NLOS)</div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-cyan-50 border border-cyan-200">
+          <span class="text-cyan-700 font-bold block mb-1">NODE 2 (RELAY)</span>
+          <span class="text-slate-600">STM32-02 (Poros Utama)</span>
+          <div class="text-[10px] text-cyan-700 mt-2 bg-cyan-100 py-0.5 rounded">Estafet Aktif (Hop 1)</div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-green-50 border border-green-200">
+          <span class="text-green-700 font-bold block mb-1">POSKO GATEWAY</span>
+          <span class="text-slate-600">ESP32 (Surface)</span>
+          <div class="text-[10px] text-green-700 mt-2 bg-green-100 py-0.5 rounded">MQTT Broker (Hop 2)</div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1.5 leading-relaxed">
+        <div class="font-bold text-slate-800">Penjelasan Logika Estafet untuk Juri:</div>
+        <p>1. <strong>Direct Detection:</strong> Jika RSSI ke posko &lt; -95 dBm (terhalang runtuhan batuan), Node Korban meminta bantuan estafet (<code>RELAY_REQ</code>).</p>
+        <p>2. <strong>Auto-Forwarding:</strong> Node rekan kerja di lorong utama menerima paket dan meneruskannya (Hop Count = 2) ke Gateway di permukaan tanah.</p>
+      </div>
+
+      <button onclick="closeRelayModal()" class="w-full mt-4 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800">
+        Tutup Jendela
+      </button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    const WORKERS = [
+      { id: 1, name: "Pekerja #01", tag: "STM32-01", triage: "HIJAU", hr: 78, spo2: 98, temp: 36.6, act: "Normal", hop: 1, relay_by: "DIRECT" },
+      { id: 2, name: "Pekerja #02", tag: "STM32-02", triage: "KUNING", hr: 106, spo2: 93, temp: 37.6, act: "Kelelahan", hop: 1, relay_by: "DIRECT" },
+      { id: 3, name: "Pekerja #03", tag: "STM32-03", triage: "MERAH", hr: 134, spo2: 88, temp: 38.6, act: "JATUH & IMOBIL", hop: 2, relay_by: "Node-02" }
+    ];
+
+    let lightChart = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderWorkerList();
+      initClock();
+      initChart();
+      initMQTT();
+      startSimulation();
+    });
+
+    function initClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('live-clock').textContent = now.toTimeString().split(' ')[0] + ' WIB';
+      }, 1000);
+    }
+
+    function renderWorkerList() {
+      const container = document.getElementById('worker-list-container');
+      container.innerHTML = '';
+
+      WORKERS.forEach(w => {
+        let badgeColor = 'bg-green-100 text-green-700 border-green-200';
+        let borderColor = 'border-slate-200';
+
+        if(w.triage === 'KUNING') {
+          badgeColor = 'bg-amber-100 text-amber-700 border-amber-200';
+          borderColor = 'border-amber-300';
+        } else if(w.triage === 'MERAH') {
+          badgeColor = 'bg-red-100 text-red-700 border-red-300 animate-pulse';
+          borderColor = 'border-red-400 bg-red-50/40';
+        }
+
+        const div = document.createElement('div');
+        div.className = `p-3 rounded-xl border ${borderColor} flex items-center justify-between text-xs transition hover:shadow-sm`;
+        div.innerHTML = `
+          <div>
+            <div class="font-bold text-slate-800">${w.name} <span class="font-mono font-normal text-slate-500">(${w.tag})</span></div>
+            <div class="text-[11px] font-mono text-slate-500 mt-0.5">HR: ${w.hr} BPM | SpO2: ${w.spo2}% | ${w.hop === 2 ? '🔄 2-Hop Relay' : '📡 Direct'}</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold border ${badgeColor}">${w.triage}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('lightTrendChart').getContext('2d');
+      lightChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['14:25', '14:27', '14:29', '14:31', '14:33', '14:35', '14:37'],
+          datasets: [
+            {
+              label: 'Heart Rate (BPM)',
+              data: [82, 86, 108, 134, 130, 132, 135],
+              borderColor: '#16a34a',
+              backgroundColor: 'rgba(22, 163, 74, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.35,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: '#16a34a'
+            },
+            {
+              label: 'SpO2 (%)',
+              data: [98, 97, 93, 88, 87, 88, 88],
+              borderColor: '#0284c7',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [4, 4],
+              tension: 0.3,
+              pointRadius: 3,
+              pointBackgroundColor: '#0284c7'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 10 } } },
+            y: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 10 } } }
+          }
+        }
+      });
+    }
+
+    function showRelayModal() { document.getElementById('relay-modal').classList.remove('hidden'); }
+    function closeRelayModal() { document.getElementById('relay-modal').classList.add('hidden'); }
+
+    function initMQTT() {
+      try {
+        const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+          clientId: 'light_sar_' + Math.random().toString(36).substring(2, 7),
+          clean: true
+        });
+        client.on('connect', () => { client.subscribe('rescue/tag/data'); });
+      } catch(e) { console.warn('MQTT offline mode'); }
+    }
+
+    function startSimulation() {
+      setInterval(() => {
+        WORKERS.forEach(w => {
+          if(w.triage === 'HIJAU') {
+            w.hr = Math.round(76 + (Math.random() - 0.5) * 4);
+            w.spo2 = Math.min(100, Math.round(98 + (Math.random() - 0.5) * 2));
+          } else if(w.triage === 'MERAH') {
+            w.hr = Math.round(134 + (Math.random() - 0.5) * 4);
+            w.spo2 = Math.max(82, Math.round(88 + (Math.random() - 0.5) * 2));
+          }
+        });
+        renderWorkerList();
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

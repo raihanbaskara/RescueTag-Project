@@ -1,0 +1,225 @@
+{
+  "completed_codes": {
+    "D1": {
+      "session_id": 1,
+      "samples": 61,
+      "timestamp": "2026-10-05 19:57:06"
+    },
+    "D2": {
+      "session_id": 2,
+      "samples": 60,
+      "timestamp": "2026-10-05 19:58:01"
+    },
+    "D3": {
+      "session_id": 3,
+      "samples": 62,
+      "timestamp": "2026-10-05 19:58:51"
+    },
+    "D4": {
+      "session_id": 4,
+      "samples": 61,
+      "timestamp": "2026-10-05 19:59:35"
+    },
+    "D5": {
+      "session_id": 5,
+      "samples": 59,
+      "timestamp": "2026-10-05 20:01:32"
+    },
+    "D6": {
+      "session_id": 6,
+      "samples": 41,
+      "timestamp": "2026-10-05 20:02:08"
+    },
+    "D7": {
+      "session_id": 7,
+      "samples": 60,
+      "timestamp": "2026-10-05 20:02:51"
+    },
+    "D8": {
+      "session_id": 8,
+      "samples": 63,
+      "timestamp": "2026-10-05 20:03:30"
+    },
+    "K1": {
+      "session_id": 9,
+      "samples": 63,
+      "timestamp": "2026-10-05 20:04:15"
+    },
+    "K2": {
+      "session_id": 10,
+      "samples": 62,
+      "timestamp": "2026-10-05 20:04:56"
+    },
+    "K3": {
+      "session_id": 11,
+      "samples": 42,
+      "timestamp": "2026-10-05 20:05:54"
+    },
+    "K4": {
+      "session_id": 12,
+      "samples": 63,
+      "timestamp": "2026-10-05 20:06:35"
+    },
+    "K5": {
+      "session_id": 13,
+      "samples": 63,
+      "timestamp": "2026-10-05 20:08:40"
+    },
+    "K6": {
+      "session_id": 14,
+      "samples": 41,
+      "timestamp": "2026-10-05 20:09:16"
+    },
+    "K7": {
+      "session_id": 15,
+      "samples": 43,
+      "timestamp": "2026-10-05 20:11:35"
+    },
+    "K8": {
+      "session_id": 16,
+      "samples": 63,
+      "timestamp": "2026-10-05 20:12:13"
+    },
+    "K9": {
+      "session_id": 17,
+      "samples": 65,
+      "timestamp": "2026-10-05 20:15:09"
+    },
+    "K10": {
+      "session_id": 18,
+      "samples": 31,
+      "timestamp": "2026-10-05 20:16:04"
+    },
+    "K11": {
+      "session_id": 19,
+      "samples": 65,
+      "timestamp": "2026-10-05 20:17:27"
+    },
+    "K12": {
+      "session_id": 20,
+      "samples": 63,
+      "timestamp": "2026-10-05 20:18:06"
+    },
+    "J1": {
+      "session_id": 21,
+      "samples": 24,
+      "timestamp": "2026-10-05 20:19:53"
+    },
+    "J2": {
+      "session_id": 22,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:20:38"
+    },
+    "J3": {
+      "session_id": 23,
+      "samples": 22,
+      "timestamp": "2026-10-05 20:21:07"
+    },
+    "J4": {
+      "session_id": 24,
+      "samples": 24,
+      "timestamp": "2026-10-05 20:21:40"
+    },
+    "J5": {
+      "session_id": 25,
+      "samples": 14,
+      "timestamp": "2026-10-05 20:21:59"
+    },
+    "J7": {
+      "session_id": 27,
+      "samples": 24,
+      "timestamp": "2026-10-05 20:23:12"
+    },
+    "J8": {
+      "session_id": 28,
+      "samples": 9,
+      "timestamp": "2026-10-05 20:23:32"
+    },
+    "J13": {
+      "session_id": 33,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:25:40"
+    },
+    "J14": {
+      "session_id": 34,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:25:55"
+    },
+    "J15": {
+      "session_id": 35,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:26:12"
+    },
+    "J16": {
+      "session_id": 36,
+      "samples": 22,
+      "timestamp": "2026-10-05 20:26:27"
+    },
+    "J17": {
+      "session_id": 37,
+      "samples": 22,
+      "timestamp": "2026-10-05 20:26:44"
+    },
+    "J18": {
+      "session_id": 38,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:27:04"
+    },
+    "J19": {
+      "session_id": 39,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:27:18"
+    },
+    "J20": {
+      "session_id": 40,
+      "samples": 22,
+      "timestamp": "2026-10-05 20:27:33"
+    },
+    "J6": {
+      "session_id": 41,
+      "samples": 15,
+      "timestamp": "2026-10-05 20:33:57"
+    },
+    "J9": {
+      "session_id": 42,
+      "samples": 16,
+      "timestamp": "2026-10-05 20:34:12"
+    },
+    "J10": {
+      "session_id": 43,
+      "samples": 9,
+      "timestamp": "2026-10-05 20:34:26"
+    },
+    "J11": {
+      "session_id": 44,
+      "samples": 14,
+      "timestamp": "2026-10-05 20:34:44"
+    },
+    "J12": {
+      "session_id": 45,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:35:00"
+    },
+    "J21": {
+      "session_id": 46,
+      "samples": 22,
+      "timestamp": "2026-10-05 20:35:16"
+    },
+    "J22": {
+      "session_id": 47,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:35:56"
+    },
+    "J23": {
+      "session_id": 48,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:36:10"
+    },
+    "J24": {
+      "session_id": 49,
+      "samples": 23,
+      "timestamp": "2026-10-05 20:36:26"
+    }
+  },
+  "max_session_id": 49
+}

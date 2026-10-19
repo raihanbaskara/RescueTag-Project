@@ -1,0 +1,62 @@
+# PlatformIO & Embedded Builds
+.pio/
+.pioenvs/
+.piolibdeps/
+.clangd/
+*.bin
+*.elf
+*.hex
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints
+
+# VS Code & IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporary log & diff dumps
+*.tmp
+diff_*.txt
+full_diff_audit.txt
+log_firmware_50hz_backup_*.txt
+ 
+.agents/
+
+ 
+# Ignore extracted large/redundant zip web folders
+**/extracted/
+
