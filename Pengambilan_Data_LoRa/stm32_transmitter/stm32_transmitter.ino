@@ -4,6 +4,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "MAX30105.h"
+#include <Adafruit_MLX90614.h>
 #include "triage_model.h"
 #include <IWatchdog.h>
 
@@ -24,6 +25,7 @@
 #define BMI160_ADDR   0x68
 #define OLED_ADDR     0x3C
 #define MAX30105_ADDR 0x57
+#define MLX90614_ADDR 0x5A
 
 // Layar OLED SSD1306 0.96" (128x64)
 Adafruit_SSD1306 display(-1);
@@ -32,6 +34,10 @@ bool oled_connected = false;
 // Sensor Optik MAX30105 (PPG Heart Rate & SpO2)
 MAX30105 particleSensor;
 bool max30105_connected = false;
+
+// Sensor Suhu Medis Inframerah MLX90614 (GY-906)
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+bool mlx_connected = false;
 
 // ==========================================
 // DUAL-WAVELENGTH OPTICAL PPG (MAX30105: RED 660nm + IR 880nm)
@@ -521,7 +527,7 @@ int countdown_seconds = 0;
 
 unsigned long spo2_low_since = 0;
 unsigned long spo2ConfirmMs() { return sim_asphyxia_gas ? 2000UL : 8000UL; }
-int evaluate_clinical_triage(bool worn, int model_pred, float a_total, float g_total, float a_max, float g_mean, int hr, int spo2) {
+int evaluate_clinical_triage(bool worn, int model_pred, float a_total, float g_total, float a_max, float g_mean, int hr, int spo2, float temp) {
   // Hitung streak prediksi Merah model TinyML
   if (model_pred == 3) red_streak++;
   else red_streak = 0;
@@ -588,7 +594,10 @@ int evaluate_clinical_triage(bool worn, int model_pred, float a_total, float g_t
     return 3; // 🔴 KODE 3: MERAH (JATUH KRITIS / PINGSAN)
   }
 
-  // 4. SKENARIO WASPADA DINI: Kenaikan denyut drastis dari baseline
+  // 4. SKENARIO WASPADA DINI: Kenaikan denyut drastis dari baseline ATAU Suhu Ekstrem
+  if (temp > 0.0f && (temp >= 38.5f || temp <= 34.5f)) {
+    return 2; // 🟠 KODE 2: WASPADA DINI (DEMAM TINGGI / GEJALA AWAL HIPOTERMIA)
+  }
   if (baseline_valid && (hr >= (baseline_hr + 25) || hr >= 115)) {
     return 2; // 🟠 KODE 2: WASPADA DINI (KELELAHAN EKSTREM)
   } else if (!baseline_valid && hr >= 115) {
@@ -769,6 +778,25 @@ void setup() {
     }
   } else {
     Serial.println("[INFO] MAX30105 tidak terdeteksi di 0x57.");
+  }
+
+  // 4b. Inisialisasi Sensor Suhu Medis MLX90614 (0x5A)
+  Wire.beginTransmission(MLX90614_ADDR);
+  if (Wire.endTransmission() == 0) {
+    if (mlx.begin()) {
+      mlx_connected = true;
+      float test_obj = mlx.readObjectTempC();
+      if (!isnan(test_obj) && test_obj > 0.0f && test_obj < 100.0f) {
+        temp_c = test_obj;
+      }
+      Serial.print("[OK] Sensor Suhu Medis MLX90614 Siap di 0x5A! Suhu Awal: ");
+      Serial.print(temp_c, 1);
+      Serial.println(" C");
+    } else {
+      Serial.println("[!] MLX90614 gagal inisialisasi software.");
+    }
+  } else {
+    Serial.println("[INFO] MLX90614 tidak terdeteksi di 0x5A (Gunakan simulasi baseline).");
   }
 
   Wire.setClock(100000);
@@ -976,6 +1004,19 @@ void loop() {
   if (millis() - lastSend >= interval) {
     lastSend = millis();
 
+    // 0. Baca Suhu Tubuh Real-time dari Sensor Medis MLX90614 (Objek Kulit)
+    if (mlx_connected) {
+      static unsigned long last_mlx_read = 0;
+      if (millis() - last_mlx_read >= 500) { // Update tiap 500 ms agar I2C ringan
+        last_mlx_read = millis();
+        float raw_obj = mlx.readObjectTempC();
+        if (!isnan(raw_obj) && raw_obj > 20.0f && raw_obj < 50.0f) {
+          // Low-pass filter suhu tubuh agar stabil
+          temp_c = 0.3f * raw_obj + 0.7f * temp_c;
+        }
+      }
+    }
+
     // 1. Ekstraksi Fitur Rata-rata & Puncak Nyata dari Sub-Window 50 Hz
     float ax = fast_ax_last;
     float ay = fast_ay_last;
@@ -1026,8 +1067,8 @@ void loop() {
     // 6. Evaluasi Prediksi TinyML Decision Tree
     int model_pred = predict_triage(a_total, g_total, a_max, a_min, g_mean, a_std, g_max, a_jerk);
 
-    // 7. Evaluasi Multi-Modal Clinical Triage (TinyML + FSM Pasca-Jatuh + True PPG)
-    int triage_pred = evaluate_clinical_triage(is_worn, model_pred, a_total, g_total, a_max, g_mean, current_hr, display_spo2);
+    // 7. Evaluasi Multi-Modal Clinical Triage (TinyML + FSM Pasca-Jatuh + True PPG + Suhu MLX)
+    int triage_pred = evaluate_clinical_triage(is_worn, model_pred, a_total, g_total, a_max, g_mean, current_hr, display_spo2, temp_c);
 
     // 8. Indikator LED Onboard PC13
     if (triage_pred == 0 || triage_pred == 4) {

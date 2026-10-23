@@ -78,32 +78,47 @@ void loop() {
     int spo2 = 0;
     float a_max = 1.0f;
     float temp = 36.6f;
+    bool is_relayed = false;
+    String cleanFeat = incoming;
 
-    // A. Parse Paket FEAT 50 Hz Baru:
+    // A1. Cek Apakah Paket Datang Melalui 1-Hop Relay: RELAY,TAG01,FEAT,...
+    if (incoming.startsWith("RELAY,")) {
+      is_relayed = true;
+      int featPos = incoming.indexOf("FEAT,");
+      if (featPos != -1) {
+        cleanFeat = incoming.substring(featPos);
+      }
+    }
+
+    // A2. Parse Paket FEAT 50 Hz (Langsung maupun via Relay)
     // Format: FEAT,a_total,g_total,a_max,a_min,g_mean,a_std,g_max,ax,ay,az,model_pred,triage_pred,hr,spo2,temp
-    if (incoming.startsWith("FEAT,")) {
-      // 1. Cetak langsung ke Serial USB Laptop untuk ditangkap record_lora_wireless.py
-      Serial.println(incoming);
+    if (cleanFeat.startsWith("FEAT,")) {
+      // 1. Cetak ke Serial USB Laptop untuk ditangkap Node-RED & Python
+      // Jika relay, beri tanda agar Node-RED bisa mengenali jalur 1-Hop Relay
+      if (is_relayed) {
+        Serial.print("RELAY,TAG01,");
+      }
+      Serial.println(cleanFeat);
 
       // 2. Ekstraksi parameter klinis untuk display OLED
       int commaIdx[16];
       int commaCount = 0;
-      for (int i = 0; i < incoming.length() && commaCount < 16; i++) {
-        if (incoming.charAt(i) == ',') {
+      for (int i = 0; i < cleanFeat.length() && commaCount < 16; i++) {
+        if (cleanFeat.charAt(i) == ',') {
           commaIdx[commaCount++] = i;
         }
       }
 
       if (commaCount >= 12) {
-        a_max = incoming.substring(commaIdx[2] + 1, commaIdx[3]).toFloat();
-        triageCode = incoming.substring(commaIdx[11] + 1, commaIdx[12]).toInt();
+        a_max = cleanFeat.substring(commaIdx[2] + 1, commaIdx[3]).toFloat();
+        triageCode = cleanFeat.substring(commaIdx[11] + 1, commaIdx[12]).toInt();
       }
       if (commaCount >= 14) {
-        hr = incoming.substring(commaIdx[12] + 1, commaIdx[13]).toInt();
-        spo2 = incoming.substring(commaIdx[13] + 1, commaIdx[14]).toInt();
+        hr = cleanFeat.substring(commaIdx[12] + 1, commaIdx[13]).toInt();
+        spo2 = cleanFeat.substring(commaIdx[13] + 1, commaIdx[14]).toInt();
       }
       if (commaCount >= 15) {
-        temp = incoming.substring(commaIdx[14] + 1).toFloat();
+        temp = cleanFeat.substring(commaIdx[14] + 1).toFloat();
       }
     } 
     // B. Fallback Format Telemetri Lama: ax,ay,az,gx,gy,gz,hr,spo2,temp,triage
@@ -191,9 +206,13 @@ void loop() {
     display.print("A_Max: "); display.print(a_max, 1); display.print("g");
     display.print(" | "); display.print(rssi); display.println("dBm");
 
-    // Baris 5: Link Status
+    // Baris 5: Link Status & Route
     display.setCursor(0, 56);
-    display.print("Link : LoRa 433MHz OK");
+    if (is_relayed) {
+      display.print("Rute : 1-Hop [TAG #01]");
+    } else {
+      display.print("Rute : Direct LoRa OK");
+    }
 
     display.display();
   }
