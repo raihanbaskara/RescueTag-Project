@@ -1706,12 +1706,11 @@
         attributionControl: true
       }).setView(watch1Pos, 15);
 
-      // Default High-End Tactical GIS Tiles (CartoDB Voyager: soft slate/sand topography)
-      const voyagerUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-      currentTileLayer = L.tileLayer(voyagerUrl, {
-        maxZoom: 19,
-        subdomains: 'abcd',
-        attribution: '© OpenStreetMap contributors, © CARTO'
+      // Default High-End Tactical GIS Canvas (Esri World Light Gray: 100% Free, Zero Watermark, Clean Slate Tone)
+      const esriGrayUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+      currentTileLayer = L.tileLayer(esriGrayUrl, {
+        maxZoom: 16,
+        attribution: 'Tiles © Esri — Esri, DeLorme, NAVTEQ'
       }).addTo(leafletMap);
       isDarkTiles = true;
 
@@ -1928,18 +1927,19 @@
       if(!leafletMap) return;
       leafletMap.removeLayer(currentTileLayer);
       if(!isDarkTiles) {
-        currentTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-          maxZoom: 19,
-          subdomains: 'abcd',
-          attribution: '© OpenStreetMap contributors, © CARTO'
+        currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 16,
+          attribution: 'Tiles © Esri — Esri, DeLorme, NAVTEQ'
         }).addTo(leafletMap);
         isDarkTiles = true;
+        showSimulationToast('🗺 [Layer Peta] Tactical Canvas (Esri Gray Base)');
       } else {
         currentTileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap contributors'
         }).addTo(leafletMap);
         isDarkTiles = false;
+        showSimulationToast('🗺 [Layer Peta] Street Topography (OpenStreetMap)');
       }
     }
 
