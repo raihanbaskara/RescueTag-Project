@@ -843,34 +843,39 @@
             <div class="lg:col-span-2 card-shell">
               <div class="card-inner flex flex-col justify-between !p-4 bg-white rounded-2xl shadow-sm">
                 
-                <!-- Clean Top Bar Over Map with Elite Tactical Metadata -->
-                <div class="flex flex-wrap justify-between items-center px-4 py-3 bg-slate-900 text-white rounded-xl border border-slate-800 mb-3 gap-3 shadow-md">
+                <!-- Tactile Instrumentation Header (Harmonized Tactical Design) -->
+                <div class="flex flex-wrap justify-between items-center px-3.5 py-2.5 bg-slate-50/90 border border-slate-200/90 rounded-xl mb-2.5 gap-2.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
                   <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-xs font-mono font-bold tracking-wider text-slate-100 uppercase">LORA 1-HOP MESH · SPATIAL ANCHOR MAPPING</span>
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                    </span>
+                    <span class="text-[11px] font-mono font-bold tracking-wider text-slate-800 uppercase">LoRa 1-Hop Mesh · Spatial Anchor Mapping</span>
                   </div>
 
-                  <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                    <span class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-bold tracking-wide">
-                      INDOOR GPS-DENIED MAPPING
+                  <div class="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+                    <span class="pill-badge pill-green text-[10px] font-bold uppercase tracking-wide">
+                      Indoor GPS-Denied Mapping
                     </span>
-                    <span class="text-slate-600 hidden sm:inline">|</span>
-                    <span class="text-slate-300 text-[11px] font-semibold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
-                      RSSI TRILATERATION & PROXIMITY
+                    <span class="pill-badge pill-slate text-[10px] font-semibold text-slate-600">
+                      RSSI Trilateration & Proximity
                     </span>
-                    <span class="text-slate-600 hidden sm:inline">|</span>
-                    <span class="text-emerald-400 text-[11px] font-bold">
+                    <span class="pill-badge pill-teal text-[10px] font-bold">
                       433.05 MHz · SF7
                     </span>
                   </div>
                 </div>
 
-                <!-- Callout Banner: Penjelasan Ilmiah Non-GPS untuk Juri / Dosen -->
-                <div class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl mb-3 flex items-start gap-3 text-slate-700 text-xs">
-                  <span class="text-base leading-none mt-0.5">🛰️</span>
-                  <div class="leading-relaxed">
-                    <span class="font-bold text-slate-900 font-mono">METODE LOKALISASI NON-GPS:</span>
-                    <span class="text-slate-600"> Sinyal satelit GPS tidak dapat menembus terowongan batuan/reruntuhan. Sistem mengestimasi koordinat taktis menggunakan <b>RSSI Proximity</b> dan <b>Anchor Mesh Relay</b> dari node terdekat secara real-time.</span>
+                <!-- Callout Banner: Metodologi Non-GPS RSSI Taktis (Harmonized Tone) -->
+                <div class="px-3.5 py-2.5 bg-gradient-to-r from-amber-50/30 via-slate-50/60 to-slate-50/40 border border-slate-200/90 rounded-xl mb-3 flex items-start gap-3 shadow-xs">
+                  <div class="w-6 h-6 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-700 shrink-0 shadow-xs mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A2 2 0 013 15.488V5.132a2 2 0 011.553-1.954l6-1.5a2 2 0 011.082 0l5.812 1.453A2 2 0 0119 5.084v7.416m-4 5.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                  </div>
+                  <div class="text-[11.5px] leading-relaxed text-slate-600">
+                    <span class="font-mono font-bold text-slate-800 uppercase tracking-wide mr-1">Metode Lokalisasi Non-GPS:</span>
+                    <span>Sinyal satelit GPS tidak dapat menembus terowongan batuan tambang bawah tanah / reruntuhan bangunan. Koordinat taktis korban diestimasi secara real-time via <span class="font-semibold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200/80 font-mono text-[10.5px]">RSSI Log-Distance Path Loss</span> dan relasi spasial <span class="font-semibold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200/80 font-mono text-[10.5px]">Spatial Anchor Relay</span> dari node terdekat.</span>
                   </div>
                 </div>
 
