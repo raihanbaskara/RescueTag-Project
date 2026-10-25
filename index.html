@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue-Tag · Subterranean Mining Disaster & Triage Portal</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js, MQTT.js, Leaflet (OpenStreetMap) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Google Fonts: Geist, Plus Jakarta Sans, JetBrains Mono, Playfair Display Italic, Outfit, Space Grotesk, Rajdhani -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400;1,600;1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            rescue: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            },
+            spruce: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+            outfit: ['"Outfit"', 'sans-serif'],
+            tactical: ['"Rajdhani"', 'sans-serif'],
+            tech: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            brand: ['"Playfair Display"', 'Georgia', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+    .font-tactical {
+      font-family: 'Rajdhani', sans-serif;
+    }
+    .font-tech {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .font-brand {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+    }
+    .role-btn {
+      color: #64748b;
+      cursor: pointer;
+    }
+    .role-btn.active {
+      background: #ffffff !important;
+      color: #c2410c !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      font-weight: 700;
+    }
+    :root {
+      --bg-canvas: #fbf8f5;
+      --border-subtle: #eedfd2;
+      --spruce-teal: #ea580c;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: #0f172a;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      letter-spacing: -0.01em;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .display-font { font-family: 'Geist', sans-serif; }
+
+    /* High-End Double-Bezel Card Shell */
+    .card-shell {
+      background: #fdfaf7;
+      border: 1px solid #eedfd2;
+      border-radius: 18px;
+      padding: 2px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-shell:hover {
+      border-color: #fdba74;
+      box-shadow: 0 8px 24px -6px rgba(234, 88, 12, 0.08);
+    }
+    .card-inner {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      height: 100%;
+      border: 1px solid rgba(254, 243, 199, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Tactile Press Buttons */
+    .btn-tactile {
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+    .btn-tactile:active {
+      transform: scale(0.97);
+    }
+
+    /* Sidebar Navigation Links */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      color: #ea580c;
+      background-color: #fff7ed;
+    }
+    .nav-item.active {
+      background-color: #ffedd5;
+      color: #c2410c;
+      font-weight: 600;
+    }
+
+    /* High-Precision Pill Badges (Strict No-Wrap) */
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    .pill-red { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .pill-amber { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .pill-green { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .pill-teal, .pill-orange { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+    .pill-slate { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+    /* Custom Leaflet Marker Pulsing Ring */
+    .pulse-marker {
+      position: relative;
+    }
+    .pulse-marker::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      animation: map-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    .pulse-red::after { background-color: rgba(239, 68, 68, 0.6); }
+    .pulse-teal::after, .pulse-orange::after { background-color: rgba(234, 88, 12, 0.6); }
+    .pulse-emerald::after { background-color: rgba(16, 185, 129, 0.6); }
+
+    @keyframes map-ping {
+      75%, 100% {
+        transform: scale(2.2);
+        opacity: 0;
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f8fafc; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0f766e; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased" onclick="closeRoleMenuOnClickOutside(event)">
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       PAGE 0: LOGIN & AUTHENTICATION SCREEN (TACTICAL INDUSTRIAL DOUBLE-BEZEL)
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div id="page-login" class="fixed inset-0 z-50 bg-[#f8f5f0] bg-[radial-gradient(#e5dec9_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center p-4 md:p-8 overflow-y-auto select-none">
+    
+    <!-- Ambient Depth-of-Field Background Silhouettes -->
+    <div class="absolute -left-20 -bottom-20 w-[450px] h-[450px] opacity-15 filter blur-3xl pointer-events-none transform -rotate-12">
+      <img src="./smartwatch_oled_hd.png?v=ultra_hd_2026" alt="" class="w-full h-full object-contain" />
+    </div>
+    <div class="absolute -right-24 -top-24 w-[450px] h-[450px] opacity-10 filter blur-3xl pointer-events-none transform rotate-45">
+      <img src="./smartwatch_oled_hd.png?v=ultra_hd_2026" alt="" class="w-full h-full object-contain" />
+    </div>
+
+    <!-- Outer Double-Bezel Tray (Doppelrand Architecture) -->
+    <div class="w-full max-w-5xl rounded-[2.5rem] p-2 sm:p-3 bg-black/[0.03] border border-black/10 shadow-[0_32px_80px_-16px_rgba(200,100,20,0.14),0_0_0_1px_rgba(255,255,255,0.9)] backdrop-blur-2xl">
+      
+      <!-- Inner Core Canvas Container -->
+      <div class="w-full rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-sm min-h-[640px]">
+        
+        <!-- Left Column (5 cols): Tactical Command Center Terminal -->
+        <div class="lg:col-span-5 bg-white p-7 md:p-8 lg:border-r border-slate-200/80 flex flex-col justify-between relative z-10">
+          <div>
+            <!-- Terminal Header & Brand -->
+            <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-orange-500/25">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  </svg>
+                </div>
+                <div>
+                  <span class="font-brand font-bold text-xl tracking-normal text-slate-900 leading-none block">Rescue-Tag</span>
+                  <span class="text-[9px] font-mono tracking-widest text-orange-700 font-bold uppercase block mt-0.5">DISASTER TRIAGE PORTAL</span>
+                </div>
+              </div>
+              <span class="font-mono text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                SEC-01
+              </span>
+            </div>
+
+            <div class="mb-5">
+              <span class="font-tech text-[10px] font-bold uppercase tracking-[0.22em] text-orange-600 block mb-1">
+                [ ACCESS TERMINAL // 2026 ]
+              </span>
+              <h2 class="font-outfit text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">Command Center</h2>
+              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed font-sans">Sistem Pemantauan Triage Bawah Tanah & Jaringan LoRa 1-Hop Relay</p>
+            </div>
+
+            <!-- Segmented Role Selector (Swiss Precision Architecture) -->
+            <div class="mb-5">
+              <label class="block text-[10px] font-tech font-bold text-slate-400 uppercase tracking-widest mb-2">OPERATOR ROLE PROFILE:</label>
+              <div class="grid grid-cols-3 p-1 rounded-xl bg-slate-100/80 border border-slate-200/70 text-xs font-tech font-medium" id="login-role-selector">
+                <button type="button" onclick="selectLoginRole('SAR Commander', this)" class="role-btn active py-2 px-1 rounded-lg font-bold text-center text-[11px] transition shadow-xs">
+                  SAR Cmd
+                </button>
+                <button type="button" onclick="selectLoginRole('Field Paramedic', this)" class="role-btn py-2 px-1 rounded-lg text-slate-600 hover:text-slate-900 text-center text-[11px] transition">
+                  Medic
+                </button>
+                <button type="button" onclick="selectLoginRole('Mine K3 Lead', this)" class="role-btn py-2 px-1 rounded-lg text-slate-600 hover:text-slate-900 text-center text-[11px] transition">
+                  K3 Lead
+                </button>
+              </div>
+            </div>
+
+            <!-- Form Fields with Double-Bezel Framing -->
+            <form onsubmit="handleLogin(event)" class="space-y-3.5">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-[11px] font-tech font-semibold text-slate-600">Operator ID / NIP</label>
+                  <span class="text-[9px] font-mono text-slate-400">[REQUIRED]</span>
+                </div>
+                <input type="text" id="login-nip" value="250534618547" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition shadow-inner" />
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-[11px] font-tech font-semibold text-slate-600">Security Passcode</label>
+                  <a href="#" class="text-[10px] font-mono text-orange-600 hover:underline font-semibold">Reset Passcode?</a>
+                </div>
+                <input type="password" id="login-pass" value="rescetag2026" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition shadow-inner" />
+              </div>
+
+              <!-- Button-in-Button Tactical CTA Button -->
+              <button type="submit" class="btn-tactile w-full py-2.5 pl-4 pr-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white rounded-xl text-xs font-outfit font-bold tracking-wider uppercase shadow-lg shadow-orange-600/25 transition mt-2 flex items-center justify-between group active:scale-[0.98]">
+                <span>Login</span>
+                <span class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                  <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                  </svg>
+                </span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Dramatic Philosophy Creed (Centered & Elevated) -->
+          <div class="mt-6 pt-4 border-t border-slate-100/90 text-center">
+            <p class="font-brand italic text-slate-600 text-[13px] sm:text-sm tracking-normal leading-relaxed">
+              “Engineered for the unseen critical moments.”
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Column (7 cols): Art-Directed Minimalist Hardware Showcase -->
+        <div class="lg:col-span-7 bg-[#faf8f5] p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
+          
+          <!-- Subtle Blueprint Corner Ticks -->
+          <div class="absolute top-3 left-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute top-3 right-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute bottom-3 left-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute bottom-3 right-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+
+          <!-- Editorial Top Header Strip (Featuring Playfair Display Italic + Outfit) -->
+          <div class="w-full flex items-start justify-between pb-3.5 border-b border-black/[0.06] relative z-10">
+            <div>
+              <span class="font-tech text-[10px] font-bold tracking-[0.22em] text-orange-600 uppercase block mb-1">
+                HARDWARE SPEC // NODE·01
+              </span>
+              <div class="flex items-baseline gap-2">
+                <h3 class="font-brand italic font-bold text-2xl text-slate-900 leading-none">
+                  Rescue-Tag
+                </h3>
+                <span class="font-outfit font-semibold text-slate-400 text-sm">Wearable Unit</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="font-mono text-[9px] text-slate-400 tracking-wider block">433.05 MHz SUB-GHZ</span>
+              <span class="font-tech text-[10px] font-bold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200 block mt-1 shadow-2xs">
+                REV 2.0 · OLED
+              </span>
+            </div>
+          </div>
+
+          <!-- 3D Hardware Stage (Pure Studio Horizon - Proportional & Clean) -->
+          <div class="relative w-full my-auto py-6 flex items-center justify-center group">
+            
+            <!-- Soft Ambient Warm Horizon Glow -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-400/15 via-amber-300/8 to-transparent rounded-full filter blur-3xl transform scale-75 group-hover:scale-90 transition-all duration-700 pointer-events-none"></div>
+
+            <!-- Minimalist Coordinate Ticks -->
+            <span class="absolute top-2 left-2 font-mono text-[9px] text-slate-300 tracking-widest pointer-events-none">LAT -8.2465°</span>
+            <span class="absolute top-2 right-2 font-mono text-[9px] text-slate-300 tracking-widest pointer-events-none">LON 113.6965°</span>
+
+            <!-- 3D Prototype Image (Proportional, Balanced Scale) -->
+            <div class="relative py-2 px-4 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-y-1.5 cursor-pointer z-10 flex items-center justify-center">
+              <img 
+                src="./smartwatch_oled_hd.png?v=ultra_hd_2026" 
+                alt="Rescue-Tag Industrial Smartwatch Prototype" 
+                class="w-auto h-[270px] sm:h-[295px] md:h-[315px] max-h-[330px] object-contain drop-shadow-[0_22px_36px_rgba(0,0,0,0.22)] filter contrast-105" 
+              />
+            </div>
+
+          </div>
+
+          <!-- Bottom Architectural Spec Rail (Clean, Swiss Minimalist Metrics) -->
+          <div class="w-full pt-3.5 border-t border-black/[0.06] grid grid-cols-3 divide-x divide-black/[0.06] text-center relative z-10">
+            <div class="px-2">
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">ENCLOSURE</span>
+              <span class="font-outfit text-xs font-bold text-slate-900 block mt-0.5">IP68 Rugged ABS</span>
+            </div>
+            <div class="px-2">
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">TELEMETRY</span>
+              <span class="font-outfit text-xs font-bold text-slate-900 block mt-0.5">0.96" Live OLED</span>
+            </div>
+            <div class="px-2">
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">RELAY</span>
+              <span class="font-outfit text-xs font-bold text-orange-600 block mt-0.5">1-Hop P2P (18ms)</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       MAIN DASHBOARD SHELL (Hidden until login)
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div id="page-dashboard" class="hidden flex-1 flex flex-col md:flex-row min-h-screen">
+    
+    <!-- FIXED LEFT SIDEBAR -->
+    <aside class="w-full md:w-64 bg-white border-r border-[#eedfd2] p-5 flex flex-col justify-between shrink-0">
+      <div>
+        <div class="flex items-center gap-3 mb-8 px-1">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center shadow-md shadow-orange-500/25">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-brand font-bold text-base tracking-normal text-slate-900 leading-none">Rescue-Tag</h1>
+            <span class="text-[10px] font-mono text-orange-700 font-semibold mt-1 block">Command Center</span>
+          </div>
+        </div>
+
+        <nav class="space-y-1.5">
+          <div onclick="navigateTo('dashboard', this)" class="nav-item active" id="nav-dashboard">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            <span>Dashboard</span>
+          </div>
+
+          <div onclick="navigateTo('map-views', this)" class="nav-item" id="nav-map-views">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+            <span class="flex items-center gap-2">
+              <span>Map Views</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 bg-orange-100 text-orange-800 rounded font-bold">GIS</span>
+            </span>
+          </div>
+
+          <div onclick="navigateTo('sensor-comms', this)" class="nav-item" id="nav-sensor-comms">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>Sensor Comms</span>
+          </div>
+
+          <div onclick="navigateTo('incident-logs', this)" class="nav-item" id="nav-incident-logs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Incident Logs</span>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Bottom Action Section -->
+      <div class="pt-6 border-t border-slate-100 space-y-1">
+
+        <div class="space-y-1 pt-2">
+          <a href="#" onclick="alert('Rescue-Tag System - Built for Eltech Epoch Jember 2026')" class="nav-item !py-2 text-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-round="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Settings</span>
+          </a>
+          <a href="#" onclick="showLogoutModal()" class="nav-item !py-2 text-xs text-red-600 hover:bg-red-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <span>Sign Out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT VIEWPORT & TOP ACTION BAR -->
+    <div class="flex-1 flex flex-col min-w-0 bg-[#f8fafc]">
+      
+      <!-- TOP ACTION BAR: CLEANED & SOLID (NO OVERLAP / NO AWKWARD WRAPPING) -->
+      <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-40 w-full shadow-sm" style="background-color: #ffffff !important;">
+        <!-- Clean Title + Live Telemetry Badge -->
+        <div class="flex items-center gap-3 min-w-0">
+          <h2 class="font-display font-extrabold text-base text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis" id="header-portal-title">Subterranean Disaster Portal</h2>
+          <span id="mqtt-status-badge" class="pill-badge pill-teal text-[10px] hidden lg:inline-flex shrink-0">● Menghubungkan MQTT...</span>
+        </div>
+
+        <!-- Right System Indicators -->
+        <div class="flex items-center gap-3 shrink-0">
+          <!-- Realtime Digital Clock -->
+          <div class="text-xs font-mono text-slate-700 px-3 py-1.5 bg-slate-100 rounded-xl border border-slate-200 font-semibold tracking-wide shrink-0">
+            <span id="live-utc-clock">07:46:01 UTC</span>
+          </div>
+
+          <!-- Role Switcher Dropdown Pill -->
+          <div class="relative shrink-0">
+            <button type="button" id="role-btn-trigger" onclick="toggleRoleMenu(event)" class="btn-tactile px-3.5 py-1.5 rounded-full border border-slate-300 text-xs font-mono font-semibold text-slate-800 hover:border-slate-400 bg-white flex items-center gap-2 shadow-sm">
+              <span id="active-role-label">Role: SAR Commander</span>
+              <span class="text-slate-400 text-[10px]">▼</span>
+            </button>
+            <div id="role-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 py-1 text-xs font-mono">
+              <div onclick="switchActiveRole('SAR Commander')" class="px-4 py-2.5 hover:bg-spruce-50 hover:text-spruce-800 cursor-pointer font-semibold flex items-center gap-2 border-b border-slate-100">
+                <span class="w-2 h-2 rounded-full bg-spruce-600"></span> SAR Commander
+              </div>
+              <div onclick="switchActiveRole('Field Paramedic')" class="px-4 py-2.5 hover:bg-spruce-50 hover:text-spruce-800 cursor-pointer flex items-center gap-2 border-b border-slate-100">
+                <span class="w-2 h-2 rounded-full bg-slate-300"></span> Field Paramedic
+              </div>
+              <div onclick="switchActiveRole('Mine K3 Lead')" class="px-4 py-2.5 hover:bg-spruce-50 hover:text-spruce-800 cursor-pointer flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-slate-300"></span> Mine K3 Lead
+              </div>
+            </div>
+          </div>
+
+          <!-- Alarm Bell -->
+          <div onclick="toggleAlarmDrawer()" class="relative w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center cursor-pointer hover:bg-slate-100 transition shadow-sm shrink-0">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
+          </div>
+
+          <div class="w-8 h-8 rounded-full bg-spruce-100 text-spruce-800 font-mono text-xs font-bold flex items-center justify-center border border-spruce-200 shadow-sm shrink-0">
+            RY
+          </div>
+        </div>
+      </header>
+
+      <!-- VIEW CONTAINER -->
+      <div class="p-6 flex-1 flex flex-col gap-6 max-w-[1600px] w-full mx-auto">
+
+        <!-- =========================================================
+             SCREEN 1: MAIN TRIAGE DASHBOARD
+        ========================================================== -->
+        <section id="view-dashboard" class="space-y-6">
+          
+          <!-- ROW 1: 4 METRIC CARDS (ZERO TEXT WRAPPING / CLEAN 3-TIER ARCHITECTURE) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Card 1: Total Miners -->
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono uppercase tracking-wider font-bold text-slate-500">TOTAL MINERS UNDERGROUND</span>
+                  <span class="text-xs">👤</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">2 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">Nodes Active</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Sub-Surface Sync</span>
+                  <span class="pill-badge pill-teal text-[10px]">⟳ +100% Online</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: START Immediate (Merah) -->
+            <div id="kpi-casualty-card" class="card-shell !border-l-4 !border-l-red-500 bg-red-50/10">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-red-500">
+                  <span id="kpi-casualty-title" class="text-[11px] font-mono uppercase tracking-wider font-bold text-red-600">START IMMEDIATE (MERAH)</span>
+                  <span class="text-xs">⚠</span>
+                </div>
+                <div class="my-2">
+                  <div id="kpi-casualty-count" class="text-3xl font-extrabold font-mono text-red-600 tracking-tight flex items-center gap-2">
+                    <span id="kpi-casualty-dot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+                    <span id="kpi-casualty-num">1</span> <span id="kpi-casualty-label" class="text-xs font-sans font-bold text-red-600 ml-1">Critical Casualty</span>
+                  </div>
+                </div>
+                <div class="pt-2 border-t border-red-100/80 flex items-center justify-between">
+                  <span id="kpi-casualty-footer-text" class="text-[11px] font-mono text-red-500 font-bold">Agus Salim (#02)</span>
+                  <span id="kpi-casualty-footer-badge" class="pill-badge pill-red text-[10px]">PRIORITAS SAR</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: LoRa 1-Hop Relay -->
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono uppercase tracking-wider font-bold text-slate-500">LORA 1-HOP RELAY</span>
+                  <span class="text-xs">📡</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">1 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">Estafet Active</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Route Forwarding</span>
+                  <span class="pill-badge pill-teal text-[10px]">⇄ via Watch #01</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: TinyML Filter -->
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono uppercase tracking-wider font-bold text-slate-500">TINYML FALSE-ALARM FILTER</span>
+                  <span class="text-xs">⚙</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">98.2% <span class="text-xs font-sans font-semibold text-slate-500 ml-1">Accuracy</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Drilling Noise</span>
+                  <span class="pill-badge pill-green text-[10px]">✓ Filtered</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 2: 65% / 35% TWO-COLUMN CHARTS -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Left 65%: Bar Chart LoRa Packet Flow -->
+            <div class="lg:col-span-2 card-shell">
+              <div class="card-inner flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-800">LORA PACKET FLOW & TRANSMISSION VOLUME</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Mekanisme Transmisi Adaptif: lonjakan throughput darurat saat insiden kritis (T-30m)</p>
+                  </div>
+                  <span class="pill-badge pill-teal">Adaptive Rate SF12</span>
+                </div>
+
+                <div class="w-full h-64 relative">
+                  <canvas id="chart-packet-flow"></canvas>
+                </div>
+
+                <div class="flex justify-between text-[11px] font-mono text-slate-400 pt-3 border-t border-slate-100">
+                  <span>T-60m</span>
+                  <span class="text-spruce-700 font-bold">T-30m (Insiden Jatuh & Relay Aktif)</span>
+                  <span>Now</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 35%: Donut Chart START Triage Distribution -->
+            <div class="card-shell">
+              <div class="card-inner flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-800">START TRIAGE SEVERITY DISTRIBUTION</h3>
+                  <span class="text-xs font-mono text-slate-400 font-semibold">4 Total</span>
+                </div>
+
+                <div class="w-full h-48 relative flex items-center justify-center my-auto">
+                  <canvas id="chart-triage-donut"></canvas>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-3 border-t border-slate-100">
+                  <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-600"></span> <span>Merah (25%)</span></div>
+                  <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> <span>Kuning (25%)</span></div>
+                  <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-spruce-700"></span> <span>Hijau (50%)</span></div>
+                  <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> <span>Hitam (0%)</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 3: FULL-WIDTH ROSTER TABLE -->
+          <div class="card-shell">
+            <div class="card-inner !p-6">
+              <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                  <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-900">UNDERGROUND WORKER LIVE TELEMETRY ROSTER</h3>
+                  <span class="pill-badge pill-green text-[10px]">Live Feed Active</span>
+                </div>
+                <span class="text-xs font-mono text-slate-400">Auto-Refreshed via MQTT</span>
+              </div>
+
+              <div class="overflow-x-auto mt-2">
+                <table class="w-full text-left text-xs border-separate border-spacing-y-2">
+                  <thead>
+                    <tr class="text-[11px] font-mono uppercase tracking-wider text-slate-400">
+                      <th class="py-2 px-3">Worker Name & Tag ID</th>
+                      <th class="py-2 px-3 whitespace-nowrap">Vital Signs (HR · SpO2 · Temp)</th>
+                      <th class="py-2 px-3">Activity State (TinyML)</th>
+                      <th class="py-2 px-3">Transmission Route</th>
+                      <th class="py-2 px-3">Triage START Status</th>
+                      <th class="py-2 px-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-50 font-mono">
+                    <!-- Row 1: Pekerja #02 (Agus Salim - Live Telemetry) -->
+                    <tr id="row-worker-02" class="bg-red-50/30 hover:bg-red-50/60 rounded-xl transition">
+                      <td class="py-3.5 px-3 rounded-l-xl">
+                        <div class="font-bold text-slate-900 font-sans text-sm">Pekerja #02 (Agus Salim)</div>
+                        <div class="text-[11px] text-slate-500 whitespace-nowrap">Jam Tangan #02 · Sektor 7 (Lorong C-4)</div>
+                      </td>
+                      <td id="worker-02-vitals" class="py-3.5 px-3 font-bold text-red-600 whitespace-nowrap">
+                        134 BPM · 88% SpO2 · <span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded">38.6°C</span>
+                      </td>
+                      <td id="worker-02-kinematics" class="py-3.5 px-3">
+                        <span class="pill-badge pill-red">
+                          ⚠ Free-Fall & Immobility >30s
+                        </span>
+                      </td>
+                      <td id="worker-02-route" class="py-3.5 px-3">
+                        <span class="pill-badge pill-teal">
+                          🔄 1-Hop Relay via Jam Tangan #01
+                        </span>
+                      </td>
+                      <td id="worker-02-triage" class="py-3.5 px-3">
+                        <span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>
+                      </td>
+                      <td class="py-3.5 px-3 text-right rounded-r-xl">
+                        <button onclick="triggerDeployModal()" class="btn-tactile px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs font-bold whitespace-nowrap shadow-sm">
+                          Dispatch SAR Team
+                        </button>
+                      </td>
+                    </tr>
+
+                    <!-- Row 2: Pekerja #01 (Bambang - Relay Host) -->
+                    <tr class="hover:bg-slate-50 rounded-xl transition">
+                      <td class="py-3.5 px-3 rounded-l-xl">
+                        <div class="font-bold text-slate-900 font-sans text-sm">Pekerja #01 (Bambang)</div>
+                        <div class="text-[11px] text-slate-500 whitespace-nowrap">Jam Tangan #01 · Junction Poros B-02</div>
+                      </td>
+                      <td class="py-3.5 px-3 text-amber-800 whitespace-nowrap font-medium">
+                        106 BPM · 93% SpO2 · 37.6°C
+                      </td>
+                      <td class="py-3.5 px-3">
+                        <span class="pill-badge pill-amber">
+                          ⚡ Tremor / Kelelahan Ringan
+                        </span>
+                      </td>
+                      <td class="py-3.5 px-3">
+                        <span class="pill-badge pill-teal">
+                          ⇄ Direct + Relay Host (Hop 1)
+                        </span>
+                      </td>
+                      <td class="py-3.5 px-3">
+                        <span class="pill-badge pill-amber">● KUNING - Delayed</span>
+                      </td>
+                      <td class="py-3.5 px-3 text-right rounded-r-xl">
+                        <button onclick="navigateTo('map-views')" class="btn-tactile px-4 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-mono text-xs whitespace-nowrap">
+                          Lihat di Peta
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             SCREEN 3: MAP VIEWS (CLEAN PALETTE · 1-HOP LORA MESH)
+        ========================================================== -->
+        <section id="view-map-views" class="hidden space-y-6">
+          
+          <!-- ROW 1: 4 TACTICAL TELEMETRY CARDS (3-TIER ZERO-WRAP ARCHITECTURE) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Card 1: Pusat Gateway -->
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider">PUSAT GATEWAY BASECAMP</span>
+                  <span class="text-xs">🏢</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">0.0m <span class="text-xs font-sans font-semibold text-slate-500 ml-1">Surface Posko</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">ESP32 Master Hub</span>
+                  <span class="pill-badge pill-green text-[10px]">● GPS Fixed Lock</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Jam Tangan Korban #02 -->
+            <div id="map-card-worker-02" class="card-shell !border-l-4 !border-l-red-500 bg-red-50/15">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-red-500">
+                  <span id="map-card-worker-02-header" class="text-[10px] font-mono text-red-700 font-bold uppercase tracking-wider">JAM TANGAN #02 (KORBAN)</span>
+                  <span class="text-xs">🎯</span>
+                </div>
+                <div class="my-2">
+                  <div id="map-card-worker-02-sector" class="text-3xl font-extrabold font-mono text-red-600 tracking-tight flex items-center gap-1.5">
+                    Sektor 7 <span id="map-card-worker-02-loc" class="text-xs font-sans font-bold text-red-600 ml-1">Incline C-4</span>
+                  </div>
+                </div>
+                <div class="pt-2 border-t border-red-100/80 flex items-center justify-between">
+                  <span id="map-card-worker-02-info" class="text-[11px] font-mono text-red-600 font-medium">Agus Salim · Trapped</span>
+                  <span id="map-card-worker-02-badge" class="pill-badge pill-red text-[10px]">TRIAGE MERAH</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Jam Tangan Relay #01 -->
+            <div class="card-shell !border-l-4 !border-l-amber-500 bg-amber-50/10">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-amber-500">
+                  <span class="text-[10px] font-mono text-amber-700 font-bold uppercase tracking-wider">JAM TANGAN #01 (RELAY HOST)</span>
+                  <span class="text-xs">📡</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">Junction <span class="text-xs font-sans font-semibold text-slate-500 ml-1">B-02 Shaft</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-500 font-medium">Bambang · Estafet Host</span>
+                  <span class="pill-badge pill-amber text-[10px]">⇄ 1-Hop Relay</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Relay Forwarding Latency & Accuracy -->
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider">RELAY HOP LATENCY</span>
+                  <span class="text-xs">⚡</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">18 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">Milliseconds</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Mesh SF12 / 125kHz</span>
+                  <span class="pill-badge pill-green text-[10px]">±4.2m Akurasi</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 2: TACTILE INTERACTIVE SMARTWATCH FLEET BAR (EXACTLY 2 WATCHES) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Watch #01 Quick Nav Card -->
+            <div onclick="focusWatch(1)" class="btn-tactile p-3.5 bg-white rounded-2xl border border-slate-200 hover:border-amber-500 shadow-sm cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-base border border-amber-200 shadow-sm">
+                  ⌚1
+                </div>
+                <div>
+                  <div class="font-display font-bold text-sm text-slate-900 group-hover:text-amber-700 transition">Jam Tangan #01 (Bambang)</div>
+                  <div class="font-mono text-xs text-slate-500">Junction B-02 · 106 BPM · 37.6°C</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="pill-badge pill-amber text-[10px]">RELAY HOST</span>
+                <span class="text-xs font-mono text-slate-400 block mt-1">Baterai 81%</span>
+              </div>
+            </div>
+
+            <!-- Watch #02 Quick Nav Card -->
+            <div id="map-fleet-watch-02" onclick="focusWatch(2)" class="btn-tactile p-3.5 bg-red-50/50 rounded-2xl border border-red-200 hover:border-red-500 shadow-sm cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-3.5">
+                <div id="map-fleet-watch-02-icon" class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-bold text-base border border-red-400 shadow-sm animate-pulse">
+                  ⌚2
+                </div>
+                <div>
+                  <div class="font-display font-bold text-sm text-red-900 group-hover:text-red-700 transition">Jam Tangan #02 (Agus Salim)</div>
+                  <div id="map-fleet-watch-02-vitals" class="font-mono text-xs text-red-700 font-semibold">Sektor 7 (C-4) · 134 BPM · 38.6°C</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span id="map-fleet-watch-02-badge" class="pill-badge pill-red text-[10px] animate-pulse">KORBAN KRITIS</span>
+                <span class="text-xs font-mono text-red-600 block mt-1">Baterai 62%</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 3: TACTICAL GIS HUD MAP + SUBTERRANEAN STRATA SCHEMATIC -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            
+            <!-- Left 65%: Tactical Leaflet GIS with Clean White/Slate Design Palette -->
+            <div class="lg:col-span-2 card-shell">
+              <div class="card-inner flex flex-col justify-between !p-4 bg-white rounded-2xl shadow-sm">
+                
+                <!-- Clean Top Bar Over Map -->
+                <div class="flex flex-wrap justify-between items-center px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 mb-3 gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-mono font-bold text-slate-800 uppercase tracking-wide">LORA 1-HOP MESH · PUSAT GATEWAY & SMARTWATCH</span>
+                  </div>
+
+                  <div class="flex items-center gap-2 text-xs font-mono">
+                    <span class="pill-badge pill-teal text-[10px]">1 Gateway + 2 Jam Tangan</span>
+                    <span class="text-slate-400">|</span>
+                    <span class="text-slate-600 text-[11px] font-semibold">1-Hop Relay</span>
+                    <span class="text-slate-400">|</span>
+                    <span class="text-slate-600 text-[11px]">433.05 MHz SF12</span>
+                  </div>
+                </div>
+
+                <!-- Leaflet Map Container with Clean Border -->
+                <div class="relative w-full h-[450px] rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+                  <div id="leaflet-mining-map" style="height: 450px; min-height: 450px; width: 100%; display: block;" class="relative z-10"></div>
+
+                  <!-- Floating Map Tactical Controls (Bottom-Right) -->
+                  <div class="absolute bottom-4 right-4 z-[1000] flex flex-col gap-2 font-mono text-xs">
+                    <button onclick="centerOnCasualty()" class="btn-tactile px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow-md flex items-center gap-1.5 transition">
+                      <span>🎯</span>
+                      <span>FOCUS KORBAN (#02)</span>
+                    </button>
+                    <div class="flex gap-1.5">
+                      <button onclick="pulseHopRoute()" class="btn-tactile flex-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold shadow-sm transition">
+                        ⚡ Transmisi 1-Hop
+                      </button>
+                      <button onclick="fitAllMarkers()" class="btn-tactile flex-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold shadow-sm transition">
+                        🔍 Semua Titik
+                      </button>
+                      <button onclick="toggleMapTiles()" class="btn-tactile px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 shadow-sm transition">
+                        🗺 Style
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Tactical Map Legend Bar -->
+                <div class="flex flex-wrap justify-between items-center text-xs font-mono text-slate-600 px-1 pt-3 border-t border-slate-100 mt-3 gap-2">
+                  <div class="flex flex-wrap items-center gap-4">
+                    <span class="flex items-center gap-1.5 cursor-pointer hover:text-slate-900" onclick="fitAllMarkers()"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span> 🏢 Pusat Gateway (ESP32 · 0m)</span>
+                    <span class="flex items-center gap-1.5 cursor-pointer hover:text-slate-900" onclick="focusWatch(1)"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm"></span> ⌚ Jam Tangan #01 (Bambang · Relay)</span>
+                    <span class="flex items-center gap-1.5 cursor-pointer hover:text-slate-900" onclick="focusWatch(2)"><span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse shadow-sm"></span> ⌚ Jam Tangan #02 (Agus Salim · Korban)</span>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-medium">1-Hop Mesh Transmission Network</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right 35%: Subterranean Strata Cross-Section & Environmental Safety -->
+            <div class="card-shell">
+              <div class="card-inner flex flex-col justify-between !p-5 bg-white">
+                <div>
+                  <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                    <div>
+                      <h3 class="text-xs font-mono font-bold uppercase text-slate-900 tracking-wide">SUBTERRANEAN STRATA SCHEMATIC</h3>
+                      <p class="text-[11px] text-slate-500">Penetrasi gelombang LoRa 1-Hop melalui batuan tambang</p>
+                    </div>
+                    <span class="pill-badge pill-teal text-[10px]">3.8 dB/m Loss</span>
+                  </div>
+
+                  <!-- 3D Layered Strata Visual Diagram -->
+                  <div class="space-y-3 font-mono text-xs">
+                    <!-- Layer 1: Surface Basecamp -->
+                    <div class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl relative overflow-hidden">
+                      <div class="flex justify-between items-center font-bold text-emerald-950">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                          <span>Permukaan · Posko SAR Basecamp</span>
+                        </span>
+                        <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Pusat Gateway</span>
+                      </div>
+                      <p class="text-[11px] text-emerald-800 mt-1 font-medium">ESP32 Master Hub · Antena Omnidirectional 433.05 MHz</p>
+                    </div>
+
+                    <!-- Direct Uplink Line -->
+                    <div class="flex items-center gap-2 pl-4 text-[10px] text-slate-400">
+                      <span class="border-l-2 border-dashed border-orange-500 h-6"></span>
+                      <span class="text-orange-700 font-semibold">↑ Direct Uplink: Transmisi Poros Utama (Junction B-02)</span>
+                    </div>
+
+                    <!-- Layer 2: Mid-Shaft Junction B-02 (Relay Host) -->
+                    <div class="p-3 bg-amber-50/80 border border-amber-200 rounded-xl relative overflow-hidden">
+                      <div class="flex justify-between items-center font-bold text-amber-950">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                          <span>Junction B-02 · Poros Shaft</span>
+                        </span>
+                        <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Jam #01 (Relay)</span>
+                      </div>
+                      <p class="text-[11px] text-amber-800 mt-1 font-medium">Pekerja #01 (Bambang) · Estafet Packet Forwarder (18ms)</p>
+                    </div>
+
+                    <!-- 1-Hop Relay Line -->
+                    <div class="flex items-center gap-2 pl-4 text-[10px] text-slate-400">
+                      <span class="border-l-2 border-dashed border-red-500 h-6"></span>
+                      <span class="text-red-600 font-semibold">↓ 1-Hop Relay: Menembus Batuan Runtuh (Sektor 7)</span>
+                    </div>
+
+                    <!-- Layer 3: Deep Shaft Sector 7 (Korban) -->
+                    <div id="strata-layer-watch-02" class="p-3 bg-red-50 border border-red-200 rounded-xl relative overflow-hidden transition">
+                      <div class="flex justify-between items-center font-bold text-red-950">
+                        <span class="flex items-center gap-1.5">
+                          <span id="strata-dot-watch-02" class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                          <span>Sektor 7 · Lorong Incline C-4</span>
+                        </span>
+                        <span id="strata-badge-watch-02" class="pill-badge pill-red text-[10px]">Jam #02 (Korban)</span>
+                      </div>
+                      <p id="strata-vitals-watch-02" class="text-[11px] text-red-700 mt-1 font-semibold">Agus Salim · Terjebak Runtuhan · SpO2 88% · Suhu 38.6°C</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 4: FULL-WIDTH HARDWARE & WEARABLE TELEMETRY MATRIX (2 WATCHES + GATEWAY) -->
+          <div class="card-shell">
+            <div class="card-inner !p-6 bg-white">
+              <div class="flex flex-wrap items-center justify-between pb-3 border-b border-slate-100 mb-2 gap-2">
+                <div class="flex items-center gap-2.5">
+                  <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-900">NODE HARDWARE & WEARABLE TELEMETRY MATRIX</h3>
+                  <span class="pill-badge pill-teal text-[10px]">1-Hop Relay P2P Audit</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="pulseHopRoute()" class="btn-tactile px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs font-bold flex items-center gap-1.5">
+                    <span>⚡</span>
+                    <span>Uji Transmisi 1-Hop</span>
+                  </button>
+                </div>
+              </div>
+
+              <table class="w-full text-left text-xs font-mono border-separate border-spacing-y-2">
+                <thead>
+                  <tr class="text-slate-400 text-[11px] uppercase">
+                    <th class="py-2 px-3">Device & Wearer</th>
+                    <th class="py-2 px-3">Location / Sektor</th>
+                    <th class="py-2 px-3">Vitals (PPG / Temp)</th>
+                    <th class="py-2 px-3">LoRa RF Link & Mesh Role</th>
+                    <th class="py-2 px-3">Battery & Health</th>
+                    <th class="py-2 px-3">START Triage</th>
+                    <th class="py-2 px-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  
+                  <!-- Korban #02 -->
+                  <tr id="map-table-row-watch-02" class="bg-red-50/50 hover:bg-red-50/80 transition rounded-xl">
+                    <td class="py-3.5 px-3 font-bold text-red-700 rounded-l-xl">
+                      <div class="flex items-center gap-2">
+                        <span id="map-table-dot-watch-02" class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+                        <div>
+                          <div class="font-bold">Jam Tangan #02 (Agus Salim)</div>
+                          <div class="text-[10px] text-red-600/80 font-normal">UID: RT-W02-STM32 · Sector 7</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td id="map-table-sector-watch-02" class="py-3.5 px-3 font-bold text-red-700">Sektor 7 (Incline C-4)</td>
+                    <td id="map-table-vitals-watch-02" class="py-3.5 px-3 text-red-700 font-bold">
+                      134 BPM · 88% SpO2 · 38.6°C
+                    </td>
+                    <td id="map-table-route-watch-02" class="py-3.5 px-3">
+                      <span class="pill-badge pill-red">1-Hop via Watch #01 (-98 dBm)</span>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-amber">62% (4.2V LiPo)</span>
+                    </td>
+                    <td id="map-table-triage-watch-02" class="py-3.5 px-3">
+                      <span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>
+                    </td>
+                    <td class="py-3.5 px-3 text-right rounded-r-xl">
+                      <button onclick="focusWatch(2)" class="btn-tactile px-3.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold shadow-sm">
+                        Focus Map
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Relay #01 -->
+                  <tr class="hover:bg-slate-50 transition rounded-xl">
+                    <td class="py-3.5 px-3 font-bold text-slate-900 rounded-l-xl">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <div>
+                          <div class="font-bold">Jam Tangan #01 (Bambang)</div>
+                          <div class="text-[10px] text-slate-400 font-normal">UID: RT-W01-STM32 · Junction B-02</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-3 font-bold text-slate-900">Junction B-02 (Shaft Poros)</td>
+                    <td class="py-3.5 px-3 text-amber-800 font-medium">
+                      106 BPM · 93% SpO2 · 37.6°C
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-teal">Relay Forwarder (-88 dBm)</span>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-green">81% (4.2V LiPo)</span>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-amber">● KUNING - Delayed</span>
+                    </td>
+                    <td class="py-3.5 px-3 text-right rounded-r-xl">
+                      <button onclick="focusWatch(1)" class="btn-tactile px-3.5 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-mono text-xs">
+                        Focus Map
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Gateway Basecamp -->
+                  <tr class="hover:bg-slate-50 transition rounded-xl bg-slate-50/50">
+                    <td class="py-3.5 px-3 font-bold text-slate-900 rounded-l-xl">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                        <div>
+                          <div class="font-bold">Pusat Gateway Basecamp</div>
+                          <div class="text-[10px] text-slate-400 font-normal">UID: RT-GW01-ESP32 · Posko SAR</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-3 font-bold text-slate-900">Posko Permukaan</td>
+                    <td class="py-3.5 px-3 text-slate-500 font-mono">
+                      Master Receiver Node
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-green">Root Gateway (433.05 MHz)</span>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-green">AC Mainline (100%)</span>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="pill-badge pill-slate">COMMAND HUB</span>
+                    </td>
+                    <td class="py-3.5 px-3 text-right rounded-r-xl">
+                      <button onclick="fitAllMarkers()" class="btn-tactile px-3.5 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-mono text-xs">
+                        Fit All
+                      </button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =========================================================
+             SCREEN 4: SENSOR COMMS (RF LORA & HARDWARE HEALTH)
+        ========================================================== -->
+        <section id="view-sensor-comms" class="hidden space-y-6">
+          
+          <!-- ROW 1: 4 RF & TELEMETRY CARDS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">LORA FREQUENCY</span>
+                  <span class="text-xs">📻</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900">433.05 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">MHz</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">RF Modulation</span>
+                  <span class="pill-badge pill-teal text-[10px]">SF12 / BW 125kHz</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">PACKET DELIVERY RATIO</span>
+                  <span class="text-xs">📊</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-emerald-600">98.8%</div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Mesh Forwarding</span>
+                  <span class="pill-badge pill-green text-[10px]">✓ +1.4% via 1-Hop</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">1-HOP RELAY TIME</span>
+                  <span class="text-xs">⚡</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900">18.2 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">ms</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Hop #01 Latency</span>
+                  <span class="pill-badge pill-teal text-[10px]">Ultra Low Latency</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">TINYML INFERENCE TIME</span>
+                  <span class="text-xs">🧠</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900">1.2 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">ms</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Edge Classifier</span>
+                  <span class="pill-badge pill-slate text-[10px]">STM32 Cortex-M4</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 2: RSSI SIGNAL SPECTRUM & BATTERY DONUT -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-2 card-shell">
+              <div class="card-inner flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-xs font-mono font-bold uppercase text-slate-800">LORA RSSI SIGNAL SPECTRUM & NOISE FLOOR (dBm)</h3>
+                  <span class="pill-badge pill-teal text-[10px]">1-Hop Mesh Link</span>
+                </div>
+                <div class="w-full h-56 relative">
+                  <canvas id="chart-rssi-spectrum"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-xs font-mono font-bold uppercase text-slate-800">TAG BATTERY HEALTH</h3>
+                  <span class="text-[11px] font-mono text-emerald-600 font-bold">2 Nodes Active</span>
+                </div>
+                <div class="w-full h-44 relative flex items-center justify-center my-auto">
+                  <canvas id="chart-battery-donut"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 3: WEARABLE HARDWARE & SENSOR DIAGNOSTICS TABLE (EXACT 2 WATCHES + 1 GATEWAY) -->
+          <div class="card-shell">
+            <div class="card-inner !p-6">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
+                <h3 class="text-xs font-mono font-bold uppercase text-slate-800">WEARABLE HARDWARE & SENSOR DIAGNOSTICS</h3>
+                <span class="text-[11px] font-mono text-slate-400">1 Hub + 2 Smartwatches</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs font-mono border-separate border-spacing-y-2">
+                  <thead>
+                    <tr class="text-slate-400 text-[11px] uppercase">
+                      <th class="py-2 px-3">Device Tag</th>
+                      <th class="py-2 px-3">Wearer / Role</th>
+                      <th class="py-2 px-3">Sensor Stack</th>
+                      <th class="py-2 px-3">RSSI / SNR</th>
+                      <th class="py-2 px-3">Hop Route</th>
+                      <th class="py-2 px-3">Battery</th>
+                      <th class="py-2 px-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <!-- Row 1: Jam Tangan #02 (Korban) -->
+                    <tr id="sensor-table-row-watch-02" class="hover:bg-slate-50 transition bg-red-50/20">
+                      <td class="py-3 px-3 font-bold text-slate-900">
+                        <div class="flex items-center gap-2">
+                          <span id="sensor-table-dot-watch-02" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                          <span>Jam Tangan #02</span>
+                        </div>
+                      </td>
+                      <td id="sensor-table-wearer-watch-02" class="py-3 px-3 font-bold text-red-600">Pekerja #02 (Agus Salim) · Sektor 7 (Lorong C-4)</td>
+                      <td class="py-3 px-3 text-slate-600">MAX30102 PPG + BMI160 IMU + SHT31</td>
+                      <td id="sensor-table-rssi-watch-02" class="py-3 px-3 text-red-600 font-bold">-98 dBm · -4.2 dB</td>
+                      <td id="sensor-table-route-watch-02" class="py-3 px-3"><span class="pill-badge pill-red">1-Hop via Watch #01</span></td>
+                      <td class="py-3 px-3 font-bold text-slate-700">62% (3.78V)</td>
+                      <td class="py-3 px-3 text-right">
+                        <button id="sensor-btn-diag-watch-02" onclick="alert('DIAGNOSTIK JAM TANGAN #02 (AGUS SALIM):\nStatus: Terjebak Reruntuhan Sektor 7\nLoRa Link: 1-Hop via Jam Tangan #01\nSpO2: 88% (Kritis)\nHR: 134 BPM\nImobilitas: >30s (Impact 8.4g)')" class="btn-tactile px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold">
+                          Run Diag
+                        </button>
+                      </td>
+                    </tr>
+
+                    <!-- Row 2: Jam Tangan #01 (Relay Host) -->
+                    <tr class="hover:bg-slate-50 transition">
+                      <td class="py-3 px-3 font-bold text-slate-900">
+                        <div class="flex items-center gap-2">
+                          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                          <span>Jam Tangan #01</span>
+                        </div>
+                      </td>
+                      <td class="py-3 px-3 font-bold text-slate-800">Pekerja #01 (Bambang) · Junction Poros B-02</td>
+                      <td class="py-3 px-3 text-slate-600">MAX30102 PPG + BMI160 IMU + SHT31</td>
+                      <td class="py-3 px-3 text-emerald-700 font-bold">-88 dBm · +6.5 dB</td>
+                      <td class="py-3 px-3"><span class="pill-badge pill-teal">⇄ Relay Host (Hop 1)</span></td>
+                      <td class="py-3 px-3 font-bold text-slate-700">81% (4.02V)</td>
+                      <td class="py-3 px-3 text-right">
+                        <button onclick="alert('DIAGNOSTIK JAM TANGAN #01 (BAMBANG):\nStatus: Relay Host Aktif\nForwarding Packets: 1,428 Pkts\nLoRa Uplink: Langsung ke Posko (18ms)\nSpO2: 97% | HR: 84 BPM')" class="btn-tactile px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">
+                          Run Diag
+                        </button>
+                      </td>
+                    </tr>
+
+                    <!-- Row 3: Pusat Gateway Basecamp -->
+                    <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                      <td class="py-3 px-3 font-bold text-spruce-900">
+                        <div class="flex items-center gap-2">
+                          <span class="w-2 h-2 rounded-full bg-spruce-600"></span>
+                          <span>Pusat Gateway</span>
+                        </div>
+                      </td>
+                      <td class="py-3 px-3 font-bold text-spruce-700">Basecamp Posko SAR · Permukaan</td>
+                      <td class="py-3 px-3 text-slate-600">ESP32-S3 LoRa SX1262 + Ethernet Uplink</td>
+                      <td class="py-3 px-3 text-emerald-700 font-bold">-72 dBm · +10.2 dB</td>
+                      <td class="py-3 px-3"><span class="pill-badge pill-slate">Basecamp Root Hub</span></td>
+                      <td class="py-3 px-3 font-bold text-emerald-700">AC Power (100%)</td>
+                      <td class="py-3 px-3 text-right">
+                        <button onclick="alert('STATUS PUSAT GATEWAY:\nPerangkat: ESP32 Master Hub\nFrekuensi: 433.05 MHz SF12\nJaringan: Ethernet Posko OK\nPaket Diterima: 1,428 / CRC 100%')" class="btn-tactile px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">
+                          Run Diag
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             SCREEN 5: INCIDENT LOGS (MEDICAL TIMELINE & AUDIT)
+        ========================================================== -->
+        <section id="view-incident-logs" class="hidden space-y-6">
+          
+          <!-- ROW 1: 4 INCIDENT METRICS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">ACTIVE INCIDENT ID</span>
+                  <span class="text-xs">📋</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900">#INC-0829</div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Lokasi Insiden</span>
+                  <span class="pill-badge pill-red text-[10px]">Sektor 7 Runtuh</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">TIME ELAPSED</span>
+                  <span class="text-xs">⏱</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900">00:42:15</div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Durasi Terjebak</span>
+                  <span class="pill-badge pill-slate text-[10px]">Realtime Chrono</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-slate-400">
+                  <span class="text-[11px] font-mono text-slate-500 font-bold uppercase tracking-wider">PACKETS RECORDED</span>
+                  <span class="text-xs">📦</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-slate-900">1,428 <span class="text-xs font-sans font-semibold text-slate-500 ml-1">Pkts</span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-400">Integritas Data</span>
+                  <span class="pill-badge pill-green text-[10px]">100% CRC Valid</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell !border-l-4 !border-l-red-500 bg-red-50/10">
+              <div class="card-inner">
+                <div class="flex items-center justify-between text-red-500">
+                  <span class="text-[11px] font-mono text-red-700 font-bold uppercase tracking-wider">START TRIAGE STATUS</span>
+                  <span class="text-xs">📈</span>
+                </div>
+                <div class="my-2">
+                  <div class="text-3xl font-extrabold font-mono text-red-600">1 <span class="text-xs font-sans font-bold text-red-600 ml-1">Korban Kritis</span></div>
+                </div>
+                <div class="pt-2 border-t border-red-100/80 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-red-600">Agus Salim (#02)</span>
+                  <span class="pill-badge pill-red text-[10px]">MERAH IMMEDIATE</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 2: EVENT AUDIT TRAIL & INCIDENT TYPE BREAKDOWN -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            
+            <div class="lg:col-span-2 card-shell">
+              <div class="card-inner flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+                  <h3 class="text-xs font-mono font-bold uppercase text-slate-800">CHRONOLOGICAL EVENT AUDIT TRAIL</h3>
+                  <span class="pill-badge pill-teal text-[10px]">Sistem 1-Hop Mesh</span>
+                </div>
+                <div class="space-y-3 font-mono text-xs">
+                  
+                  <div class="p-3.5 rounded-xl bg-red-50 border-l-4 border-red-500">
+                    <div class="flex justify-between font-bold text-red-700">
+                      <span>14:35:10 - Triage TinyML Eskalasi ke MERAH (Immediate)</span>
+                      <span>Jam Tangan #02</span>
+                    </div>
+                    <p class="text-red-600 mt-1">SpO2 turun ke 88%, HR 134 BPM (Takikardia), Suhu 38.6°C. Imobilitas fisik >30s terkonfirmasi pasca runtuhan.</p>
+                  </div>
+
+                  <div class="p-3.5 rounded-xl bg-orange-50/80 border-l-4 border-orange-500">
+                    <div class="flex justify-between font-bold text-orange-900">
+                      <span>14:33:04 - LoRa 1-Hop Opportunistic Relay Forwarding Aktif</span>
+                      <span>Jam Tangan #01</span>
+                    </div>
+                    <p class="text-orange-800 mt-1">Sinyal langsung Jam Tangan #02 terhalang runtuhan (-98 dBm). Jam Tangan #01 (Bambang) otomatis estafetkan data ke Posko (18ms).</p>
+                  </div>
+
+                  <div class="p-3.5 rounded-xl bg-slate-50 border-l-4 border-slate-400">
+                    <div class="flex justify-between font-bold text-slate-800">
+                      <span>14:31:18 - IMU BMI160 Deteksi Impact & Free-Fall Spike</span>
+                      <span>Jam Tangan #02</span>
+                    </div>
+                    <p class="text-slate-600 mt-1">Akselerasi jatuh bebas (0.2g) diikuti lonjakan benturan tinggi (8.4g). TinyML pada STM32 memvalidasi trauma fisik.</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="card-shell">
+              <div class="card-inner flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-xs font-mono font-bold uppercase text-slate-800">INCIDENT TYPE BREAKDOWN</h3>
+                  <span class="text-[11px] font-mono text-slate-400">Klasifikasi Trauma</span>
+                </div>
+                <div class="w-full h-48 relative flex items-center justify-center my-auto">
+                  <canvas id="chart-incident-donut"></canvas>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ROW 3: EXPORT AMBULANCE HANDOVER MEDICAL REPORT -->
+          <div class="card-shell">
+            <div class="card-inner flex items-center justify-between !py-4 flex-wrap gap-4">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Export Official Ambulance Handover Medical Report</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Dokumen rekam medis terenkripsi format PDF untuk serah terima ke tim dokter ambulans darurat.</p>
+              </div>
+              <button onclick="alert('✓ DOKUMEN REKAM MEDIS TERUNDUH!\nNomor Dokumen: #MED-0829-KORBAN-02\nNama Pasien: Agus Salim (Jam Tangan #02)\nTriage: MERAH (Immediate)\nSpO2: 88% | HR: 134 BPM | Suhu: 38.6°C\nEstimasi Trauma: 8.4g Crush Injury Sektor 7')" class="btn-tactile px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-mono font-bold flex items-center gap-2">
+                <span>Download Medical PDF</span>
+                <span>↓</span>
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DEPLOY SQUAD -->
+  <div id="modal-deploy" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <span class="pill-badge pill-red">MISSION #SAR-0829</span>
+          <h3 class="font-display font-bold text-base text-slate-900">Authorize Emergency Squad Dispatch</h3>
+        </div>
+        <button onclick="closeDeployModal()" class="text-slate-400 hover:text-slate-700 font-mono text-sm">✕</button>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-red-50 border border-red-200 space-y-2 text-xs font-mono">
+        <div class="flex justify-between font-bold text-red-800">
+          <span>TARGET: Agus Salim (Jam Tangan #02)</span>
+          <span class="pill-badge pill-red">TRIAGE MERAH</span>
+        </div>
+        <div class="text-slate-700">
+          <span>Lokasi: Sektor 7 (Lorong Incline C-4)</span>
+        </div>
+        <div class="text-slate-700">
+          <span>Kondisi Vital: 134 BPM · SpO2 88% · Suhu 38.6°C · Terjebak Runtuhan Batuan</span>
+        </div>
+        <div class="text-spruce-800 font-semibold">
+          <span>Rute Sinyal: LoRa 1-Hop Relay melalui Jam Tangan #01 (Bambang · Junction B-02)</span>
+        </div>
+      </div>
+
+      <div class="space-y-2 text-xs font-mono">
+        <span class="font-bold text-slate-800 block uppercase">Peralatan Penyelamatan Terverifikasi:</span>
+        <label class="flex items-center gap-2 text-slate-700 cursor-pointer">
+          <input type="checkbox" checked class="rounded text-spruce-700 focus:ring-0" />
+          <span>Tandu Evakuasi Trauma (Spineboard Stretcher)</span>
+        </label>
+        <label class="flex items-center gap-2 text-slate-700 cursor-pointer">
+          <input type="checkbox" checked class="rounded text-spruce-700 focus:ring-0" />
+          <span>Tabung Oksigen Portabel Medis & Masker Resusitasi</span>
+        </label>
+        <label class="flex items-center gap-2 text-slate-700 cursor-pointer">
+          <input type="checkbox" checked class="rounded text-spruce-700 focus:ring-0" />
+          <span>Radio Komunikasi LoRa Channel-1 Darurat (433.05 MHz)</span>
+        </label>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeDeployModal()" class="btn-tactile flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-mono text-xs font-semibold">
+          Batal
+        </button>
+        <button onclick="confirmDeploy()" class="btn-tactile flex-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white rounded-xl font-mono text-xs font-bold uppercase tracking-wider shadow-lg shadow-red-600/30">
+          KONFIRMASI & LUNCURKAN REGU SAR →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT & LEAFLET GIS ENGINE -->
+  <script>
+    let activeRole = 'SAR Commander';
+    let leafletMap = null;
+    let casualtyMarker = null;
+    let currentTileLayer = null;
+    let isDarkTiles = true;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+      initClock();
+      initMQTT();
+    });
+
+    // 1. Navigation Flow Controller
+    function navigateTo(viewId, element) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.querySelectorAll('section[id^="view-"]').forEach(s => s.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      const targetView = document.getElementById('view-' + viewId);
+      if(targetView) targetView.classList.remove('hidden');
+      if(element) element.classList.add('active');
+
+      const titles = {
+        'dashboard': 'Subterranean Disaster Portal',
+        'map-views': 'Subterranean Spatial Mine Navigation (OpenStreetMap GIS)',
+        'sensor-comms': 'Sub-GHz LoRa RF & Telemetry Diagnostics',
+        'incident-logs': 'Chronological Triage Audit & Medical Logs'
+      };
+      document.getElementById('header-portal-title').textContent = titles[viewId] || 'Subterranean Disaster Portal';
+
+      if(viewId === 'map-views') {
+        if(!leafletMap) {
+          initLeafletMap();
+        }
+        setTimeout(() => {
+          if(leafletMap) {
+            leafletMap.invalidateSize(true);
+            leafletMap.setView([-8.2465, 113.6965], 15);
+          }
+        }, 100);
+        setTimeout(() => {
+          if(leafletMap) {
+            leafletMap.invalidateSize(true);
+          }
+        }, 300);
+      }
+    }
+
+    // 2. Authentication Controller
+    function selectLoginRole(role, btn) {
+      document.querySelectorAll('.role-btn').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-slate-600');
+      });
+      btn.classList.add('active');
+      btn.classList.remove('text-slate-600');
+      activeRole = role;
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      document.getElementById('page-login').classList.add('hidden');
+      document.getElementById('page-dashboard').classList.remove('hidden');
+      document.getElementById('active-role-label').textContent = 'Role: ' + activeRole;
+      if(window.leafletMap) {
+        setTimeout(() => { window.leafletMap.invalidateSize(); }, 150);
+      }
+    }
+
+    function showLogoutModal() {
+      if(confirm('Apakah Anda ingin keluar dari Rescue-Tag Command Center?')) {
+        document.getElementById('page-login').classList.remove('hidden');
+        document.getElementById('page-dashboard').classList.add('hidden');
+      }
+    }
+
+    // 3. Role Switcher Dropdown (with outside click handler)
+    function toggleRoleMenu(e) {
+      if(e) e.stopPropagation();
+      document.getElementById('role-menu').classList.toggle('hidden');
+    }
+    function switchActiveRole(role) {
+      activeRole = role;
+      document.getElementById('active-role-label').textContent = 'Role: ' + role;
+      document.getElementById('role-menu').classList.add('hidden');
+    }
+    function closeRoleMenuOnClickOutside(e) {
+      const menu = document.getElementById('role-menu');
+      const trigger = document.getElementById('role-btn-trigger');
+      if (menu && !menu.classList.contains('hidden') && !menu.contains(e.target) && !trigger.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    }
+
+    // 4. Deploy Squad Modal
+    function triggerDeployModal() {
+      document.getElementById('modal-deploy').classList.remove('hidden');
+    }
+    function closeDeployModal() {
+      document.getElementById('modal-deploy').classList.add('hidden');
+    }
+    function confirmDeploy() {
+      alert('🚨 PERINTAH DISPATCH TERKIRIM!\nRegu Alpha Search Squad telah diberangkatkan menuju Sektor 7 (C-4).');
+      closeDeployModal();
+    }
+
+    function toggleAlarmDrawer() {
+      alert('Peringatan Aktif: 1 Korban Kritis (Pekerja #02) di Sektor 7 terdeteksi via LoRa 1-Hop Relay.');
+    }
+
+    // 5. Clock Function
+    function initClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('live-utc-clock').textContent = now.toTimeString().split(' ')[0] + ' UTC';
+      }, 1000);
+    }
+
+    let hop1Poly = null;
+    let uplinkPoly = null;
+    let allMapMarkersGroup = null;
+    let watch1Marker = null;
+    let watch2Marker = null;
+    let gatewayMarker = null;
+    let chartTriageDonut = null;
+    let chartRssiSpectrum = null;
+
+    // 6. OpenStreetMap & Leaflet GIS Initializer (Pusat Gateway & 2 Jam Tangan · 1-Hop Relay)
+    function initLeafletMap() {
+      // 1 Pusat Gateway + 2 Pemakai Jam Tangan (Rescue-Tag Smartwatches)
+      const gatewayPos = [-8.2435, 113.6928]; // Pusat Gateway Basecamp (Posko Permukaan)
+      const watch1Pos = [-8.2465, 113.6965];  // Jam Tangan #01: Bambang (Junction B-02 · KUNING Relay Host)
+      const watch2Pos = [-8.2498, 113.7012];  // Jam Tangan #02: Agus Salim (Sektor 7 · MERAH Korban Kritis)
+
+      leafletMap = L.map('leaflet-mining-map', {
+        zoomControl: true,
+        attributionControl: true
+      }).setView(watch1Pos, 15);
+
+      const osmUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+      currentTileLayer = L.tileLayer(osmUrl, {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(leafletMap);
+      isDarkTiles = false;
+
+      // Custom Icon Builders
+      const createGatewayIcon = () => {
+        return L.divIcon({
+          className: 'custom-gateway-badge',
+          html: `<div class="bg-orange-700 text-white font-mono font-bold text-[10px] px-2.5 py-1 rounded-lg border-2 border-white shadow-xl flex items-center gap-1.5 whitespace-nowrap">
+                   <span class="text-xs">🏢</span>
+                   <span>PUSAT GATEWAY (ESP32)</span>
+                 </div>`,
+          iconSize: [160, 26],
+          iconAnchor: [80, 13]
+        });
+      };
+
+      const createWatchIcon = (label, roleTag, colorBg, borderClass, isPulsing = false) => {
+        const pulseAnim = isPulsing ? 'animate-pulse ring-4 ring-red-400/50' : '';
+        return L.divIcon({
+          className: 'custom-watch-badge',
+          html: `<div class="flex flex-col items-center">
+                   <div class="${colorBg} ${borderClass} ${pulseAnim} text-white font-mono font-bold text-[10px] px-2.5 py-1 rounded-lg border-2 shadow-xl flex items-center gap-1.5 whitespace-nowrap">
+                     <span class="text-xs">⌚</span>
+                     <span>${label}</span>
+                     <span class="text-[8px] bg-white/20 px-1 rounded">${roleTag}</span>
+                   </div>
+                   <div class="w-2 h-2 ${colorBg} rotate-45 -mt-1"></div>
+                 </div>`,
+          iconSize: [150, 32],
+          iconAnchor: [75, 30]
+        });
+      };
+
+      // 1. PUSAT GATEWAY BASECAMP
+      gatewayMarker = L.marker(gatewayPos, { icon: createGatewayIcon() }).addTo(leafletMap);
+      gatewayMarker.bindPopup(`
+        <div class="font-mono text-xs p-1.5">
+          <div class="font-bold text-orange-800 text-sm flex items-center gap-1.5">🏢 PUSAT GATEWAY BASECAMP</div>
+          <div class="text-slate-600 mt-1">Area: Posko SAR (Permukaan)</div>
+          <div class="text-slate-600">Hardware: ESP32 Master Receiver (433.05 MHz)</div>
+          <div class="text-orange-700 font-bold mt-1">Status: Online · GPS Locked · Hub Komando</div>
+        </div>
+      `);
+
+      // 2. JAM TANGAN #01 (PEKERJA #01: BAMBANG - RELAY FORWARDER)
+      watch1Marker = L.marker(watch1Pos, {
+        icon: createWatchIcon('JAM TANGAN #01', 'RELAY HOST', 'bg-amber-600', 'border-amber-200')
+      }).addTo(leafletMap);
+      watch1Marker.bindPopup(`
+        <div class="font-mono text-xs p-1.5">
+          <div class="font-bold text-amber-700 text-sm flex items-center gap-1.5">⌚ JAM TANGAN #01: BAMBANG</div>
+          <div class="text-slate-700 mt-1 font-semibold">Triage START: KUNING (Delayed)</div>
+          <div class="text-slate-600">Lokasi: Poros Shaft (Junction B-02)</div>
+          <div class="text-slate-600">Peran: LoRa 1-Hop Mesh Relay Forwarder</div>
+          <div class="text-slate-600">Vitals: 106 BPM · 93% SpO2 · 37.6°C</div>
+          <div class="text-amber-700 font-bold mt-1">Status: Meneruskan Paket Korban Sektor 7 (18ms)</div>
+        </div>
+      `);
+
+      // 3. JAM TANGAN #02 (PEKERJA #02: AGUS SALIM - KORBAN KRITIS)
+      watch2Marker = L.marker(watch2Pos, {
+        icon: createWatchIcon('JAM TANGAN #02', 'KORBAN KRITIS', 'bg-red-600', 'border-red-300', true)
+      }).addTo(leafletMap);
+      watch2Marker.bindPopup(`
+        <div class="font-mono text-xs p-1.5">
+          <div class="font-bold text-red-600 text-sm flex items-center gap-1.5">⌚ JAM TANGAN #02: AGUS SALIM</div>
+          <div class="text-slate-800 mt-1 font-bold">Triage START: MERAH (Immediate Emergency)</div>
+          <div class="text-slate-600">Lokasi: Sektor 7 (Incline C-4)</div>
+          <div class="text-slate-600">Vitals: 134 BPM · 88% SpO2 · 38.6°C (Hipertermia)</div>
+          <div class="text-red-700 font-bold mt-1">Status: Terjebak Reruntuhan Batuan Tambang</div>
+        </div>
+      `).openPopup();
+
+      casualtyMarker = watch2Marker; // Alias for casualty button
+
+      allMapMarkersGroup = L.featureGroup([gatewayMarker, watch1Marker, watch2Marker]);
+
+      // Transmission Vector Lines for 1-Hop Relay:
+      // Hop 1 Relay: Watch #02 (Korban) -> Watch #01 (Relay Host)
+      hop1Poly = L.polyline([watch2Pos, watch1Pos], {
+        color: '#ef4444',
+        weight: 4.5,
+        dashArray: '6, 6',
+        opacity: 0.95
+      }).addTo(leafletMap).bindTooltip("LoRa Hop 1: Jam Tangan #02 (Korban) → Jam Tangan #01 (Relay)", { permanent: false });
+
+      // Direct Uplink: Watch #01 (Relay Host) -> Gateway Basecamp
+      uplinkPoly = L.polyline([watch1Pos, gatewayPos], {
+        color: '#ea580c',
+        weight: 4.5,
+        dashArray: '6, 6',
+        opacity: 0.9
+      }).addTo(leafletMap).bindTooltip("LoRa Uplink: Jam Tangan #01 (Relay) → Pusat Gateway Basecamp", { permanent: false });
+    }
+
+    function centerOnCasualty() {
+      if(leafletMap && watch2Marker) {
+        leafletMap.setView(watch2Marker.getLatLng(), 16);
+        watch2Marker.openPopup();
+      }
+    }
+
+    function focusWatch(index) {
+      if(!leafletMap) return;
+      if(index === 1 && watch1Marker) {
+        leafletMap.setView(watch1Marker.getLatLng(), 16);
+        watch1Marker.openPopup();
+        if(uplinkPoly) {
+          uplinkPoly.setStyle({ weight: 8, color: '#fbbf24', opacity: 1 });
+          setTimeout(() => uplinkPoly.setStyle({ weight: 4.5, color: '#ea580c', opacity: 0.9 }), 800);
+        }
+      } else if(index === 2 && watch2Marker) {
+        leafletMap.setView(watch2Marker.getLatLng(), 16);
+        watch2Marker.openPopup();
+        if(hop1Poly) {
+          hop1Poly.setStyle({ weight: 8, color: '#f87171', opacity: 1 });
+          setTimeout(() => hop1Poly.setStyle({ weight: 4.5, color: '#ef4444', opacity: 0.95 }), 800);
+        }
+      }
+    }
+
+    function fitAllMarkers() {
+      if(leafletMap && allMapMarkersGroup) {
+        leafletMap.fitBounds(allMapMarkersGroup.getBounds().pad(0.25));
+      }
+    }
+
+    function showSimulationToast(msg) {
+      let toast = document.getElementById('map-tactical-toast');
+      if(!toast) {
+        toast = document.createElement('div');
+        toast.id = 'map-tactical-toast';
+        toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white font-mono text-xs px-5 py-3 rounded-2xl border border-slate-700 shadow-2xl z-[9999] flex items-center gap-3 backdrop-blur-md transition-all duration-300 pointer-events-none';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span><span>${msg}</span>`;
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    }
+
+    function pulseHopRoute() {
+      if(!hop1Poly || !uplinkPoly) return;
+      showSimulationToast('📡 [1-Hop Relay] Jam Tangan #02 (Korban) mengirim sinyal vital ke Jam Tangan #01...');
+      hop1Poly.setStyle({ weight: 9, color: '#fca5a5', opacity: 1 });
+      setTimeout(() => {
+        hop1Poly.setStyle({ weight: 4.5, color: '#ef4444', opacity: 0.95 });
+        showSimulationToast('⚡ [Uplink Basecamp] Jam Tangan #01 meneruskan paket ke Pusat Gateway (18ms)...');
+        uplinkPoly.setStyle({ weight: 9, color: '#5eead4', opacity: 1 });
+        setTimeout(() => {
+          uplinkPoly.setStyle({ weight: 4.5, color: '#0f766e', opacity: 0.9 });
+          showSimulationToast('✓ [Diterima di Posko] Pusat Gateway ESP32: Paket vital terverifikasi (CRC Valid)!');
+        }, 700);
+      }, 700);
+    }
+
+    function toggleMapTiles() {
+      if(!leafletMap) return;
+      leafletMap.removeLayer(currentTileLayer);
+      if(!isDarkTiles) {
+        currentTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19,
+          subdomains: 'abcd',
+          attribution: '© OpenStreetMap contributors, © CARTO'
+        }).addTo(leafletMap);
+        isDarkTiles = true;
+      } else {
+        currentTileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(leafletMap);
+        isDarkTiles = false;
+      }
+    }
+
+    // 7. Chart.js Initializer
+    function initCharts() {
+      const ctxBar = document.getElementById('chart-packet-flow').getContext('2d');
+      new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: ['T-60m', 'T-50m', 'T-40m', 'T-30m', 'T-20m', 'T-10m', 'Now'],
+          datasets: [{
+            label: 'Packets Transmitted',
+            data: [280, 420, 260, 980, 410, 520, 640],
+            backgroundColor: [
+              '#e2e8f0', '#e2e8f0', '#e2e8f0',
+              '#0f766e',
+              '#e2e8f0', '#e2e8f0', '#e2e8f0'
+            ],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 } } },
+            y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'JetBrains Mono', size: 10 } } }
+          }
+        }
+      });
+
+      const ctxDonut = document.getElementById('chart-triage-donut').getContext('2d');
+      chartTriageDonut = new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+          labels: ['Merah (Immediate)', 'Kuning (Delayed)', 'Hijau (Minor)', 'Hitam (Expectant)'],
+          datasets: [{
+            data: [1, 1, 2, 0],
+            backgroundColor: ['#dc2626', '#f59e0b', '#ea580c', '#94a3b8'],
+            borderWidth: 0,
+            cutout: '72%'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      const sectorElem = document.getElementById('chart-sector-donut');
+      if(sectorElem) {
+        new Chart(sectorElem.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Sector 7 (Critical)', 'Sector 4 (Relay)', 'Sector 1 (Surface)'],
+            datasets: [{
+              data: [33, 33, 34],
+              backgroundColor: ['#dc2626', '#ea580c', '#94a3b8'],
+              borderWidth: 0,
+              cutout: '70%'
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      const ctxRssi = document.getElementById('chart-rssi-spectrum').getContext('2d');
+      chartRssiSpectrum = new Chart(ctxRssi, {
+        type: 'line',
+        data: {
+          labels: ['Pusat Gateway (Posko Permukaan)', 'Jam Tangan #01 (Junction B-02)', 'Jam Tangan #02 (Sektor 7)'],
+          datasets: [{
+            label: 'RSSI Signal (dBm)',
+            data: [-72, -88, -98],
+            borderColor: '#ea580c',
+            backgroundColor: 'rgba(234, 88, 12, 0.08)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 6,
+            pointBackgroundColor: ['#ea580c', '#f59e0b', '#dc2626']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { min: -120, max: -50, ticks: { font: { family: 'JetBrains Mono', size: 10 } } },
+            x: { ticks: { font: { family: 'JetBrains Mono', size: 10 } } }
+          }
+        }
+      });
+
+      const ctxBat = document.getElementById('chart-battery-donut').getContext('2d');
+      new Chart(ctxBat, {
+        type: 'doughnut',
+        data: {
+          labels: ['Jam Tangan #01: Bambang (81%)', 'Jam Tangan #02: Agus Salim (62%)'],
+          datasets: [{
+            data: [81, 62],
+            backgroundColor: ['#ea580c', '#f59e0b'],
+            borderWidth: 0,
+            cutout: '70%'
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      const ctxInc = document.getElementById('chart-incident-donut').getContext('2d');
+      new Chart(ctxInc, {
+        type: 'doughnut',
+        data: {
+          labels: ['Trauma Benturan Runtuhan (60%)', 'Takikardia & Asfiksia (25%)', 'Hipertermia Bawah Tanah (15%)'],
+          datasets: [{
+            data: [60, 25, 15],
+            backgroundColor: ['#dc2626', '#f59e0b', '#ea580c'],
+            borderWidth: 0,
+            cutout: '70%'
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+
+    // 8. Live Dashboard Updater from MQTT Real-time Telemetry (Synchronizes Dashboard, Maps & Sensor Comms)
+    function updateLiveDashboard(data) {
+      if (!data || !data.triage || data.triage.code === undefined) {
+        return; // Abaikan paket non-telemetri atau alert tanpa triage code
+      }
+
+      const vitals = data.vitals || {};
+      const triage = data.triage || {};
+      const kinematics = data.kinematics || {};
+      const network = data.network || {};
+
+      const hr = vitals.hr || 0;
+      const spo2 = vitals.spo2 || 0;
+      const temp = (vitals.temp !== undefined) ? vitals.temp : 36.6;
+      const tCode = (triage.code !== undefined) ? triage.code : 0;
+      const aMax = (kinematics.a_max !== undefined) ? kinematics.a_max : 1.0;
+      const rssi = (network.rssi !== undefined) ? network.rssi : -98;
+
+      const hrStr = hr > 0 ? `${hr} BPM` : 'Mengukur...';
+      const spo2Str = spo2 > 0 ? `${spo2}% SpO2` : '--% SpO2';
+      const tempStr = temp.toFixed(1) + '°C';
+      const vitalsSummary = `${hrStr} · ${spo2Str} · ${tempStr}`;
+
+      // ========================================================
+      // 1. SCREEN 1 (DASHBOARD): Worker #02 Table Roster & Cards
+      // ========================================================
+      const vitalsEl = document.getElementById('worker-02-vitals');
+      if (vitalsEl) {
+        const tempClass = temp > 38.0 ? 'bg-red-100 text-red-700 px-1.5 py-0.5 rounded' : 'text-slate-700 font-medium';
+        vitalsEl.innerHTML = `${hrStr} · ${spo2Str} · <span class="${tempClass}">${tempStr}</span>`;
+        if (tCode === 3) vitalsEl.className = 'py-3.5 px-3 font-bold text-red-600 whitespace-nowrap';
+        else if (tCode === 2) vitalsEl.className = 'py-3.5 px-3 font-bold text-orange-600 whitespace-nowrap';
+        else if (tCode === 1) vitalsEl.className = 'py-3.5 px-3 font-medium text-amber-700 whitespace-nowrap';
+        else vitalsEl.className = 'py-3.5 px-3 font-medium text-emerald-700 whitespace-nowrap';
+      }
+
+      const kinEl = document.getElementById('worker-02-kinematics');
+      if (kinEl) {
+        let badgeClass = 'pill-teal';
+        let kinText = kinematics.summary || `Percepatan: ${aMax.toFixed(2)}g`;
+        if (tCode === 3) {
+          badgeClass = 'pill-red animate-pulse';
+          kinText = '⚠ Free-Fall & Immobility >30s';
+        } else if (tCode === 2) {
+          badgeClass = 'pill-amber';
+          kinText = '⚡ Kelelahan / Takikardia';
+        } else if (tCode === 1) {
+          badgeClass = 'pill-amber';
+          kinText = '⚡ Kerja Aktif Tambang';
+        } else {
+          badgeClass = 'pill-green';
+          kinText = '✔ Diam / Istirahat Normal';
+        }
+        kinEl.innerHTML = `<span class="pill-badge ${badgeClass}">${kinText}</span>`;
+      }
+
+      const triageEl = document.getElementById('worker-02-triage');
+      if (triageEl) {
+        if (tCode === 3) {
+          triageEl.innerHTML = '<span class="pill-badge pill-red animate-pulse">● MERAH - Immediate (SOS)</span>';
+        } else if (tCode === 2) {
+          triageEl.innerHTML = '<span class="pill-badge pill-orange animate-pulse">● ORANYE - Waspada Dini</span>';
+        } else if (tCode === 1) {
+          triageEl.innerHTML = '<span class="pill-badge pill-amber">● KUNING - Delayed (Kerja)</span>';
+        } else if (tCode === 4) {
+          triageEl.innerHTML = '<span class="pill-badge pill-gray">○ STANDBY (Jam Dilepas)</span>';
+        } else {
+          triageEl.innerHTML = '<span class="pill-badge pill-green">● HIJAU - Minor (Aman)</span>';
+        }
+      }
+
+      const rowEl = document.getElementById('row-worker-02');
+      if (rowEl) {
+        if (tCode === 3) {
+          rowEl.className = 'bg-red-50/60 hover:bg-red-50/80 rounded-xl transition border-l-4 border-red-500';
+        } else if (tCode === 2) {
+          rowEl.className = 'bg-orange-50/40 hover:bg-orange-50/60 rounded-xl transition border-l-4 border-orange-400';
+        } else if (tCode === 1) {
+          rowEl.className = 'hover:bg-slate-50 rounded-xl transition border-l-4 border-amber-400';
+        } else {
+          rowEl.className = 'bg-emerald-50/20 hover:bg-emerald-50/40 rounded-xl transition border-l-4 border-emerald-400';
+        }
+      }
+
+      // KPI Card 2 on Dashboard
+      const kpiCard = document.getElementById('kpi-casualty-card');
+      const kpiTitle = document.getElementById('kpi-casualty-title');
+      const kpiNum = document.getElementById('kpi-casualty-num');
+      const kpiLabel = document.getElementById('kpi-casualty-label');
+      const kpiDot = document.getElementById('kpi-casualty-dot');
+      const kpiFooterText = document.getElementById('kpi-casualty-footer-text');
+      const kpiFooterBadge = document.getElementById('kpi-casualty-footer-badge');
+
+      if (kpiCard) {
+        if (tCode === 3) {
+          kpiCard.className = 'card-shell !border-l-4 !border-l-red-500 bg-red-50/10';
+          if (kpiTitle) { kpiTitle.textContent = 'START IMMEDIATE (MERAH)'; kpiTitle.className = 'text-[11px] font-mono uppercase tracking-wider font-bold text-red-600'; }
+          if (kpiNum) { kpiNum.textContent = '1'; kpiNum.className = 'text-3xl font-extrabold font-mono text-red-600 tracking-tight'; }
+          if (kpiLabel) { kpiLabel.textContent = 'Critical Casualty'; kpiLabel.className = 'text-xs font-sans font-bold text-red-600 ml-1'; }
+          if (kpiDot) kpiDot.className = 'w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse';
+          if (kpiFooterText) { kpiFooterText.textContent = 'Agus Salim (#02)'; kpiFooterText.className = 'text-[11px] font-mono text-red-500 font-bold'; }
+          if (kpiFooterBadge) { kpiFooterBadge.textContent = 'PRIORITAS SAR'; kpiFooterBadge.className = 'pill-badge pill-red text-[10px]'; }
+        } else if (tCode === 2) {
+          kpiCard.className = 'card-shell !border-l-4 !border-l-orange-500 bg-orange-50/10';
+          if (kpiTitle) { kpiTitle.textContent = 'WASPADA DINI (ORANYE)'; kpiTitle.className = 'text-[11px] font-mono uppercase tracking-wider font-bold text-orange-600'; }
+          if (kpiNum) { kpiNum.textContent = '1'; kpiNum.className = 'text-3xl font-extrabold font-mono text-orange-600 tracking-tight'; }
+          if (kpiLabel) { kpiLabel.textContent = 'Worker Fatigue'; kpiLabel.className = 'text-xs font-sans font-bold text-orange-600 ml-1'; }
+          if (kpiDot) kpiDot.className = 'w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping';
+          if (kpiFooterText) { kpiFooterText.textContent = 'Agus Salim (#02) - HR Tinggi'; kpiFooterText.className = 'text-[11px] font-mono text-orange-600 font-bold'; }
+          if (kpiFooterBadge) { kpiFooterBadge.textContent = 'MONITORING'; kpiFooterBadge.className = 'pill-badge pill-orange text-[10px]'; }
+        } else if (tCode === 1) {
+          kpiCard.className = 'card-shell !border-l-4 !border-l-amber-500 bg-amber-50/10';
+          if (kpiTitle) { kpiTitle.textContent = 'STATUS KORBAN (AMAN)'; kpiTitle.className = 'text-[11px] font-mono uppercase tracking-wider font-bold text-amber-600'; }
+          if (kpiNum) { kpiNum.textContent = '0'; kpiNum.className = 'text-3xl font-extrabold font-mono text-amber-600 tracking-tight'; }
+          if (kpiLabel) { kpiLabel.textContent = 'Active Working'; kpiLabel.className = 'text-xs font-sans font-bold text-amber-600 ml-1'; }
+          if (kpiDot) kpiDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+          if (kpiFooterText) { kpiFooterText.textContent = 'Pekerja Aktif Beroperasi'; kpiFooterText.className = 'text-[11px] font-mono text-amber-600 font-medium'; }
+          if (kpiFooterBadge) { kpiFooterBadge.textContent = 'OPERASIONAL'; kpiFooterBadge.className = 'pill-badge pill-amber text-[10px]'; }
+        } else {
+          kpiCard.className = 'card-shell !border-l-4 !border-l-emerald-500 bg-emerald-50/10';
+          if (kpiTitle) { kpiTitle.textContent = 'STATUS KORBAN (NORMAL)'; kpiTitle.className = 'text-[11px] font-mono uppercase tracking-wider font-bold text-emerald-600'; }
+          if (kpiNum) { kpiNum.textContent = '0'; kpiNum.className = 'text-3xl font-extrabold font-mono text-emerald-600 tracking-tight'; }
+          if (kpiLabel) { kpiLabel.textContent = 'Casualty'; kpiLabel.className = 'text-xs font-sans font-bold text-emerald-600 ml-1'; }
+          if (kpiDot) kpiDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+          if (kpiFooterText) { kpiFooterText.textContent = 'Semua Pekerja Aman'; kpiFooterText.className = 'text-[11px] font-mono text-emerald-600 font-medium'; }
+          if (kpiFooterBadge) { kpiFooterBadge.textContent = 'NORMAL AMAN'; kpiFooterBadge.className = 'pill-badge pill-green text-[10px]'; }
+        }
+      }
+
+      // Update Triage Donut Chart
+      if (chartTriageDonut) {
+        if (tCode === 3) chartTriageDonut.data.datasets[0].data = [1, 1, 0, 0];
+        else if (tCode === 2) chartTriageDonut.data.datasets[0].data = [0, 1, 1, 0];
+        else if (tCode === 1) chartTriageDonut.data.datasets[0].data = [0, 2, 0, 0];
+        else chartTriageDonut.data.datasets[0].data = [0, 1, 1, 0];
+        chartTriageDonut.update('none');
+      }
+
+      // ========================================================
+      // 2. SCREEN 2 (MAP VIEWS): Tactical Cards, Fleet & GIS Map
+      // ========================================================
+      // Map Tactical Card 2
+      const mapCard = document.getElementById('map-card-worker-02');
+      const mapCardHeader = document.getElementById('map-card-worker-02-header');
+      const mapCardSector = document.getElementById('map-card-worker-02-sector');
+      const mapCardInfo = document.getElementById('map-card-worker-02-info');
+      const mapCardBadge = document.getElementById('map-card-worker-02-badge');
+
+      if (mapCard) {
+        if (tCode === 3) {
+          mapCard.className = 'card-shell !border-l-4 !border-l-red-500 bg-red-50/15';
+          if (mapCardHeader) mapCardHeader.textContent = 'JAM TANGAN #02 (KORBAN)';
+          if (mapCardSector) mapCardSector.innerHTML = 'Sektor 7 <span class="text-xs font-sans font-bold text-red-600 ml-1">Incline C-4</span>';
+          if (mapCardInfo) mapCardInfo.textContent = 'Agus Salim · Trapped SOS';
+          if (mapCardBadge) { mapCardBadge.textContent = 'TRIAGE MERAH'; mapCardBadge.className = 'pill-badge pill-red text-[10px] animate-pulse'; }
+        } else if (tCode === 2) {
+          mapCard.className = 'card-shell !border-l-4 !border-l-orange-500 bg-orange-50/15';
+          if (mapCardHeader) mapCardHeader.textContent = 'JAM TANGAN #02 (WASPADA)';
+          if (mapCardSector) mapCardSector.innerHTML = 'Sektor 7 <span class="text-xs font-sans font-bold text-orange-600 ml-1">Incline C-4</span>';
+          if (mapCardInfo) mapCardInfo.textContent = 'Agus Salim · Takikardia';
+          if (mapCardBadge) { mapCardBadge.textContent = 'TRIAGE ORANYE'; mapCardBadge.className = 'pill-badge pill-orange text-[10px]'; }
+        } else if (tCode === 1) {
+          mapCard.className = 'card-shell !border-l-4 !border-l-amber-500 bg-amber-50/15';
+          if (mapCardHeader) mapCardHeader.textContent = 'JAM TANGAN #02 (KERJA)';
+          if (mapCardSector) mapCardSector.innerHTML = 'Sektor 7 <span class="text-xs font-sans font-bold text-amber-600 ml-1">Incline C-4</span>';
+          if (mapCardInfo) mapCardInfo.textContent = 'Agus Salim · Kerja Aktif';
+          if (mapCardBadge) { mapCardBadge.textContent = 'TRIAGE KUNING'; mapCardBadge.className = 'pill-badge pill-amber text-[10px]'; }
+        } else {
+          mapCard.className = 'card-shell !border-l-4 !border-l-emerald-500 bg-emerald-50/15';
+          if (mapCardHeader) mapCardHeader.textContent = 'JAM TANGAN #02 (NORMAL)';
+          if (mapCardSector) mapCardSector.innerHTML = 'Sektor 7 <span class="text-xs font-sans font-bold text-emerald-600 ml-1">Incline C-4</span>';
+          if (mapCardInfo) mapCardInfo.textContent = 'Agus Salim · Normal Aman';
+          if (mapCardBadge) { mapCardBadge.textContent = 'TRIAGE HIJAU'; mapCardBadge.className = 'pill-badge pill-green text-[10px]'; }
+        }
+      }
+
+      // Map Fleet Bar Watch #02
+      const fleetCard = document.getElementById('map-fleet-watch-02');
+      const fleetIcon = document.getElementById('map-fleet-watch-02-icon');
+      const fleetVitals = document.getElementById('map-fleet-watch-02-vitals');
+      const fleetBadge = document.getElementById('map-fleet-watch-02-badge');
+
+      if (fleetCard) {
+        if (tCode === 3) {
+          fleetCard.className = 'btn-tactile p-3.5 bg-red-50/50 rounded-2xl border border-red-300 hover:border-red-500 shadow-sm cursor-pointer transition flex items-center justify-between group';
+          if (fleetIcon) fleetIcon.className = 'w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-bold text-base border border-red-400 shadow-sm animate-pulse';
+          if (fleetVitals) fleetVitals.innerHTML = `Sektor 7 (C-4) · <span class="font-bold text-red-600">${vitalsSummary}</span>`;
+          if (fleetBadge) { fleetBadge.textContent = 'KORBAN KRITIS'; fleetBadge.className = 'pill-badge pill-red text-[10px] animate-pulse'; }
+        } else if (tCode === 2) {
+          fleetCard.className = 'btn-tactile p-3.5 bg-orange-50/40 rounded-2xl border border-orange-200 hover:border-orange-500 shadow-sm cursor-pointer transition flex items-center justify-between group';
+          if (fleetIcon) fleetIcon.className = 'w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center font-bold text-base border border-orange-300 shadow-sm';
+          if (fleetVitals) fleetVitals.innerHTML = `Sektor 7 (C-4) · ${vitalsSummary}`;
+          if (fleetBadge) { fleetBadge.textContent = 'WASPADA HR'; fleetBadge.className = 'pill-badge pill-orange text-[10px]'; }
+        } else if (tCode === 1) {
+          fleetCard.className = 'btn-tactile p-3.5 bg-amber-50/30 rounded-2xl border border-amber-200 hover:border-amber-500 shadow-sm cursor-pointer transition flex items-center justify-between group';
+          if (fleetIcon) fleetIcon.className = 'w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-base border border-amber-300 shadow-sm';
+          if (fleetVitals) fleetVitals.innerHTML = `Sektor 7 (C-4) · ${vitalsSummary}`;
+          if (fleetBadge) { fleetBadge.textContent = 'KERJA AKTIF'; fleetBadge.className = 'pill-badge pill-amber text-[10px]'; }
+        } else {
+          fleetCard.className = 'btn-tactile p-3.5 bg-emerald-50/30 rounded-2xl border border-emerald-200 hover:border-emerald-500 shadow-sm cursor-pointer transition flex items-center justify-between group';
+          if (fleetIcon) fleetIcon.className = 'w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-base border border-emerald-300 shadow-sm';
+          if (fleetVitals) fleetVitals.innerHTML = `Sektor 7 (C-4) · ${vitalsSummary}`;
+          if (fleetBadge) { fleetBadge.textContent = 'NORMAL AMAN'; fleetBadge.className = 'pill-badge pill-green text-[10px]'; }
+        }
+      }
+
+      // Map Strata Layer 3
+      const strataLayer = document.getElementById('strata-layer-watch-02');
+      const strataDot = document.getElementById('strata-dot-watch-02');
+      const strataBadge = document.getElementById('strata-badge-watch-02');
+      const strataVitals = document.getElementById('strata-vitals-watch-02');
+
+      if (strataLayer) {
+        if (tCode === 3) {
+          strataLayer.className = 'p-3 bg-red-50 border border-red-300 rounded-xl relative overflow-hidden transition';
+          if (strataDot) strataDot.className = 'w-2 h-2 rounded-full bg-red-600 animate-pulse';
+          if (strataBadge) { strataBadge.textContent = 'Jam #02 (KORBAN)'; strataBadge.className = 'pill-badge pill-red text-[10px] animate-pulse'; }
+          if (strataVitals) strataVitals.textContent = `Agus Salim · TERJEBAK DARURAT · SpO2 ${spo2 > 0 ? spo2 + '%' : '88%'} · Suhu ${tempStr} · HR ${hrStr}`;
+        } else {
+          strataLayer.className = 'p-3 bg-slate-50 border border-slate-200 rounded-xl relative overflow-hidden transition';
+          if (strataDot) strataDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+          if (strataBadge) { strataBadge.textContent = 'Jam #02 (Aktif)'; strataBadge.className = 'pill-badge pill-green text-[10px]'; }
+          if (strataVitals) strataVitals.textContent = `Agus Salim · Operasional Normal · SpO2 ${spo2 > 0 ? spo2 + '%' : '98%'} · Suhu ${tempStr} · HR ${hrStr}`;
+        }
+      }
+
+      // Map Views Table (Row 4)
+      const mapTableRow = document.getElementById('map-table-row-watch-02');
+      const mapTableDot = document.getElementById('map-table-dot-watch-02');
+      const mapTableVitals = document.getElementById('map-table-vitals-watch-02');
+      const mapTableTriage = document.getElementById('map-table-triage-watch-02');
+
+      if (mapTableRow) {
+        if (tCode === 3) {
+          mapTableRow.className = 'bg-red-50/50 hover:bg-red-50/80 transition rounded-xl';
+          if (mapTableDot) mapTableDot.className = 'w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse';
+          if (mapTableVitals) { mapTableVitals.textContent = vitalsSummary; mapTableVitals.className = 'py-3.5 px-3 text-red-700 font-bold'; }
+          if (mapTableTriage) mapTableTriage.innerHTML = '<span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>';
+        } else if (tCode === 2) {
+          mapTableRow.className = 'bg-orange-50/30 hover:bg-orange-50/60 transition rounded-xl';
+          if (mapTableDot) mapTableDot.className = 'w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping';
+          if (mapTableVitals) { mapTableVitals.textContent = vitalsSummary; mapTableVitals.className = 'py-3.5 px-3 text-orange-700 font-bold'; }
+          if (mapTableTriage) mapTableTriage.innerHTML = '<span class="pill-badge pill-orange">● ORANYE - Waspada</span>';
+        } else if (tCode === 1) {
+          mapTableRow.className = 'hover:bg-slate-50 transition rounded-xl';
+          if (mapTableDot) mapTableDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+          if (mapTableVitals) { mapTableVitals.textContent = vitalsSummary; mapTableVitals.className = 'py-3.5 px-3 text-amber-700 font-medium'; }
+          if (mapTableTriage) mapTableTriage.innerHTML = '<span class="pill-badge pill-amber">● KUNING - Delayed</span>';
+        } else {
+          mapTableRow.className = 'bg-emerald-50/20 hover:bg-emerald-50/40 transition rounded-xl';
+          if (mapTableDot) mapTableDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+          if (mapTableVitals) { mapTableVitals.textContent = vitalsSummary; mapTableVitals.className = 'py-3.5 px-3 text-emerald-700 font-medium'; }
+          if (mapTableTriage) mapTableTriage.innerHTML = '<span class="pill-badge pill-green">● HIJAU - Minor</span>';
+        }
+      }
+
+      // Leaflet Map Markers & Hop Polyline
+      if (typeof watch2Marker !== 'undefined' && watch2Marker && typeof createWatchIcon === 'function') {
+        let roleTag = 'NORMAL AMAN';
+        let bgCol = 'bg-emerald-600';
+        let borderCol = 'border-emerald-200';
+        let isPulse = false;
+
+        if (tCode === 3) {
+          roleTag = 'KORBAN KRITIS';
+          bgCol = 'bg-red-600';
+          borderCol = 'border-red-300';
+          isPulse = true;
+        } else if (tCode === 2) {
+          roleTag = 'WASPADA HR';
+          bgCol = 'bg-orange-500';
+          borderCol = 'border-orange-200';
+        } else if (tCode === 1) {
+          roleTag = 'KERJA AKTIF';
+          bgCol = 'bg-amber-500';
+          borderCol = 'border-amber-200';
+        }
+
+        watch2Marker.setIcon(createWatchIcon('JAM TANGAN #02', roleTag, bgCol, borderCol, isPulse));
+
+        const popupHtml = `
+          <div class="font-mono text-xs p-1.5">
+            <div class="font-bold ${tCode === 3 ? 'text-red-600' : tCode === 2 ? 'text-orange-600' : 'text-slate-800'} text-sm flex items-center gap-1.5">
+              ⌚ JAM TANGAN #02: AGUS SALIM
+            </div>
+            <div class="text-slate-800 mt-1 font-bold">Status: ${triage.label || roleTag}</div>
+            <div class="text-slate-600">Lokasi: Sektor 7 (Lorong C-4)</div>
+            <div class="text-slate-600">Vitals: ${vitalsSummary}</div>
+            <div class="${tCode === 3 ? 'text-red-700 font-bold' : 'text-slate-600'} mt-1">
+              ${tCode === 3 ? '⚠ TERJEBAK / JATUH KRITIS' : 'Aktivitas terpantau aman'}
+            </div>
+          </div>
+        `;
+        watch2Marker.setPopupContent(popupHtml);
+      }
+
+      if (typeof hop1Poly !== 'undefined' && hop1Poly) {
+        if (tCode === 3) {
+          hop1Poly.setStyle({ color: '#ef4444', weight: 5, dashArray: '6, 6', opacity: 0.95 });
+        } else if (tCode === 2) {
+          hop1Poly.setStyle({ color: '#f97316', weight: 4.5, dashArray: '4, 4', opacity: 0.9 });
+        } else if (tCode === 1) {
+          hop1Poly.setStyle({ color: '#f59e0b', weight: 4, dashArray: null, opacity: 0.85 });
+        } else {
+          hop1Poly.setStyle({ color: '#10b981', weight: 3.5, dashArray: null, opacity: 0.85 });
+        }
+      }
+
+      // ========================================================
+      // 3. SCREEN 3 (SENSOR COMMS): RF Diagnostics & Charts
+      // ========================================================
+      const sensorRow = document.getElementById('sensor-table-row-watch-02');
+      const sensorDot = document.getElementById('sensor-table-dot-watch-02');
+      const sensorWearer = document.getElementById('sensor-table-wearer-watch-02');
+      const sensorRssi = document.getElementById('sensor-table-rssi-watch-02');
+      const sensorBtn = document.getElementById('sensor-btn-diag-watch-02');
+
+      if (sensorRow) {
+        if (tCode === 3) {
+          sensorRow.className = 'hover:bg-slate-50 transition bg-red-50/30';
+          if (sensorDot) sensorDot.className = 'w-2 h-2 rounded-full bg-red-500 animate-ping';
+          if (sensorWearer) sensorWearer.className = 'py-3 px-3 font-bold text-red-600';
+          if (sensorRssi) { sensorRssi.textContent = `${rssi} dBm · -4.2 dB`; sensorRssi.className = 'py-3 px-3 text-red-600 font-bold'; }
+          if (sensorBtn) {
+            sensorBtn.className = 'btn-tactile px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold';
+            sensorBtn.setAttribute('onclick', `alert('DIAGNOSTIK JAM TANGAN #02 (AGUS SALIM):\\nStatus: TERJEBAK DARURAT (SOS)\\nLoRa Link: 1-Hop via Jam #01 (${rssi} dBm)\\nSpO2: ${spo2}%\\nHR: ${hr} BPM\\nSuhu: ${tempStr}\\nKinematika: ${kinematics.summary || "Impact " + aMax.toFixed(2) + "g"}')`);
+          }
+        } else {
+          sensorRow.className = 'hover:bg-slate-50 transition bg-emerald-50/10';
+          if (sensorDot) sensorDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+          if (sensorWearer) sensorWearer.className = 'py-3 px-3 font-bold text-slate-800';
+          if (sensorRssi) { sensorRssi.textContent = `${rssi} dBm · +4.8 dB`; sensorRssi.className = 'py-3 px-3 text-emerald-700 font-bold'; }
+          if (sensorBtn) {
+            sensorBtn.className = 'btn-tactile px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold';
+            sensorBtn.setAttribute('onclick', `alert('DIAGNOSTIK JAM TANGAN #02 (AGUS SALIM):\\nStatus: NORMAL AMAN\\nLoRa Link: 1-Hop via Jam #01 (${rssi} dBm)\\nSpO2: ${spo2}%\\nHR: ${hr} BPM\\nSuhu: ${tempStr}\\nAktivitas: Normal')`);
+          }
+        }
+      }
+
+      // Update RSSI Spectrum Chart
+      if (chartRssiSpectrum) {
+        chartRssiSpectrum.data.datasets[0].data[2] = rssi;
+        chartRssiSpectrum.data.datasets[0].pointBackgroundColor[2] = (tCode === 3 ? '#dc2626' : (tCode === 2 ? '#f97316' : (tCode === 1 ? '#f59e0b' : '#10b981')));
+        chartRssiSpectrum.update('none');
+      }
+    }
+
+    // 9. MQTT WebSocket Receiver (EMQX Broker)
+    function initMQTT() {
+      const badge = document.getElementById('mqtt-status-badge');
+      try {
+        const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+          clientId: 'rescue_tag_web_' + Math.random().toString(36).substring(2, 7),
+          clean: true,
+          reconnectPeriod: 3000,
+          connectTimeout: 10000
+        });
+
+        client.on('connect', () => {
+          console.log('[MQTT] Connected to broker.emqx.io:8084 on rescue/tag/data & alert');
+          if (badge) {
+            badge.className = 'pill-badge pill-green text-[10px] hidden lg:inline-flex shrink-0';
+            badge.innerHTML = '● MQTT: Online (EMQX Live)';
+          }
+          client.subscribe('rescue/tag/data');
+          client.subscribe('rescue/tag/alert');
+        });
+
+        client.on('message', (topic, payload) => {
+          try {
+            const data = JSON.parse(payload.toString());
+            console.log('[MQTT RX ' + topic + ']', data);
+
+            if (topic === 'rescue/tag/data') {
+              updateLiveDashboard(data);
+              if (badge) {
+                badge.className = 'pill-badge pill-teal text-[10px] hidden lg:inline-flex shrink-0 animate-pulse';
+                badge.innerHTML = '⚡ MQTT: Rx Data (' + (data.triage?.status || 'Live') + ')';
+                setTimeout(() => {
+                  badge.className = 'pill-badge pill-green text-[10px] hidden lg:inline-flex shrink-0';
+                  badge.innerHTML = '● MQTT: Online (EMQX Live)';
+                }, 1200);
+              }
+            } else if (topic === 'rescue/tag/alert') {
+              if (typeof showSimulationToast === 'function') {
+                showSimulationToast('🚨 ALARM DARURAT: ' + (data.worker || 'Agus Salim') + ' TERJATUH DI ' + (data.sector || 'Sektor 7'));
+              }
+            }
+          } catch(err) {
+            console.warn('[MQTT PARSE ERR]', err);
+          }
+        });
+
+        client.on('error', (err) => {
+          console.warn('[MQTT ERROR]', err);
+          if (badge) {
+            badge.className = 'pill-badge pill-red text-[10px] hidden lg:inline-flex shrink-0';
+            badge.innerHTML = '⚠ MQTT: Error (Cek Internet)';
+          }
+        });
+
+        client.on('offline', () => {
+          console.warn('[MQTT OFFLINE]');
+          if (badge) {
+            badge.className = 'pill-badge pill-orange text-[10px] hidden lg:inline-flex shrink-0';
+            badge.innerHTML = '○ MQTT: Offline (Menyambung...)';
+          }
+        });
+
+        window.testDashboardSOS = function() {
+          updateLiveDashboard({
+            device_id: 'RESCUE-TAG-02',
+            worker_id: 'WRK-002',
+            worker_name: 'Agus Salim',
+            triage: { code: 3, label: 'MERAH - Darurat SOS', status: 'DARURAT_JATUH', is_emergency: true },
+            vitals: { hr: 138, spo2: 86, temp: 38.6 },
+            kinematics: { a_max: 4.85, summary: '⚠ Free-Fall & Immobility >30s' },
+            network: { rssi: -98 }
+          });
+        };
+
+        window.testDashboardNormal = function() {
+          updateLiveDashboard({
+            device_id: 'RESCUE-TAG-02',
+            worker_id: 'WRK-002',
+            worker_name: 'Agus Salim',
+            triage: { code: 0, label: 'HIJAU - Normal', status: 'NORMAL', is_emergency: false },
+            vitals: { hr: 74, spo2: 98, temp: 36.5 },
+            kinematics: { a_max: 1.02, summary: '✔ Diam / Istirahat Normal' },
+            network: { rssi: -68 }
+          });
+        };
+
+      } catch(e) {
+        console.warn('Running in autonomous offline simulation mode.', e);
+        if (badge) {
+          badge.className = 'pill-badge pill-gray text-[10px] hidden lg:inline-flex shrink-0';
+          badge.innerHTML = '○ Mode Offline';
+        }
+      }
+    }
+  </script>
+</body>
+</html>

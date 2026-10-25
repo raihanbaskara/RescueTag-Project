@@ -1,13 +1,3 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/Raihan PTE/web stich/index.html"
-    },
-    {
-      "source": "/dashboard",
-      "destination": "/Raihan PTE/web stich/index.html"
-    }
-  ]
+  "cleanUrls": true
 }
