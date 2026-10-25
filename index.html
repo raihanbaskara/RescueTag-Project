@@ -1386,7 +1386,7 @@
                   <h3 class="text-xs font-mono font-bold uppercase text-slate-800">CHRONOLOGICAL EVENT AUDIT TRAIL</h3>
                   <span class="pill-badge pill-teal text-[10px]">Sistem 1-Hop Mesh</span>
                 </div>
-                <div class="space-y-3 font-mono text-xs">
+                <div id="audit-trail-container" class="space-y-3 font-mono text-xs max-h-[380px] overflow-y-auto pr-1">
                   
                   <div class="p-3.5 rounded-xl bg-red-50 border-l-4 border-red-500">
                     <div class="flex justify-between font-bold text-red-700">
@@ -1792,6 +1792,14 @@
     function pulseHopRoute() {
       if(!hop1Poly || !uplinkPoly) return;
       showSimulationToast('📡 [1-Hop Relay] Jam Tangan #02 (Korban) mengirim sinyal vital ke Jam Tangan #01...');
+      if (typeof appendAuditTrail === 'function') {
+        appendAuditTrail(
+          'LoRa 1-Hop Opportunistic Relay Forwarding Aktif',
+          'Jam Tangan #01',
+          'Sinyal langsung Jam Tangan #02 terhalang batuan runtuhan (-98 dBm). Jam Tangan #01 (Bambang) otomatis mengestafetkan data ke Posko SAR (18ms).',
+          'orange'
+        );
+      }
       hop1Poly.setStyle({ weight: 9, color: '#fca5a5', opacity: 1 });
       setTimeout(() => {
         hop1Poly.setStyle({ weight: 4.5, color: '#ef4444', opacity: 0.95 });
@@ -1944,6 +1952,55 @@
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
+    }
+
+    // 7.5 Dynamic Event Audit Trail Manager
+    window.lastReportedTriage = null;
+    window.lastImpactTimestamp = 0;
+    window.lastRelayLogged = false;
+
+    function appendAuditTrail(title, nodeName, detailText, level = 'red') {
+      const container = document.getElementById('audit-trail-container');
+      if (!container) return;
+
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' +
+                      String(now.getMinutes()).padStart(2, '0') + ':' +
+                      String(now.getSeconds()).padStart(2, '0');
+
+      let borderClass = 'border-red-500 bg-red-50 text-red-700';
+      let textClass = 'text-red-600';
+
+      if (level === 'orange') {
+        borderClass = 'border-orange-500 bg-orange-50/80 text-orange-900';
+        textClass = 'text-orange-800';
+      } else if (level === 'amber') {
+        borderClass = 'border-amber-500 bg-amber-50/80 text-amber-900';
+        textClass = 'text-amber-800';
+      } else if (level === 'green') {
+        borderClass = 'border-emerald-500 bg-emerald-50/80 text-emerald-900';
+        textClass = 'text-emerald-800';
+      } else if (level === 'slate') {
+        borderClass = 'border-slate-400 bg-slate-50 text-slate-800';
+        textClass = 'text-slate-600';
+      }
+
+      const item = document.createElement('div');
+      item.className = `p-3.5 rounded-xl border-l-4 transition-all duration-300 ${borderClass}`;
+      item.innerHTML = `
+        <div class="flex justify-between font-bold">
+          <span>${timeStr} - ${title}</span>
+          <span>${nodeName}</span>
+        </div>
+        <p class="${textClass} mt-1">${detailText}</p>
+      `;
+
+      container.insertBefore(item, container.firstChild);
+
+      // Batasi maksimal 20 item log
+      while (container.children.length > 20) {
+        container.removeChild(container.lastChild);
+      }
     }
 
     // 8. Live Dashboard Updater from MQTT Real-time Telemetry (Synchronizes Dashboard, Maps & Sensor Comms)
@@ -2291,6 +2348,69 @@
         chartRssiSpectrum.data.datasets[0].pointBackgroundColor[2] = (tCode === 3 ? '#dc2626' : (tCode === 2 ? '#f97316' : (tCode === 1 ? '#f59e0b' : '#10b981')));
         chartRssiSpectrum.update('none');
       }
+
+      // ========================================================
+      // 4. SCREEN 4 (INCIDENT LOGS): Dynamically Append to Audit Trail
+      // ========================================================
+      const nowMs = Date.now();
+
+      // 4a. Deteksi Lonjakan Benturan Keras (Impact Spike a_max >= 3.0g)
+      if (aMax >= 3.0 && (!window.lastImpactTimestamp || (nowMs - window.lastImpactTimestamp > 8000))) {
+        window.lastImpactTimestamp = nowMs;
+        appendAuditTrail(
+          `IMU BMI160 Deteksi Impact & Free-Fall Spike (${aMax.toFixed(2)}g)`,
+          'Jam Tangan #02',
+          `Akselerasi jatuh bebas diikuti lonjakan benturan tinggi (${aMax.toFixed(2)}g). Model TinyML pada STM32 memvalidasi trauma fisik.`,
+          'slate'
+        );
+      }
+
+      // 4b. Deteksi Transisi Status Triage
+      if (window.lastReportedTriage !== tCode) {
+        if (tCode === 3) {
+          appendAuditTrail(
+            'Triage TinyML Eskalasi ke MERAH (Immediate SOS)',
+            'Jam Tangan #02',
+            `SpO2 turun ke ${spo2 > 0 ? spo2 + '%' : '88%'}, HR ${hrStr} (Takikardia), Suhu ${tempStr}. Imobilitas fisik >30s terkonfirmasi pasca runtuhan.`,
+            'red'
+          );
+        } else if (tCode === 2) {
+          appendAuditTrail(
+            'Deteksi Dini: Takikardia & Kelelahan Fisik (ORANYE)',
+            'Jam Tangan #02',
+            `Lonjakan denyut jantung ${hrStr} dengan suhu tubuh ${tempStr}. Gejala stres operasional dan asfiksia dini terdeteksi.`,
+            'orange'
+          );
+        } else if (tCode === 1 && window.lastReportedTriage === 3) {
+          appendAuditTrail(
+            'Triage Dide-eskalasi ke KUNING (Delayed)',
+            'Jam Tangan #02',
+            `Respons fisiologis dan motorik kembali terdeteksi. Korban dalam tahap stabilisasi oleh tim evakuasi.`,
+            'amber'
+          );
+        } else if (tCode === 0 && window.lastReportedTriage !== null) {
+          appendAuditTrail(
+            'Status Fisiologis Normal Aman Terpantau (HIJAU)',
+            'Jam Tangan #02',
+            `Parameter vital stabil: HR ${hrStr}, SpO2 ${spo2Str}, Suhu ${tempStr}. Tidak ada anomali benturan fisik.`,
+            'green'
+          );
+        }
+        window.lastReportedTriage = tCode;
+      }
+
+      // 4c. Deteksi LoRa 1-Hop Relay Aktif
+      if (network.is_relayed && !window.lastRelayLogged) {
+        window.lastRelayLogged = true;
+        appendAuditTrail(
+          'LoRa 1-Hop Opportunistic Relay Forwarding Aktif',
+          'Jam Tangan #01',
+          `Sinyal langsung Jam Tangan #02 terhalang runtuhan (${rssi} dBm). Jam Tangan #01 (Bambang) otomatis mengestafetkan paket ke Posko SAR Basecamp.`,
+          'orange'
+        );
+      } else if (!network.is_relayed) {
+        window.lastRelayLogged = false;
+      }
     }
 
     // 9. MQTT WebSocket Receiver (EMQX Broker)
@@ -2332,6 +2452,14 @@
             } else if (topic === 'rescue/tag/alert') {
               if (typeof showSimulationToast === 'function') {
                 showSimulationToast('🚨 ALARM DARURAT: ' + (data.worker || 'Agus Salim') + ' TERJATUH DI ' + (data.sector || 'Sektor 7'));
+              }
+              if (typeof appendAuditTrail === 'function') {
+                appendAuditTrail(
+                  'ALARM DARURAT SAR: ' + (data.alert_type || 'SOS FALL CRITICAL'),
+                  'Jam Tangan #02',
+                  `${data.worker || 'Agus Salim'} di ${data.sector || 'Sektor 7'}. Vitals: ${data.vitals || ''}. Jalur: ${data.route || '1-Hop Relay'}.`,
+                  'red'
+                );
               }
             }
           } catch(err) {
