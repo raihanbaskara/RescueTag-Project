@@ -843,19 +843,34 @@
             <div class="lg:col-span-2 card-shell">
               <div class="card-inner flex flex-col justify-between !p-4 bg-white rounded-2xl shadow-sm">
                 
-                <!-- Clean Top Bar Over Map -->
-                <div class="flex flex-wrap justify-between items-center px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 mb-3 gap-2">
-                  <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-xs font-mono font-bold text-slate-800 uppercase tracking-wide">LORA 1-HOP MESH · PUSAT GATEWAY & SMARTWATCH</span>
+                <!-- Clean Top Bar Over Map with Elite Tactical Metadata -->
+                <div class="flex flex-wrap justify-between items-center px-4 py-3 bg-slate-900 text-white rounded-xl border border-slate-800 mb-3 gap-3 shadow-md">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-xs font-mono font-bold tracking-wider text-slate-100 uppercase">LORA 1-HOP MESH · SPATIAL ANCHOR MAPPING</span>
                   </div>
 
-                  <div class="flex items-center gap-2 text-xs font-mono">
-                    <span class="pill-badge pill-teal text-[10px]">1 Gateway + 2 Jam Tangan</span>
-                    <span class="text-slate-400">|</span>
-                    <span class="text-slate-600 text-[11px] font-semibold">1-Hop Relay</span>
-                    <span class="text-slate-400">|</span>
-                    <span class="text-slate-600 text-[11px]">433.05 MHz SF12</span>
+                  <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                    <span class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-bold tracking-wide">
+                      INDOOR GPS-DENIED MAPPING
+                    </span>
+                    <span class="text-slate-600 hidden sm:inline">|</span>
+                    <span class="text-slate-300 text-[11px] font-semibold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
+                      RSSI TRILATERATION & PROXIMITY
+                    </span>
+                    <span class="text-slate-600 hidden sm:inline">|</span>
+                    <span class="text-emerald-400 text-[11px] font-bold">
+                      433.05 MHz · SF7
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Callout Banner: Penjelasan Ilmiah Non-GPS untuk Juri / Dosen -->
+                <div class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl mb-3 flex items-start gap-3 text-slate-700 text-xs">
+                  <span class="text-base leading-none mt-0.5">🛰️</span>
+                  <div class="leading-relaxed">
+                    <span class="font-bold text-slate-900 font-mono">METODE LOKALISASI NON-GPS:</span>
+                    <span class="text-slate-600"> Sinyal satelit GPS tidak dapat menembus terowongan batuan/reruntuhan. Sistem mengestimasi koordinat taktis menggunakan <b>RSSI Proximity</b> dan <b>Anchor Mesh Relay</b> dari node terdekat secara real-time.</span>
                   </div>
                 </div>
 
