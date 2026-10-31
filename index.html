@@ -529,23 +529,23 @@
             </div>
 
             <!-- Card 2: START Immediate (Merah) -->
-            <div id="kpi-casualty-card" class="card-shell !border-l-4 !border-l-red-500 bg-red-50/10">
+            <div id="kpi-casualty-card" class="card-shell !border-l-4 !border-l-emerald-500 bg-emerald-50/10">
               <div class="card-inner">
-                <div class="flex items-center justify-between text-red-500">
-                  <span id="kpi-casualty-title" class="text-[11px] font-mono uppercase tracking-wider font-bold text-red-600">START IMMEDIATE (MERAH)</span>
-                  <svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <div class="flex items-center justify-between text-emerald-600">
+                  <span id="kpi-casualty-title" class="text-[11px] font-mono uppercase tracking-wider font-bold text-emerald-600">STATUS KORBAN (NORMAL)</span>
+                  <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div class="my-2">
-                  <div id="kpi-casualty-count" class="text-3xl font-extrabold font-mono text-red-600 tracking-tight flex items-center gap-2">
-                    <span id="kpi-casualty-dot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-                    <span id="kpi-casualty-num">1</span> <span id="kpi-casualty-label" class="text-xs font-sans font-bold text-red-600 ml-1">Critical Casualty</span>
+                  <div id="kpi-casualty-count" class="text-3xl font-extrabold font-mono text-emerald-600 tracking-tight flex items-center gap-2">
+                    <span id="kpi-casualty-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span id="kpi-casualty-num">0</span> <span id="kpi-casualty-label" class="text-xs font-sans font-bold text-emerald-600 ml-1">Casualty</span>
                   </div>
                 </div>
-                <div class="pt-2 border-t border-red-100/80 flex items-center justify-between">
-                  <span id="kpi-casualty-footer-text" class="text-[11px] font-mono text-red-500 font-bold">Agus Salim (#02)</span>
-                  <span id="kpi-casualty-footer-badge" class="pill-badge pill-red text-[10px]">PRIORITAS SAR</span>
+                <div class="pt-2 border-t border-emerald-100/80 flex items-center justify-between">
+                  <span id="kpi-casualty-footer-text" class="text-[11px] font-mono text-emerald-600 font-medium">Semua Pekerja Aman</span>
+                  <span id="kpi-casualty-footer-badge" class="pill-badge pill-green text-[10px]">NORMAL AMAN</span>
                 </div>
               </div>
             </div>
@@ -662,30 +662,30 @@
                   </thead>
                   <tbody class="divide-y divide-slate-50 font-mono">
                     <!-- Row 1: Pekerja #02 (Agus Salim - Live Telemetry) -->
-                    <tr id="row-worker-02" class="bg-red-50/30 hover:bg-red-50/60 rounded-xl transition">
+                    <tr id="row-worker-02" class="hover:bg-slate-50 rounded-xl transition border-l-4 border-emerald-400">
                       <td class="py-3.5 px-3 rounded-l-xl">
                         <div class="font-bold text-slate-900 font-sans text-sm">Pekerja #02 (Agus Salim)</div>
                         <div class="text-[11px] text-slate-500 whitespace-nowrap">Jam Tangan #02 · Sektor 7 (Lorong C-4)</div>
                       </td>
-                      <td id="worker-02-vitals" class="py-3.5 px-3 font-bold text-red-600 whitespace-nowrap">
-                        134 BPM · 88% SpO2 · <span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded">38.6°C</span>
+                      <td id="worker-02-vitals" class="py-3.5 px-3 font-medium text-emerald-700 whitespace-nowrap">
+                        74 BPM · 98% SpO2 · 36.5°C
                       </td>
                       <td id="worker-02-kinematics" class="py-3.5 px-3">
-                        <span class="pill-badge pill-red">
-                          ⚠ Free-Fall & Immobility >30s
+                        <span class="pill-badge pill-green">
+                          ✔ Diam / Istirahat Normal
                         </span>
                       </td>
                       <td id="worker-02-route" class="py-3.5 px-3">
                         <span class="pill-badge pill-teal">
-                          🔄 1-Hop Relay via Jam Tangan #01
+                          ⇄ Direct + 1-Hop Relay Standby
                         </span>
                       </td>
                       <td id="worker-02-triage" class="py-3.5 px-3">
-                        <span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>
+                        <span class="pill-badge pill-green">● HIJAU - Minor (Aman)</span>
                       </td>
                       <td class="py-3.5 px-3 text-right rounded-r-xl">
-                        <button onclick="triggerDeployModal()" class="btn-tactile px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs font-bold whitespace-nowrap shadow-sm">
-                          Dispatch SAR Team
+                        <button onclick="navigateTo('map-views')" class="btn-tactile px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs font-bold whitespace-nowrap shadow-sm">
+                          Lihat di Peta
                         </button>
                       </td>
                     </tr>
@@ -1076,32 +1076,32 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                   
-                  <!-- Korban #02 -->
-                  <tr id="map-table-row-watch-02" class="bg-red-50/50 hover:bg-red-50/80 transition rounded-xl">
-                    <td class="py-3.5 px-3 font-bold text-red-700 rounded-l-xl">
+                  <!-- Node #02: Agus Salim -->
+                  <tr id="map-table-row-watch-02" class="hover:bg-slate-50 transition rounded-xl">
+                    <td class="py-3.5 px-3 font-bold text-slate-900 rounded-l-xl">
                       <div class="flex items-center gap-2">
-                        <span id="map-table-dot-watch-02" class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+                        <span id="map-table-dot-watch-02" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                         <div>
                           <div class="font-bold">Jam Tangan #02 (Agus Salim)</div>
-                          <div class="text-[10px] text-red-600/80 font-normal">UID: RT-W02-STM32 · Sector 7</div>
+                          <div class="text-[10px] text-slate-400 font-normal">UID: RT-W02-STM32 · Sector 7</div>
                         </div>
                       </div>
                     </td>
-                    <td id="map-table-sector-watch-02" class="py-3.5 px-3 font-bold text-red-700">Sektor 7 (Incline C-4)</td>
-                    <td id="map-table-vitals-watch-02" class="py-3.5 px-3 text-red-700 font-bold">
-                      134 BPM · 88% SpO2 · 38.6°C
+                    <td id="map-table-sector-watch-02" class="py-3.5 px-3 font-bold text-slate-900">Sektor 7 (Lorong C-4)</td>
+                    <td id="map-table-vitals-watch-02" class="py-3.5 px-3 text-emerald-800 font-medium whitespace-nowrap">
+                      74 BPM · 98% SpO2 · 36.5°C
                     </td>
                     <td id="map-table-route-watch-02" class="py-3.5 px-3">
-                      <span class="pill-badge pill-red">1-Hop via Watch #01 (-98 dBm)</span>
+                      <span class="pill-badge pill-teal">1-Hop via Watch #01 (-68 dBm)</span>
                     </td>
                     <td class="py-3.5 px-3">
-                      <span class="pill-badge pill-amber">62% (4.2V LiPo)</span>
+                      <span class="pill-badge pill-green">84% (4.2V LiPo)</span>
                     </td>
                     <td id="map-table-triage-watch-02" class="py-3.5 px-3">
-                      <span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>
+                      <span class="pill-badge pill-green">● HIJAU - Normal</span>
                     </td>
                     <td class="py-3.5 px-3 text-right rounded-r-xl">
-                      <button onclick="focusWatch(2)" class="btn-tactile px-3.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold shadow-sm">
+                      <button onclick="focusWatch(2)" class="btn-tactile px-3.5 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-mono text-xs">
                         Focus Map
                       </button>
                     </td>
@@ -1298,21 +1298,25 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-100">
-                    <!-- Row 1: Jam Tangan #02 (Korban) -->
-                    <tr id="sensor-table-row-watch-02" class="hover:bg-slate-50 transition bg-red-50/20">
+                    <!-- Row 1: Jam Tangan #02 (Agus Salim) -->
+                    <tr id="sensor-table-row-watch-02" class="hover:bg-slate-50 transition">
                       <td class="py-3 px-3 font-bold text-slate-900">
                         <div class="flex items-center gap-2">
-                          <span id="sensor-table-dot-watch-02" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                          <span id="sensor-table-dot-watch-02" class="w-2 h-2 rounded-full bg-emerald-500"></span>
                           <span>Jam Tangan #02</span>
                         </div>
                       </td>
-                      <td id="sensor-table-wearer-watch-02" class="py-3 px-3 font-bold text-red-600">Pekerja #02 (Agus Salim) · Sektor 7 (Lorong C-4)</td>
+                      <td id="sensor-table-wearer-watch-02" class="py-3 px-3 font-bold text-slate-800">Pekerja #02 (Agus Salim) · Sektor 7 (Lorong C-4)</td>
                       <td class="py-3 px-3 text-slate-600">MAX30102 PPG + BMI160 IMU + MLX90614 IR</td>
-                      <td id="sensor-table-rssi-watch-02" class="py-3 px-3 text-red-600 font-bold">-98 dBm · -4.2 dB</td>
-                      <td id="sensor-table-route-watch-02" class="py-3 px-3"><span class="pill-badge pill-red">1-Hop via Watch #01</span></td>
-                      <td class="py-3 px-3 font-bold text-slate-700">62% (3.78V)</td>
+                      <td id="sensor-table-rssi-watch-02" class="py-3 px-3 text-emerald-700 font-bold">-68 dBm · +8.5 dB</td>
+                      <td id="sensor-table-route-watch-02" class="py-3 px-3"><span class="pill-badge pill-teal">⇄ Direct + 1-Hop Relay</span></td>
+                      <td id="sensor-table-battery-watch-02" class="py-3 px-3 font-bold text-slate-700">84% (4.12V)</td>
                       <td class="py-3 px-3 text-right">
-                        <button id="sensor-btn-diag-watch-02" onclick="alert('DIAGNOSTIK JAM TANGAN #02 (AGUS SALIM):\nStatus: Terjebak Reruntuhan Sektor 7\nLoRa Link: 1-Hop via Jam Tangan #01\nSpO2: 88% (Kritis)\nHR: 134 BPM\nImobilitas: >30s (Impact 8.4g)')" class="btn-tactile px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold">
+                        <button id="sensor-btn-diag-watch-02" onclick="alert('DIAGNOSTIK JAM TANGAN #02 (AGUS SALIM):
+Status: Operasional Normal
+LoRa Link: Terhubung Stabil via Jam #01
+SpO2: 98% | HR: 74 BPM
+Kinematika: Diam / Aktivitas Normal')" class="btn-tactile px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">
                           Run Diag
                         </button>
                       </td>
@@ -1811,40 +1815,40 @@
         </div>
       `);
 
-      // 3. JAM TANGAN #02 (PEKERJA #02: AGUS SALIM - KORBAN KRITIS)
+      // 3. JAM TANGAN #02 (PEKERJA #02: AGUS SALIM - NORMAL / TERHUBUNG MESH)
       watch2Marker = L.marker(watch2Pos, {
-        icon: createWatchIcon('JAM TANGAN #02', 'KORBAN KRITIS', 'bg-red-600', 'border-red-300', true)
+        icon: createWatchIcon('JAM TANGAN #02', 'NORMAL AMAN', 'bg-emerald-600', 'border-emerald-200', false)
       }).addTo(leafletMap);
       watch2Marker.bindPopup(`
         <div class="font-mono text-xs p-1">
           <div class="flex items-center gap-2 pb-1.5 border-b border-slate-100">
-            <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)] animate-ping"></span>
-            <span class="font-bold text-red-600 text-xs tracking-wide">JAM TANGAN #02: AGUS SALIM</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+            <span class="font-bold text-slate-800 text-xs tracking-wide">JAM TANGAN #02: AGUS SALIM</span>
           </div>
           <div class="mt-2 space-y-1 text-[11px] text-slate-600">
-            <div><span class="text-slate-400">Triage:</span> <span class="font-bold text-red-600">MERAH (Immediate Emergency)</span></div>
-            <div><span class="text-slate-400">Lokasi:</span> <span class="font-semibold text-slate-700">Sektor 7 (Incline C-4)</span></div>
-            <div><span class="text-slate-400">Vitals:</span> <span class="font-semibold text-slate-700">134 BPM · 88% SpO2 · 38.6°C</span></div>
-            <div><span class="text-slate-400">Kinematika:</span> <span class="font-semibold text-slate-700">Benturan 8.4g · Imobilitas >30s</span></div>
+            <div><span class="text-slate-400">Triage:</span> <span class="font-bold text-emerald-600">HIJAU (Normal / Aman)</span></div>
+            <div><span class="text-slate-400">Lokasi:</span> <span class="font-semibold text-slate-700">Sektor 7 (Lorong C-4)</span></div>
+            <div><span class="text-slate-400">Vitals:</span> <span class="font-semibold text-slate-700">74 BPM · 98% SpO2 · 36.5°C</span></div>
+            <div><span class="text-slate-400">Kinematika:</span> <span class="font-semibold text-slate-700">✔ Diam / Aktivitas Normal</span></div>
           </div>
-          <div class="mt-2 pt-1.5 border-t border-slate-100 font-bold text-[10.5px] text-red-600">
-            STATUS: TERJEBAK DARURAT SOS · PRIORITAS SAR
+          <div class="mt-2 pt-1.5 border-t border-slate-100 font-bold text-[10.5px] text-emerald-700">
+            STATUS: OPERASIONAL AMAN · TERHUBUNG DENGAN RELAY #01
           </div>
         </div>
-      `).openPopup();
+      `);
 
       casualtyMarker = watch2Marker; // Alias for casualty button
 
       allMapMarkersGroup = L.featureGroup([gatewayMarker, watch1Marker, watch2Marker]);
 
       // Transmission Vector Lines for 1-Hop Relay:
-      // Hop 1 Relay: Watch #02 (Korban) -> Watch #01 (Relay Host)
+      // Hop 1 Relay: Watch #02 -> Watch #01 (Relay Host) - Green in normal state
       hop1Poly = L.polyline([watch2Pos, watch1Pos], {
-        color: '#ef4444',
-        weight: 4.5,
-        dashArray: '6, 6',
-        opacity: 0.95
-      }).addTo(leafletMap).bindTooltip("LoRa Hop 1: Jam Tangan #02 (Korban) → Jam Tangan #01 (Relay)", { permanent: false });
+        color: '#10b981',
+        weight: 3.5,
+        dashArray: null,
+        opacity: 0.85
+      }).addTo(leafletMap).bindTooltip("LoRa Hop 1: Jam Tangan #02 (Agus Salim) → Jam Tangan #01 (Relay)", { permanent: false });
 
       // Direct Uplink: Watch #01 (Relay Host) -> Gateway Basecamp
       uplinkPoly = L.polyline([watch1Pos, gatewayPos], {
@@ -1875,8 +1879,8 @@
         leafletMap.setView(watch2Marker.getLatLng(), 16);
         watch2Marker.openPopup();
         if(hop1Poly) {
-          hop1Poly.setStyle({ weight: 8, color: '#f87171', opacity: 1 });
-          setTimeout(() => hop1Poly.setStyle({ weight: 4.5, color: '#ef4444', opacity: 0.95 }), 800);
+          hop1Poly.setStyle({ weight: 8, color: '#34d399', opacity: 1 });
+          setTimeout(() => hop1Poly.setStyle({ weight: 3.5, color: '#10b981', opacity: 0.85 }), 800);
         }
       }
     }
