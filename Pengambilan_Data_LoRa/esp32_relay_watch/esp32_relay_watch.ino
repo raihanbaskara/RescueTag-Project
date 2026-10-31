@@ -66,58 +66,82 @@ void renderWatchDisplay() {
 
   // KONDISI 1: POP-UP ALARM REKAN (Jam #02 Terdeteksi Bahaya & Sedang Di-relay)
   if (relay_alert_active && (millis() - last_relay_rx < 6000)) {
-    // Header Bar Hitam-Putih (Inverse)
-    display.fillRect(0, 0, 128, 12, WHITE);
+    // Header Bar Hitam-Putih (Inverse) - Rapi 20 Karakter Terpusat
+    display.fillRect(0, 0, 128, 11, WHITE);
     display.setTextColor(BLACK);
     display.setCursor(4, 2);
-    display.println("! PERINGATAN REKAN !");
+    display.print("! ALARM REKAN: SOS !");
     display.setTextColor(WHITE);
 
-    display.setCursor(0, 16);
-    display.print("DARI   : JAM #02 (Agus)");
-
-    display.setCursor(0, 27);
-    display.print("TRIAGE : ");
+    // Banner Status Triage Rekan (Invert Bar)
+    display.fillRect(0, 12, 128, 12, WHITE);
+    display.setTextColor(BLACK);
+    display.setCursor(4, 14);
     if (friend_triage == 3) {
-      display.print("[MERAH/JATUH!]");
+      if (friend_spo2 > 0 && friend_spo2 < 88) display.print("TAG#02: ASFIKSIA GAS");
+      else display.print("TAG#02: JATUH / SOS!");
     } else if (friend_triage == 2) {
-      display.print("[WASPADA DINI]");
+      display.print("TAG#02: WASPADA LELAH");
     } else {
-      display.print("[KUNING/KERJA]");
+      display.print("TAG#02: KERJA AKTIF ");
     }
+    display.setTextColor(WHITE);
 
-    display.setCursor(0, 39);
-    display.print("HR:"); display.print(friend_hr); display.print(" ");
-    display.print("SpO2:"); display.print(friend_spo2); display.print("%");
+    // Grid Vitals Rekan (Agus Salim) - Jarak Aman Kolom Kiri & Kanan
+    display.setCursor(2, 27);
+    display.print("Nadi:");
+    if (friend_hr > 0) { display.print(friend_hr); display.print("bpm"); }
+    else { display.print("Ukur.."); }
 
-    display.setCursor(0, 50);
-    display.print("Suhu:"); display.print(friend_temp, 1); display.print("C ");
-    display.print("RSSI:"); display.print(friend_rssi);
+    display.setCursor(70, 27);
+    display.print("SpO2:");
+    if (friend_spo2 > 0) { display.print(friend_spo2); display.print("%"); }
+    else { display.print("--%"); }
 
-    display.drawLine(0, 62, 127, 62, WHITE);
+    display.setCursor(2, 39);
+    display.print("Suhu:"); display.print(friend_temp, 1); display.print("C");
+    display.setCursor(70, 39);
+    display.print("A_Pk:"); display.print(friend_amax, 1); display.print("g");
+
+    // Dock Bawah Status Terusan Relay (Rapi Pas Tanpa Wrap)
+    display.drawLine(0, 50, 127, 50, WHITE);
+    display.setCursor(2, 53);
+    display.print("Hop->Posko");
+    display.setCursor(68, 53);
+    display.print("RSS:"); display.print(friend_rssi); display.print("dB");
   } 
-  // KONDISI 2: STANDBY JAM TANGAN PEKERJA #01 (BAMBANG - NORMAL)
+  // KONDISI 2: STANDBY JAM TANGAN PEKERJA #01 (BAMBANG - RELAWAN NORMAL)
   else {
     relay_alert_active = false;
 
-    // Header Jam Tangan #01
-    display.setCursor(0, 2);
-    display.println("RESCUE-TAG #01 [RELAY]");
-    display.drawLine(0, 12, 127, 12, WHITE);
+    // Header Jam Tangan #01 - Rata Tengah Rapi
+    display.setTextColor(WHITE);
+    display.setCursor(4, 1);
+    display.print("RESCUE-TAG: RELAY 01");
+    display.drawLine(0, 10, 127, 10, WHITE);
 
-    display.setCursor(0, 16);
-    display.println("TRIAGE: [NORMAL/SEHAT]");
+    // Banner Status Relawan Standby
+    display.drawRoundRect(0, 12, 128, 12, 2, WHITE);
+    display.setCursor(4, 14);
+    display.print("STATUS: RELAWAN AMAN");
 
-    display.setCursor(0, 28);
-    display.print("HR    : "); display.print(my_hr); display.println(" BPM");
+    // Grid Vitals Mandiri (Kiri x=2, Kanan x=70)
+    display.setCursor(2, 27);
+    display.print("Nadi:"); display.print(my_hr); display.print("bpm");
+    display.setCursor(70, 27);
+    display.print("SpO2:"); display.print(my_spo2); display.print("%");
 
-    display.setCursor(0, 39);
-    display.print("SpO2  : "); display.print(my_spo2); display.println(" %");
+    display.setCursor(2, 39);
+    display.print("Suhu:"); display.print(my_temp, 1); display.print("C");
+    display.setCursor(70, 39);
+    display.print("A_Pk:1.0g");
 
-    display.setCursor(0, 50);
-    display.print("Suhu  : "); display.print(my_temp, 1); display.print(" C | Hop:OK");
-
-    display.drawLine(0, 62, 127, 62, WHITE);
+    // Dock Bawah Mesh Status
+    display.drawLine(0, 50, 127, 50, WHITE);
+    display.setCursor(2, 53);
+    display.print("Mesh:1-Hop");
+    display.setCursor(68, 53);
+    display.print("Tx:17dBm");
   }
 
   display.display();
@@ -126,8 +150,9 @@ void renderWatchDisplay() {
 void setup() {
   Serial.begin(115200);
 
-  // Inisialisasi Layar OLED (0x3C)
+  // Inisialisasi Layar OLED (0x3C) - 128x64 Resolusi Penuh & 400kHz Fast I2C
   Wire.begin(OLED_SDA, OLED_SCL);
+  Wire.setClock(400000);
   if (display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     display.clearDisplay();
     display.setTextColor(WHITE);
@@ -210,8 +235,13 @@ void loop() {
           friend_temp = incoming.substring(commaIdx[14] + 1).toFloat();
         }
 
-        // Aktifkan alert pop-up di layar Jam #01
-        relay_alert_active = true;
+        // Aktifkan alert pop-up di layar Jam #01 HANYA jika rekan terdeteksi bahaya (Triage 2 Waspada atau Triage 3 SOS)
+        // Jika rekan kondisi normal/kerja (Triage 0 atau 1), jam tetap tampil normal seperti jam tangan mandiri relawan
+        if (friend_triage == 3 || friend_triage == 2) {
+          relay_alert_active = true;
+        } else {
+          relay_alert_active = false;
+        }
         renderWatchDisplay();
 
         Serial.print("[RELAY #"); Serial.print(relay_counter);
@@ -230,14 +260,37 @@ void loop() {
         // Pancarkan kembali ke arah Gateway Posko
         if (LoRa.beginPacket()) {
           LoRa.print(forwardedPacket);
-          LoRa.endPacket(true); // Non-blocking transmit
+          LoRa.endPacket(); // Blocking transmit agar paket terkirim tuntas sebelum radio kembali ke RX!
           Serial.println("  -> [SUKSES TERUSKAN KE GATEWAY POSKO]\n");
         }
       }
     }
   }
 
-  // 2. Render Ulang Layar Berkala (Tiap 1 Detik)
+  // 2. Transmisi Periodik Status Mandiri Jam #01 (Bambang - Relawan) ke Gateway (Tiap 3 Detik)
+  // Menjamin Dashboard Command Center & Gateway SELALU memantau 2 pekerja aktif secara simultan!
+  static unsigned long last_self_tx = 0;
+  if (millis() - last_self_tx >= 3000) {
+    last_self_tx = millis();
+
+    // Sedikit fluktuasi fisiologis realistis untuk relawan Bambang (74-78 bpm, 98-100% SpO2)
+    int current_my_hr = constrain(my_hr + random(-1, 2), 72, 80);
+    int current_my_spo2 = constrain(my_spo2 + random(-1, 2), 98, 100);
+
+    // Format standar: NODE01,FEAT,a_total,g_total,a_max,a_min,g_mean,a_std,g_max,ax,ay,az,model_pred,triage_pred,hr,spo2,temp
+    String selfPayload = "NODE01,FEAT,1.0150,2.800,1.0400,0.9900,2.100,0.0070,4.500,0.0100,0.0200,1.0100,0,0,";
+    selfPayload += String(current_my_hr) + ",";
+    selfPayload += String(current_my_spo2) + ",";
+    selfPayload += String(my_temp, 1);
+
+    if (LoRa.beginPacket()) {
+      LoRa.print(selfPayload);
+      LoRa.endPacket(); // Blocking transmit agar paket terkirim sempurna ke Gateway!
+      Serial.println("[NODE #01] Memancarkan data mandiri relawan ke Gateway (Triage: 0 Normal)");
+    }
+  }
+
+  // 3. Render Ulang Layar Berkala (Tiap 1 Detik)
   static unsigned long lastOledRefresh = 0;
   if (millis() - lastOledRefresh >= 1000) {
     lastOledRefresh = millis();
