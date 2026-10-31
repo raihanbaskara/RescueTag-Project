@@ -691,25 +691,25 @@
                     </tr>
 
                     <!-- Row 2: Pekerja #01 (Bambang - Relay Host) -->
-                    <tr class="hover:bg-slate-50 rounded-xl transition">
+                    <tr id="row-worker-01" class="hover:bg-slate-50 rounded-xl transition">
                       <td class="py-3.5 px-3 rounded-l-xl">
                         <div class="font-bold text-slate-900 font-sans text-sm">Pekerja #01 (Bambang)</div>
                         <div class="text-[11px] text-slate-500 whitespace-nowrap">Jam Tangan #01 · Junction Poros B-02</div>
                       </td>
-                      <td class="py-3.5 px-3 text-amber-800 whitespace-nowrap font-medium">
+                      <td id="worker-01-vitals" class="py-3.5 px-3 text-amber-800 whitespace-nowrap font-medium">
                         106 BPM · 93% SpO2 · 37.6°C
                       </td>
-                      <td class="py-3.5 px-3">
+                      <td id="worker-01-kinematics" class="py-3.5 px-3">
                         <span class="pill-badge pill-amber">
                           ⚡ Tremor / Kelelahan Ringan
                         </span>
                       </td>
-                      <td class="py-3.5 px-3">
+                      <td id="worker-01-route" class="py-3.5 px-3">
                         <span class="pill-badge pill-teal">
                           ⇄ Direct + Relay Host (Hop 1)
                         </span>
                       </td>
-                      <td class="py-3.5 px-3">
+                      <td id="worker-01-triage" class="py-3.5 px-3">
                         <span class="pill-badge pill-amber">● KUNING - Delayed</span>
                       </td>
                       <td class="py-3.5 px-3 text-right rounded-r-xl">
@@ -1108,28 +1108,28 @@
                   </tr>
 
                   <!-- Relay #01 -->
-                  <tr class="hover:bg-slate-50 transition rounded-xl">
+                  <tr id="map-table-row-watch-01" class="hover:bg-slate-50 transition rounded-xl">
                     <td class="py-3.5 px-3 font-bold text-slate-900 rounded-l-xl">
                       <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span id="map-table-dot-watch-01" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                         <div>
                           <div class="font-bold">Jam Tangan #01 (Bambang)</div>
                           <div class="text-[10px] text-slate-400 font-normal">UID: RT-W01-STM32 · Junction B-02</div>
                         </div>
                       </div>
                     </td>
-                    <td class="py-3.5 px-3 font-bold text-slate-900">Junction B-02 (Shaft Poros)</td>
-                    <td class="py-3.5 px-3 text-amber-800 font-medium">
-                      106 BPM · 93% SpO2 · 37.6°C
+                    <td id="map-table-sector-watch-01" class="py-3.5 px-3 font-bold text-slate-900">Junction B-02 (Shaft Poros)</td>
+                    <td id="map-table-vitals-watch-01" class="py-3.5 px-3 text-emerald-800 font-medium whitespace-nowrap">
+                      76 BPM · 98% SpO2 · 36.5°C
                     </td>
-                    <td class="py-3.5 px-3">
-                      <span class="pill-badge pill-teal">Relay Forwarder (-88 dBm)</span>
+                    <td id="map-table-route-watch-01" class="py-3.5 px-3">
+                      <span class="pill-badge pill-teal">Relay Forwarder (-65 dBm)</span>
                     </td>
-                    <td class="py-3.5 px-3">
+                    <td id="map-table-battery-watch-01" class="py-3.5 px-3">
                       <span class="pill-badge pill-green">81% (4.2V LiPo)</span>
                     </td>
-                    <td class="py-3.5 px-3">
-                      <span class="pill-badge pill-amber">● KUNING - Delayed</span>
+                    <td id="map-table-triage-watch-01" class="py-3.5 px-3">
+                      <span class="pill-badge pill-green">● HIJAU - Normal</span>
                     </td>
                     <td class="py-3.5 px-3 text-right rounded-r-xl">
                       <button onclick="focusWatch(1)" class="btn-tactile px-3.5 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-mono text-xs">
@@ -1319,20 +1319,20 @@
                     </tr>
 
                     <!-- Row 2: Jam Tangan #01 (Relay Host) -->
-                    <tr class="hover:bg-slate-50 transition">
+                    <tr id="sensor-table-row-watch-01" class="hover:bg-slate-50 transition">
                       <td class="py-3 px-3 font-bold text-slate-900">
                         <div class="flex items-center gap-2">
-                          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                          <span id="sensor-table-dot-watch-01" class="w-2 h-2 rounded-full bg-emerald-500"></span>
                           <span>Jam Tangan #01</span>
                         </div>
                       </td>
-                      <td class="py-3 px-3 font-bold text-slate-800">Pekerja #01 (Bambang) · Junction Poros B-02</td>
+                      <td id="sensor-table-worker-watch-01" class="py-3 px-3 font-bold text-slate-800">Pekerja #01 (Bambang) · Junction Poros B-02</td>
                       <td class="py-3 px-3 text-slate-600">MAX30102 PPG + BMI160 IMU + MLX90614 IR</td>
-                      <td class="py-3 px-3 text-emerald-700 font-bold">-88 dBm · +6.5 dB</td>
-                      <td class="py-3 px-3"><span class="pill-badge pill-teal">⇄ Relay Host (Hop 1)</span></td>
-                      <td class="py-3 px-3 font-bold text-slate-700">81% (4.02V)</td>
+                      <td id="sensor-table-rssi-watch-01" class="py-3 px-3 text-emerald-700 font-bold">-65 dBm · +8.5 dB</td>
+                      <td id="sensor-table-route-watch-01" class="py-3 px-3"><span class="pill-badge pill-teal">⇄ Relay Host (Hop 1)</span></td>
+                      <td id="sensor-table-battery-watch-01" class="py-3 px-3 font-bold text-slate-700">81% (4.02V)</td>
                       <td class="py-3 px-3 text-right">
-                        <button onclick="alert('DIAGNOSTIK JAM TANGAN #01 (BAMBANG):\nStatus: Relay Host Aktif\nForwarding Packets: 1,428 Pkts\nLoRa Uplink: Langsung ke Posko (18ms)\nSpO2: 97% | HR: 84 BPM')" class="btn-tactile px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">
+                        <button onclick="runDiagWatch01()" class="btn-tactile px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">
                           Run Diag
                         </button>
                       </td>
@@ -2139,6 +2139,127 @@
       const vitalsSummary = `${hrStr} · ${spo2Str} · ${tempStr}`;
 
       // ========================================================
+      // 0. TELEMETRI JAM TANGAN #01 (PEKERJA #01: BAMBANG RELAY)
+      // ========================================================
+      if (data.device_id === 'RESCUE-TAG-01' || data.worker_id === 'WRK-001' || (data.worker_name && data.worker_name.includes('Bambang'))) {
+        
+        // --- A. SCREEN 1: Roster Table Dashboard ---
+        const vitals01 = document.getElementById('worker-01-vitals');
+        if (vitals01) {
+          const tempClass = temp > 38.0 ? 'bg-red-100 text-red-700 px-1.5 py-0.5 rounded' : 'text-slate-700 font-medium';
+          vitals01.innerHTML = `${hrStr} · ${spo2Str} · <span class="${tempClass}">${tempStr}</span>`;
+          if (tCode === 3) vitals01.className = 'py-3.5 px-3 font-bold text-red-600 whitespace-nowrap';
+          else if (tCode === 2) vitals01.className = 'py-3.5 px-3 font-bold text-orange-600 whitespace-nowrap';
+          else if (tCode === 1) vitals01.className = 'py-3.5 px-3 font-medium text-amber-700 whitespace-nowrap';
+          else vitals01.className = 'py-3.5 px-3 font-medium text-emerald-700 whitespace-nowrap';
+        }
+        const triage01 = document.getElementById('worker-01-triage');
+        if (triage01) {
+          if (tCode === 3) triage01.innerHTML = '<span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>';
+          else if (tCode === 2) triage01.innerHTML = '<span class="pill-badge pill-orange animate-pulse">● ORANYE - Waspada</span>';
+          else if (tCode === 1) triage01.innerHTML = '<span class="pill-badge pill-amber">● KUNING - Delayed</span>';
+          else triage01.innerHTML = '<span class="pill-badge pill-green">● HIJAU - Normal</span>';
+        }
+        const kin01 = document.getElementById('worker-01-kinematics');
+        if (kin01) {
+          if (tCode === 3) kin01.innerHTML = '<span class="pill-badge pill-red animate-pulse">⚠ Benturan / Jatuh</span>';
+          else if (tCode === 2) kin01.innerHTML = '<span class="pill-badge pill-amber">⚡ Kelelahan Relawan</span>';
+          else if (tCode === 1) kin01.innerHTML = '<span class="pill-badge pill-amber">⚡ Patroli Aktif</span>';
+          else kin01.innerHTML = '<span class="pill-badge pill-green">✔ Siaga / Patroli Normal</span>';
+        }
+        const route01 = document.getElementById('worker-01-route');
+        if (route01) {
+          route01.innerHTML = `<span class="pill-badge pill-teal">${network.route || '⇄ Direct + Relay Host (Hop 1)'}</span>`;
+        }
+        const row01 = document.getElementById('row-worker-01');
+        if (row01) {
+          row01.className = 'bg-emerald-50/20 hover:bg-emerald-50/40 rounded-xl transition border-l-4 border-emerald-400';
+          row01.classList.add('bg-emerald-100/50');
+          setTimeout(() => row01.classList.remove('bg-emerald-100/50'), 400);
+        }
+
+        // --- B. SCREEN 3: Map Views LoRa Node Table (IMAGE 1) ---
+        const mapVitals01 = document.getElementById('map-table-vitals-watch-01');
+        if (mapVitals01) {
+          const tempClass = temp > 38.0 ? 'bg-red-100 text-red-700 px-1 py-0.5 rounded' : 'text-slate-700 font-medium';
+          mapVitals01.innerHTML = `${hrStr} · ${spo2Str} · <span class="${tempClass}">${tempStr}</span>`;
+          if (tCode === 3) mapVitals01.className = 'py-3.5 px-3 text-red-700 font-bold whitespace-nowrap';
+          else if (tCode === 2) mapVitals01.className = 'py-3.5 px-3 text-orange-700 font-bold whitespace-nowrap';
+          else if (tCode === 1) mapVitals01.className = 'py-3.5 px-3 text-amber-800 font-medium whitespace-nowrap';
+          else mapVitals01.className = 'py-3.5 px-3 text-emerald-800 font-medium whitespace-nowrap';
+        }
+        const mapRoute01 = document.getElementById('map-table-route-watch-01');
+        if (mapRoute01) {
+          const rssiText = (network.rssi !== undefined) ? ` (${network.rssi} dBm)` : ' (-65 dBm)';
+          mapRoute01.innerHTML = `<span class="pill-badge pill-teal">${(network.route ? network.route : 'Relay Forwarder') + rssiText}</span>`;
+        }
+        const mapTriage01 = document.getElementById('map-table-triage-watch-01');
+        if (mapTriage01) {
+          if (tCode === 3) mapTriage01.innerHTML = '<span class="pill-badge pill-red animate-pulse">● MERAH - Immediate</span>';
+          else if (tCode === 2) mapTriage01.innerHTML = '<span class="pill-badge pill-orange animate-pulse">● ORANYE - Waspada</span>';
+          else if (tCode === 1) mapTriage01.innerHTML = '<span class="pill-badge pill-amber">● KUNING - Delayed</span>';
+          else mapTriage01.innerHTML = '<span class="pill-badge pill-green">● HIJAU - Normal</span>';
+        }
+        const mapDot01 = document.getElementById('map-table-dot-watch-01');
+        if (mapDot01) {
+          if (tCode === 3) mapDot01.className = 'w-2.5 h-2.5 rounded-full bg-red-500 animate-ping';
+          else if (tCode === 2) mapDot01.className = 'w-2.5 h-2.5 rounded-full bg-orange-500';
+          else if (tCode === 1) mapDot01.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+          else mapDot01.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+        }
+        const mapRow01 = document.getElementById('map-table-row-watch-01');
+        if (mapRow01) {
+          mapRow01.classList.add('bg-emerald-100/50');
+          setTimeout(() => mapRow01.classList.remove('bg-emerald-100/50'), 400);
+        }
+
+        // --- C. SCREEN 2: Sensor Telemetry Detail Table (IMAGE 2) ---
+        const sensorRssi01 = document.getElementById('sensor-table-rssi-watch-01');
+        if (sensorRssi01) {
+          const rssiVal = network.rssi !== undefined ? network.rssi : -65;
+          sensorRssi01.innerHTML = `${rssiVal} dBm · +8.5 dB`;
+        }
+        const sensorRoute01 = document.getElementById('sensor-table-route-watch-01');
+        if (sensorRoute01) {
+          sensorRoute01.innerHTML = `<span class="pill-badge pill-teal">${network.route || '⇄ Relay Host (Hop 1)'}</span>`;
+        }
+        const sensorDot01 = document.getElementById('sensor-table-dot-watch-01');
+        if (sensorDot01) {
+          if (tCode === 3) sensorDot01.className = 'w-2 h-2 rounded-full bg-red-500 animate-ping';
+          else if (tCode === 2) sensorDot01.className = 'w-2 h-2 rounded-full bg-orange-500';
+          else if (tCode === 1) sensorDot01.className = 'w-2 h-2 rounded-full bg-amber-500';
+          else sensorDot01.className = 'w-2 h-2 rounded-full bg-emerald-500';
+        }
+        const sensorRow01 = document.getElementById('sensor-table-row-watch-01');
+        if (sensorRow01) {
+          sensorRow01.classList.add('bg-emerald-100/50');
+          setTimeout(() => sensorRow01.classList.remove('bg-emerald-100/50'), 400);
+        }
+
+        // --- D. MAP POPUP & MARKER ---
+        if (typeof watch1Marker !== 'undefined' && watch1Marker) {
+          const popupHtml = `
+            <div class="font-mono text-xs p-1">
+              <div class="flex items-center gap-2 pb-1.5 border-b border-slate-100">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]"></span>
+                <span class="font-bold text-slate-900 text-xs tracking-wide">JAM TANGAN #01: BAMBANG</span>
+              </div>
+              <div class="mt-2 space-y-1 text-[11px] text-slate-600">
+                <div><span class="text-slate-400">Triage:</span> <span class="font-bold text-emerald-700">${triage.label || 'HIJAU (Normal)'}</span></div>
+                <div><span class="text-slate-400">Peran:</span> <span class="font-semibold text-slate-700">Relawan SAR & Relay Host</span></div>
+                <div><span class="text-slate-400">Vitals:</span> <span class="font-semibold text-slate-700">${vitalsSummary}</span></div>
+              </div>
+              <div class="mt-2 pt-1.5 border-t border-slate-100 font-bold text-[10.5px] text-emerald-700">
+                STATUS: LORA RELAY ESTAFET AKTIF
+              </div>
+            </div>
+          `;
+          watch1Marker.setPopupContent(popupHtml);
+        }
+        return; // Selesai update untuk Node #01, jangan lanjut ke Worker #02!
+      }
+
+      // ========================================================
       // 1. SCREEN 1 (DASHBOARD): Worker #02 Table Roster & Cards
       // ========================================================
       const vitalsEl = document.getElementById('worker-02-vitals');
@@ -2598,7 +2719,15 @@
           }
         });
 
-        window.testDashboardSOS = function() {
+        
+    window.runDiagWatch01 = function() {
+      const v = document.getElementById('map-table-vitals-watch-01')?.innerText || '76 BPM · 98% SpO2 · 36.5°C';
+      const r = document.getElementById('map-table-route-watch-01')?.innerText || 'Relay Forwarder';
+      const t = document.getElementById('map-table-triage-watch-01')?.innerText || 'HIJAU - Normal';
+      alert('DIAGNOSTIK JAM TANGAN #01 (BAMBANG - RELAY):\nStatus: Relay Host Aktif\nLoRa Uplink: Direct ke Gateway (-65 dBm)\nVitals Terkini: ' + v + '\nRute: ' + r + '\nTriage: ' + t + '\nForwarding: 1-Hop P2P Aktif');
+    };
+    
+    window.testDashboardSOS = function() {
           updateLiveDashboard({
             device_id: 'RESCUE-TAG-02',
             worker_id: 'WRK-002',
