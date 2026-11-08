@@ -1,7 +1,24 @@
 # -*- coding: utf-8 -*-
-import os
+"""
+Upgraded build script for RescueTag Dashboard.
+Enforces:
+1. 100% interactive clickable elements (Zero dead buttons).
+2. Doppelrand 3-column architecture (84px | 1fr | 414px) with high-end-visual-design.
+3. Zero-emoji compliance with gpt-taste.
+4. Semantic tokens and color system with stitch-design-taste.
+5. Full dual-worker telemetry & interactive Subterranean Fleet Roster table with Focus Map & Run Diag.
+6. Interactive Metric Modals, START Triage gauge clicks, Search modal, and SAR Dispatch modal.
+"""
 
-HTML_CONTENT = """<!DOCTYPE html>
+import os
+import base64
+
+# Read base64 image for self-contained embedding
+with open('smartwatch_grey_oled.png', 'rb') as f:
+    b64_img = base64.b64encode(f.read()).decode('utf-8')
+data_uri = f"data:image/png;base64,{b64_img}"
+
+HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -14,7 +31,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Mulish:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Leaflet GIS & MQTT.js -->
+  <!-- Leaflet GIS, Chart.js & MQTT.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/mqtt@4.3.7/dist/mqtt.min.js"></script>
@@ -47,7 +64,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     /* Doppelrand (Double-Bezel) Container Architecture */
     .dashboard-wrapper {
       width: 100%;
-      max-width: 1380px;
+      max-width: 1400px;
       min-height: 880px;
       background-color: #FAF6F1;
       border-radius: 34px;
@@ -72,7 +89,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 820px) {
       .dashboard-wrapper {
         grid-template-columns: 1fr;
         border-radius: 20px;
@@ -96,17 +113,21 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
-    /* Tactile Metric Cards */
+    /* Tactile Metric Cards with Spring Hover */
     .metric-card {
       background: #FFFFFF;
       border-radius: 20px;
       border: 1px solid #F0ECE6;
       box-shadow: 0 10px 30px rgba(145, 132, 118, 0.08);
       transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+      cursor: pointer;
     }
     .metric-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 18px 40px rgba(145, 132, 118, 0.15);
+    }
+    .metric-card:active {
+      transform: translateY(-1px) scale(0.995);
     }
 
     /* Icon Action Buttons */
@@ -129,6 +150,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
       background: #FAF6F1;
     }
+    .icon-btn:active {
+      transform: scale(0.96);
+    }
 
     /* Left Nav Buttons */
     .nav-btn {
@@ -146,6 +170,10 @@ HTML_CONTENT = """<!DOCTYPE html>
     .nav-btn:hover {
       background: #F4EFEA;
       color: #1F1E1E;
+      transform: translateY(-1px);
+    }
+    .nav-btn:active {
+      transform: scale(0.94);
     }
     .nav-btn.active {
       background: #2C2A2A;
@@ -155,7 +183,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     /* START Triage Dynamic Gradient Bar */
     .triage-gradient-bar {
-      height: 9px;
+      height: 10px;
       border-radius: 999px;
       background: linear-gradient(90deg, 
         #34D399 0%, 
@@ -166,6 +194,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         #1E293B 100%
       );
       position: relative;
+      cursor: pointer;
     }
 
     /* Rotated X-axis timestamps */
@@ -198,8 +227,12 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     /* Multi-segment Pill Bars */
     .day-col:hover .pill-seg {
-      filter: brightness(1.15);
-      transform: scaleX(1.22);
+      filter: brightness(1.2);
+      transform: scaleX(1.3);
+    }
+    .day-col.selected-bar .pill-seg {
+      filter: brightness(1.3) drop-shadow(0 0 4px rgba(229, 154, 67, 0.8));
+      transform: scaleX(1.4);
     }
     .pill-seg {
       transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
@@ -209,7 +242,14 @@ HTML_CONTENT = """<!DOCTYPE html>
     .ring-glow {
       filter: drop-shadow(0 0 6px rgba(240, 82, 72, 0.7));
       transition: all 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+      cursor: pointer;
     }
+    .ring-glow:hover {
+      filter: drop-shadow(0 0 14px rgba(255, 140, 60, 1)) !important;
+      transform: scale(1.08);
+      transform-origin: center center;
+    }
+
     .measure-card {
       transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
       cursor: pointer;
@@ -218,6 +258,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       transform: translateX(4px);
       box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
       background-color: #383535;
+    }
+    .measure-card:active {
+      transform: scale(0.98);
     }
 
     /* Worker Selector Switcher */
@@ -251,7 +294,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.82);
+      background: rgba(10, 10, 10, 0.84);
       backdrop-filter: blur(8px);
       z-index: 100;
       display: flex;
@@ -266,6 +309,23 @@ HTML_CONTENT = """<!DOCTYPE html>
       opacity: 1;
       pointer-events: auto;
     }
+
+    /* Subtle Table Styles */
+    .tactical-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9C9892;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #383535;
+    }
+    .tactical-table td {
+      font-size: 11.5px;
+      padding: 12px;
+      border-bottom: 1px solid #2B2828;
+    }
   </style>
 </head>
 <body>
@@ -276,8 +336,8 @@ HTML_CONTENT = """<!DOCTYPE html>
     <!-- ================= 1. LEFT SIDEBAR (84px) ================= -->
     <aside class="left-sidebar bg-white h-full flex flex-col items-center py-7 justify-between border-r border-[#F0ECE6] z-10 select-none">
       
-      <!-- Top High-Tech RescueTag Emblem -->
-      <div class="cursor-pointer group flex flex-col items-center" onclick="resetToOverview()" title="RescueTag Command Hub">
+      <!-- Top High-Tech RescueTag Emblem (Clickable to Reset) -->
+      <button class="cursor-pointer group flex flex-col items-center focus:outline-none" onclick="resetToOverview()" title="Reset View to Command Hub">
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#2D2B2A] to-[#171615] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E59A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -286,12 +346,12 @@ HTML_CONTENT = """<!DOCTYPE html>
           </svg>
         </div>
         <span class="text-[9px] font-mono font-bold tracking-widest text-[#9C9892] mt-1.5 uppercase">SEC-01</span>
-      </div>
+      </button>
 
       <!-- Navigation Tactile Icons -->
-      <nav class="flex flex-col items-center gap-6 my-auto">
+      <nav class="flex flex-col items-center gap-5 my-auto">
         <!-- 1. Overview Dashboard (Active) -->
-        <button class="nav-btn active" onclick="setActiveNav(this, 'overview')" title="Command Overview">
+        <button id="navBtnOverview" class="nav-btn active" onclick="setActiveNav(this, 'overview')" title="Command Overview (3-Column Doppelrand)">
           <svg width="19" height="19" viewBox="0 0 20 20" fill="none">
             <rect x="2" y="2" width="6.5" height="6.5" rx="1.5" fill="currentColor"/>
             <rect x="11.5" y="2" width="6.5" height="4.5" rx="1.5" fill="currentColor"/>
@@ -300,8 +360,17 @@ HTML_CONTENT = """<!DOCTYPE html>
           </svg>
         </button>
 
-        <!-- 2. Subterranean GIS Map Modal Trigger -->
-        <button class="nav-btn" onclick="openModal('modal-gis-map')" title="Subterranean GIS Mine Map">
+        <!-- 2. Dual-Worker Fleet Telemetry Roster Table -->
+        <button id="navBtnRoster" class="nav-btn" onclick="openModal('modal-fleet-roster')" title="Subterranean Worker Fleet Roster & Diagnostic Table">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <path d="M3 9h18"></path>
+            <path d="M9 21V9"></path>
+          </svg>
+        </button>
+
+        <!-- 3. Subterranean GIS Map Modal Trigger -->
+        <button id="navBtnMap" class="nav-btn" onclick="openModal('modal-gis-map')" title="Subterranean Spatial Mine Navigation (OpenStreetMap GIS)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
             <line x1="8" y1="2" x2="8" y2="18"></line>
@@ -309,8 +378,8 @@ HTML_CONTENT = """<!DOCTYPE html>
           </svg>
         </button>
 
-        <!-- 3. SAR Chronological Audit Trail Modal -->
-        <button class="nav-btn" onclick="openModal('modal-audit-trail')" title="Chronological Triage Audit Log">
+        <!-- 4. SAR Chronological Audit Trail Modal -->
+        <button id="navBtnAudit" class="nav-btn" onclick="openModal('modal-audit-trail')" title="Chronological Triage Audit Log">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
@@ -320,8 +389,8 @@ HTML_CONTENT = """<!DOCTYPE html>
           </svg>
         </button>
 
-        <!-- 4. Wearable Hardware Spec & Prototype Viewer -->
-        <button class="nav-btn" onclick="openModal('modal-hardware-spec')" title="Hardware REV 2.0 Specifications">
+        <!-- 5. Wearable Hardware Spec & Prototype Viewer -->
+        <button id="navBtnHardware" class="nav-btn" onclick="openModal('modal-hardware-spec')" title="Hardware REV 2.0 Specifications">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <rect x="6" y="2" width="12" height="20" rx="3"></rect>
             <circle cx="12" cy="12" r="3"></circle>
@@ -329,7 +398,7 @@ HTML_CONTENT = """<!DOCTYPE html>
           </svg>
         </button>
 
-        <!-- 5. Emergency Siren Audio Toggle -->
+        <!-- 6. Emergency Siren Audio Synthesizer Toggle -->
         <button id="sirenBtn" class="nav-btn" onclick="toggleAudioAlert()" title="Toggle Emergency Siren Synthesizer">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -339,10 +408,10 @@ HTML_CONTENT = """<!DOCTYPE html>
       </nav>
 
       <!-- Bottom Status Pill (MQTT Online indicator) -->
-      <div class="flex flex-col items-center gap-1.5 cursor-pointer" onclick="toggleMqttInfo()" title="MQTT EMQX Broker Connection">
+      <button class="flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none" onclick="toggleMqttInfo()" title="MQTT EMQX Broker Connection Details">
         <span id="mqttDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
         <span class="text-[9px] font-mono text-[#8E8B86] font-semibold">EMQX</span>
-      </div>
+      </button>
     </aside>
 
     <!-- ================= 2. CENTER CONTENT (1fr, Warm Sand #FAF6F1) ================= -->
@@ -368,11 +437,11 @@ HTML_CONTENT = """<!DOCTYPE html>
 
         <!-- Worker Roster Switcher Tabs -->
         <div class="flex items-center gap-2 bg-[#EFE9E0] p-1.5 rounded-2xl border border-[#E5DFD4]">
-          <button id="tabWorker02" onclick="selectWorker(2)" class="worker-pill-btn active">
+          <button id="tabWorker02" onclick="selectWorker(2)" class="worker-pill-btn active" title="Switch to Worker #02 (Agus Salim)">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>Pekerja #02 (Agus)</span>
           </button>
-          <button id="tabWorker01" onclick="selectWorker(1)" class="worker-pill-btn">
+          <button id="tabWorker01" onclick="selectWorker(1)" class="worker-pill-btn" title="Switch to Worker #01 (Bambang Relay)">
             <span class="w-2 h-2 rounded-full bg-amber-500"></span>
             <span>Pekerja #01 (Bambang Relay)</span>
           </button>
@@ -380,14 +449,16 @@ HTML_CONTENT = """<!DOCTYPE html>
 
         <!-- Top Right Actions -->
         <div class="flex items-center gap-2.5">
-          <button class="icon-btn" onclick="openModal('modal-hardware-spec')" title="Inspection & Diagnostics">
+          <!-- Search / Quick Sector Command Palette -->
+          <button class="icon-btn" onclick="openModal('modal-search')" title="Quick Command & Shaft Search">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </button>
           
-          <button class="icon-btn relative" onclick="openModal('modal-audit-trail')" title="Alert Notifications">
+          <!-- Alert Notifications Counter -->
+          <button class="icon-btn relative" onclick="openModal('modal-audit-trail')" title="View SAR Incident Logs">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -399,11 +470,15 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
       </header>
 
-      <!-- ROW 1: 3 Live Telemetry Cards -->
+      <!-- ROW 1: 3 Live Telemetry Cards (Clickable for Diagnostics & 3D Ring Highlight) -->
       <section class="grid grid-cols-1 md:grid-cols-3 gap-4 my-2">
         
         <!-- Metric Card 1: Heart Rate (MAX30102 PPG) -->
-        <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[208px] relative overflow-hidden">
+        <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[208px] relative overflow-hidden" 
+             onclick="openMetricDetail('hr')" 
+             onmouseenter="highlightSensorRing('chestRing', true)" 
+             onmouseleave="highlightSensorRing('chestRing', false)"
+             title="Click to view Heart Rate PPG diagnostics">
           <div>
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2.5">
@@ -445,7 +520,11 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
 
         <!-- Metric Card 2: SpO2 Blood Oxygen (MAX30102 Red/IR) -->
-        <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[208px] relative overflow-hidden">
+        <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[208px] relative overflow-hidden" 
+             onclick="openMetricDetail('spo2')" 
+             onmouseenter="highlightSensorRing('chestRing', true)" 
+             onmouseleave="highlightSensorRing('chestRing', false)"
+             title="Click to view SpO2 oxygenation curve">
           <div>
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2.5">
@@ -487,7 +566,11 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
 
         <!-- Metric Card 3: IR Skin Temperature (MLX90614) -->
-        <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[208px] relative overflow-hidden">
+        <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[208px] relative overflow-hidden" 
+             onclick="openMetricDetail('temp')" 
+             onmouseenter="highlightSensorRing('wristRing', true)" 
+             onmouseleave="highlightSensorRing('wristRing', false)"
+             title="Click to view MLX90614 Thermal Telemetry">
           <div>
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2.5">
@@ -536,12 +619,12 @@ HTML_CONTENT = """<!DOCTYPE html>
           <div>
             <h2 class="text-[16px] font-bold text-[#2D2B2A]">Kinematics & TinyML Activity Stream</h2>
             <p class="text-[11px] text-[#787571] mt-0.5">
-              Live Edge BMI160 6-DOF IMU Telemetry &bull; Real-time G-Force Shock Detection
+              Live Edge BMI160 6-DOF IMU Telemetry &bull; Click any bar to inspect interval
             </p>
           </div>
           
           <div class="flex items-center gap-3">
-            <span id="liveAccelPill" class="px-2.5 py-1 rounded-[8px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[11px] font-bold">
+            <span id="liveAccelPill" class="px-2.5 py-1 rounded-[8px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[11px] font-bold cursor-pointer" onclick="testSimSOS()" title="Click to test Shock alert">
               1.02g &bull; Normal
             </span>
             <button id="shiftSelectorBtn" onclick="cycleShift()" class="flex items-center gap-2 px-3 py-1.5 rounded-[10px] border border-[#EAE6E1] text-[11.5px] font-semibold text-[#4A4744] hover:bg-[#FAF6F1] transition">
@@ -580,25 +663,25 @@ HTML_CONTENT = """<!DOCTYPE html>
         <!-- Legend and Trigger Controls -->
         <div class="flex flex-wrap items-center justify-between pt-1 border-t border-[#F6F2EC]">
           <div class="flex items-center gap-6">
-            <div class="flex items-center gap-2">
+            <button onclick="setFilterActivity('shock')" class="flex items-center gap-2 hover:opacity-80 transition focus:outline-none">
               <span class="w-2.5 h-2.5 rounded-full bg-[#DA7468]"></span>
               <span class="text-[10.5px] font-semibold text-[#6E6B67]">G-Force Shock (>3.0g)</span>
-            </div>
-            <div class="flex items-center gap-2">
+            </button>
+            <button onclick="setFilterActivity('work')" class="flex items-center gap-2 hover:opacity-80 transition focus:outline-none">
               <span class="w-2.5 h-2.5 rounded-full bg-[#438D9B]"></span>
               <span class="text-[10.5px] font-semibold text-[#6E6B67]">Kerja Tambang Aktif (1.2-2.5g)</span>
-            </div>
-            <div class="flex items-center gap-2">
+            </button>
+            <button onclick="setFilterActivity('rest')" class="flex items-center gap-2 hover:opacity-80 transition focus:outline-none">
               <span class="w-2.5 h-2.5 rounded-full bg-[#CD8A39]"></span>
               <span class="text-[10.5px] font-semibold text-[#6E6B67]">Diam / Baseline (1.0g)</span>
-            </div>
+            </button>
           </div>
 
           <div class="flex items-center gap-2">
-            <button onclick="testSimSOS()" class="px-2.5 py-1 rounded-[7px] bg-red-100 text-red-800 text-[10.5px] font-bold hover:bg-red-200 transition font-mono">
+            <button onclick="testSimSOS()" class="px-2.5 py-1 rounded-[7px] bg-red-100 text-red-800 text-[10.5px] font-bold hover:bg-red-200 transition font-mono" title="Simulate 4.85g Free-Fall & Tachycardia">
               Simulate SOS (Shock)
             </button>
-            <button onclick="testSimNormal()" class="px-2.5 py-1 rounded-[7px] bg-emerald-100 text-emerald-800 text-[10.5px] font-bold hover:bg-emerald-200 transition font-mono">
+            <button onclick="testSimNormal()" class="px-2.5 py-1 rounded-[7px] bg-emerald-100 text-emerald-800 text-[10.5px] font-bold hover:bg-emerald-200 transition font-mono" title="Simulate 1.02g Stable Vitals">
               Simulate Normal
             </button>
           </div>
@@ -616,20 +699,25 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
 
         <div class="flex items-center gap-2">
-          <span class="px-3 py-1 rounded-[8px] bg-[#CEF0F7] text-[#1E454E] text-[10.5px] font-bold font-mono tracking-tight">
+          <button onclick="pulseHopSimulation()" class="px-3 py-1 rounded-[8px] bg-[#CEF0F7] text-[#1E454E] text-[10.5px] font-bold font-mono tracking-tight hover:bg-[#BDE7F0] transition" title="Click to test 18ms Hop Relay pulse">
             18ms Estafet Latency
-          </span>
+          </button>
           <span class="px-3 py-1 rounded-[8px] bg-[#F3ECE4] text-[#4F4A44] text-[10.5px] font-bold font-mono">
             RSSI -68 dBm // SNR +8.5 dB
           </span>
         </div>
 
-        <button onclick="openModal('modal-gis-map')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-[10px] bg-[#2C2A2A] text-white text-[11px] font-semibold hover:bg-[#1E1D1D] transition shadow-sm">
-          <span>Open Subterranean GIS Map</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="openModal('modal-fleet-roster')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] bg-[#EDE7DF] text-[#3E3C39] text-[11px] font-semibold hover:bg-[#E2DAD0] transition">
+            <span>Fleet Roster Table</span>
+          </button>
+          <button onclick="openModal('modal-gis-map')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-[10px] bg-[#2C2A2A] text-white text-[11px] font-semibold hover:bg-[#1E1D1D] transition shadow-sm">
+            <span>Open GIS Map</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
       </section>
 
     </main>
@@ -659,7 +747,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div class="bg-[#F6D6B8] rounded-[14px] px-3 py-2 h-[68px] flex flex-col justify-between relative text-[#2C2A29]" title="Drag left/right to adjust Heart Rate">
               <input type="range" min="40" max="180" value="75" id="sliderHR" class="ruler-slider" oninput="onSimulatorInput()" />
               <!-- Ruler Ticks -->
-              <div class="flex items-start justify-end gap-[5px] pr-1 pt-0.5">
+              <div class="flex items-start justify-end gap-[5px] pr-1 pt-0.5 pointer-events-none">
                 <span class="w-[1.2px] h-2 bg-[#7A6855]"></span>
                 <span class="w-[1.2px] h-2 bg-[#7A6855]"></span>
                 <span class="w-[1.2px] h-2 bg-[#7A6855]"></span>
@@ -678,7 +766,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div class="bg-[#C8EAEF] rounded-[14px] px-3 py-2 h-[68px] flex flex-col justify-between relative text-[#2C2A29]" title="Drag left/right to adjust SpO2">
               <input type="range" min="70" max="100" value="98" id="sliderSpO2" class="ruler-slider" oninput="onSimulatorInput()" />
               <!-- Ruler Ticks -->
-              <div class="flex items-start justify-end gap-[5px] pr-1 pt-0.5">
+              <div class="flex items-start justify-end gap-[5px] pr-1 pt-0.5 pointer-events-none">
                 <span class="w-[1.2px] h-2 bg-[#6A8185]"></span>
                 <span class="w-[1.2px] h-2 bg-[#6A8185]"></span>
                 <span class="w-[1.2px] h-2 bg-[#6A8185]"></span>
@@ -711,16 +799,16 @@ HTML_CONTENT = """<!DOCTYPE html>
               </div>
             </div>
 
-            <!-- Gradient Priority Bar with Dynamic Indicator Dot -->
-            <div>
+            <!-- Gradient Priority Bar with Dynamic Indicator Dot (Clickable) -->
+            <div onclick="onTriageBarClick(event)" title="Click anywhere on the bar to test triage stages">
               <div class="triage-gradient-bar mt-1">
-                <div id="triageDot" class="w-3.5 h-3.5 rounded-full bg-white shadow-md border-[2.5px] border-[#2C2A2A] absolute -top-[3.5px] transition-all duration-300" style="left: 15%;"></div>
+                <div id="triageDot" class="w-3.5 h-3.5 rounded-full bg-white shadow-md border-[2.5px] border-[#2C2A2A] absolute -top-[3px] transition-all duration-300" style="left: 15%;"></div>
               </div>
               <div class="flex justify-between text-[8px] font-mono text-[#A39E97] mt-1.5 font-semibold">
-                <span>HIJAU</span>
-                <span>KUNING</span>
-                <span>MERAH</span>
-                <span>HITAM</span>
+                <span onclick="setTriageDirect('HIJAU')" class="hover:text-emerald-400 cursor-pointer">HIJAU</span>
+                <span onclick="setTriageDirect('KUNING')" class="hover:text-amber-400 cursor-pointer">KUNING</span>
+                <span onclick="setTriageDirect('MERAH')" class="hover:text-red-400 cursor-pointer">MERAH</span>
+                <span onclick="setTriageDirect('HITAM')" class="hover:text-gray-200 cursor-pointer">HITAM</span>
               </div>
             </div>
 
@@ -741,9 +829,9 @@ HTML_CONTENT = """<!DOCTYPE html>
             <h3 class="text-[15px] font-bold text-[#F4F1EA] tracking-tight">Wearable Sensor Ergonomics</h3>
             <p class="text-[10px] text-[#A6A29C] font-mono">Hardware REV 2.0 Anatomical Inset</p>
           </div>
-          <span class="text-[10px] font-mono text-[#D4AF37] px-2 py-0.5 rounded bg-[#3A3322] border border-[#5A4D2E]">
+          <button onclick="openModal('modal-hardware-spec')" class="text-[10px] font-mono text-[#D4AF37] px-2 py-0.5 rounded bg-[#3A3322] border border-[#5A4D2E] hover:bg-[#4D442C] transition">
             NODE-01 FIXED
-          </span>
+          </button>
         </div>
 
         <div class="grid grid-cols-[148px_1fr] gap-3 items-center">
@@ -755,7 +843,8 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div class="measure-card bg-[#383535] rounded-[13px] px-3 py-2 flex flex-col justify-between border border-[#484444]" 
                  onmouseenter="highlightSensorRing('wristRing', true)" 
                  onmouseleave="highlightSensorRing('wristRing', false)"
-                 onclick="openModal('modal-hardware-spec')">
+                 onclick="openModal('modal-hardware-spec')"
+                 title="Click to inspect OLED Watch Enclosure">
               <div class="text-[11px] font-bold text-[#F4F1EA] flex items-center justify-between">
                 <span>Smartwatch IP68</span>
                 <span class="text-[9px] font-mono text-[#E59A43]">REV 2.0</span>
@@ -769,7 +858,9 @@ HTML_CONTENT = """<!DOCTYPE html>
             <!-- Card 2: PPG Arterial Pulse (Triggers Chest Ring) -->
             <div class="measure-card bg-[#383535] rounded-[13px] px-3 py-2 flex flex-col justify-between border border-[#484444]" 
                  onmouseenter="highlightSensorRing('chestRing', true)" 
-                 onmouseleave="highlightSensorRing('chestRing', false)">
+                 onmouseleave="highlightSensorRing('chestRing', false)"
+                 onclick="openMetricDetail('hr')"
+                 title="Click to inspect PPG Pulse Optical Sensor">
               <div class="text-[11px] font-bold text-[#F4F1EA] flex items-center justify-between">
                 <span>MAX30102 PPG</span>
                 <span class="text-[9px] font-mono text-[#DE6D72]">Optic</span>
@@ -783,7 +874,9 @@ HTML_CONTENT = """<!DOCTYPE html>
             <!-- Card 3: Core IMU Kinematics (Triggers Waist Ring) -->
             <div class="measure-card bg-[#383535] rounded-[13px] px-3 py-2 flex flex-col justify-between border border-[#484444]" 
                  onmouseenter="highlightSensorRing('waistRing', true)" 
-                 onmouseleave="highlightSensorRing('waistRing', false)">
+                 onmouseleave="highlightSensorRing('waistRing', false)"
+                 onclick="openModal('modal-tinyml-detail')"
+                 title="Click to view TinyML Fall Detection Network">
               <div class="text-[11px] font-bold text-[#F4F1EA] flex items-center justify-between">
                 <span>BMI160 6-DOF IMU</span>
                 <span class="text-[9px] font-mono text-[#478F9E]">TinyML</span>
@@ -823,7 +916,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <path d="M 55 160 A 50 9 0 0 1 155 160" stroke="#E59A43" stroke-width="1.7" stroke-opacity="0.6" fill="none" />
               <path d="M 30 226 A 24 6 0 0 1 66 226" stroke="#E59A43" stroke-width="1.7" stroke-opacity="0.6" fill="none" />
 
-              <!-- FULL HUMAN ANATOMY (High-end vector figure) -->
+              <!-- FULL HUMAN ANATOMY -->
               <!-- Neck & Shoulders -->
               <path d="M 88 52 L 86 68 L 62 76 L 148 76 L 124 68 L 122 52 Z" fill="#F7C9A6"/>
               <path d="M 88 55 Q 105 70 122 55 L 123 68 Q 105 76 87 68 Z" fill="url(#neckShadow)"/>
@@ -854,24 +947,23 @@ HTML_CONTENT = """<!DOCTYPE html>
               <path d="M 73 400 C 70 406, 65 418, 65 426 C 65 433, 73 436, 82 436 C 91 436, 95 432, 94 424 C 93 414, 93 405, 91 400 Z" fill="#171615"/>
               <path d="M 119 400 C 117 405, 117 414, 116 424 C 115 432, 119 436, 128 436 C 137 436, 145 433, 145 426 C 145 418, 140 406, 137 400 Z" fill="#171615"/>
 
-              <!-- FRONT HALF OF 3D GLOWING SENSOR RINGS -->
+              <!-- FRONT HALF OF 3D GLOWING SENSOR RINGS (Clickable) -->
               <!-- 1. Chest Ring: MAX30102 PPG Arterial Pulse -->
-              <g id="chestRing" class="ring-glow">
+              <g id="chestRing" class="ring-glow" onclick="openMetricDetail('hr')">
                 <path d="M 38 112 A 67 11 0 0 0 172 112" stroke="#FF6B63" stroke-width="3.2" stroke-opacity="0.45" filter="url(#sensorGlow)" fill="none" />
                 <path d="M 38 112 A 67 11 0 0 0 172 112" stroke="#F0645A" stroke-width="1.8" fill="none" />
               </g>
 
               <!-- 2. Waist Ring: BMI160 6-DOF IMU Kinematics -->
-              <g id="waistRing" class="ring-glow">
+              <g id="waistRing" class="ring-glow" onclick="openModal('modal-tinyml-detail')">
                 <path d="M 55 160 A 50 9 0 0 0 155 160" stroke="#478F9E" stroke-width="3.2" stroke-opacity="0.45" filter="url(#sensorGlow)" fill="none" />
                 <path d="M 55 160 A 50 9 0 0 0 155 160" stroke="#60C3D8" stroke-width="1.8" fill="none" />
               </g>
 
               <!-- 3. Wrist Ring: Smartwatch IP68 REV 2.0 (Left Wrist) -->
-              <g id="wristRing" class="ring-glow">
+              <g id="wristRing" class="ring-glow" onclick="openModal('modal-hardware-spec')">
                 <path d="M 30 226 A 24 6 0 0 0 66 226" stroke="#E59A43" stroke-width="3.2" stroke-opacity="0.5" filter="url(#sensorGlow)" fill="none" />
                 <path d="M 30 226 A 24 6 0 0 0 66 226" stroke="#F5A84D" stroke-width="2.0" fill="none" />
-                <!-- Physical Watch Case outline on wrist -->
                 <rect x="42" y="220" width="12" height="12" rx="3" fill="#2C2A29" stroke="#E59A43" stroke-width="1.2" />
               </g>
 
@@ -886,7 +978,139 @@ HTML_CONTENT = """<!DOCTYPE html>
 
   </div>
 
-  <!-- ================= MODAL 1: SUBTERRANEAN GIS MINE MAP ================= -->
+  <!-- ================= MODAL 1: SUBTERRANEAN FLEET ROSTER & DIAGNOSTICS ================= -->
+  <div id="modal-fleet-roster" class="modal-overlay">
+    <div class="bg-[#1C1A1A] text-white w-full max-w-5xl rounded-[28px] border border-[#383535] shadow-2xl p-6 relative flex flex-col max-h-[90vh] overflow-hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-[#383535]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <path d="M3 9h18"></path>
+              <path d="M9 21V9"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold font-mono">Subterranean Worker Fleet Roster & LoRa Diagnostics</h3>
+            <p class="text-xs text-gray-400">Real-Time Telemetry & 1-Hop Forwarding State for Both Personnel</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-fleet-roster')" class="w-8 h-8 rounded-lg bg-[#333030] hover:bg-[#444040] flex items-center justify-center text-gray-300">
+          &times;
+        </button>
+      </div>
+
+      <!-- Fleet Table -->
+      <div class="overflow-x-auto mt-4 flex-1">
+        <table class="w-full tactical-table border-collapse">
+          <thead>
+            <tr>
+              <th>Worker & Tag ID</th>
+              <th>Vitals (HR &bull; SpO2 &bull; Temp)</th>
+              <th>TinyML Activity State</th>
+              <th>Transmission Route</th>
+              <th>START Triage Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: Worker #02 (Agus Salim) -->
+            <tr id="rosterRow02" class="hover:bg-[#252222] transition">
+              <td>
+                <div class="font-bold text-white text-xs">Pekerja #02 (Agus Salim)</div>
+                <div class="text-[10px] text-gray-400 font-mono">Jam Tangan #02 &bull; Sektor 7 (Lorong C-4)</div>
+              </td>
+              <td>
+                <span id="rosterVitals02" class="font-mono text-emerald-400 font-semibold">
+                  75 BPM &bull; 98% SpO2 &bull; 36.5&deg;C
+                </span>
+              </td>
+              <td>
+                <span id="rosterActivity02" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10.5px]">
+                  Diam / Istirahat Normal
+                </span>
+              </td>
+              <td>
+                <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10.5px] font-mono">
+                  1-Hop Relay via Jam #01
+                </span>
+              </td>
+              <td>
+                <span id="rosterTriage02" class="px-2.5 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-600 font-bold text-[10px]">
+                  HIJAU - Minor (Aman)
+                </span>
+              </td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <button onclick="focusFromRoster(2)" class="px-2.5 py-1 rounded bg-[#333030] hover:bg-[#444040] text-[11px] font-mono transition">
+                    Focus Map
+                  </button>
+                  <button onclick="runDiagWatch(2)" class="px-2.5 py-1 rounded bg-orange-950 hover:bg-orange-900 text-orange-300 border border-orange-800 text-[11px] font-mono transition">
+                    Run Diag
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 2: Worker #01 (Bambang Relay Host) -->
+            <tr id="rosterRow01" class="hover:bg-[#252222] transition">
+              <td>
+                <div class="font-bold text-white text-xs">Pekerja #01 (Bambang)</div>
+                <div class="text-[10px] text-gray-400 font-mono">Jam Tangan #01 &bull; Junction B-02 (Shaft Poros)</div>
+              </td>
+              <td>
+                <span id="rosterVitals01" class="font-mono text-amber-400 font-semibold">
+                  106 BPM &bull; 93% SpO2 &bull; 37.6&deg;C
+                </span>
+              </td>
+              <td>
+                <span id="rosterActivity01" class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[10.5px]">
+                  Tremor / Kelelahan Ringan
+                </span>
+              </td>
+              <td>
+                <span class="px-2 py-0.5 rounded bg-orange-950 text-orange-300 border border-orange-800 text-[10.5px] font-mono">
+                  Direct + Relay Host (Hop 1)
+                </span>
+              </td>
+              <td>
+                <span id="rosterTriage01" class="px-2.5 py-1 rounded bg-amber-950/80 text-amber-300 border border-amber-600 font-bold text-[10px]">
+                  KUNING - Delayed
+                </span>
+              </td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <button onclick="focusFromRoster(1)" class="px-2.5 py-1 rounded bg-[#333030] hover:bg-[#444040] text-[11px] font-mono transition">
+                    Focus Map
+                  </button>
+                  <button onclick="runDiagWatch(1)" class="px-2.5 py-1 rounded bg-orange-950 hover:bg-orange-900 text-orange-300 border border-orange-800 text-[11px] font-mono transition">
+                    Run Diag
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Quick Actions Footer -->
+      <div class="flex flex-wrap items-center justify-between pt-4 mt-2 border-t border-[#383535] text-xs font-mono">
+        <div class="flex items-center gap-3">
+          <button onclick="testSimSOS()" class="px-3 py-1.5 rounded bg-red-950 text-red-200 border border-red-700 hover:bg-red-900 transition">
+            Test Incident SOS (Worker #02)
+          </button>
+          <button onclick="testSimNormal()" class="px-3 py-1.5 rounded bg-emerald-950 text-emerald-200 border border-emerald-700 hover:bg-emerald-900 transition">
+            Test Baseline Normal
+          </button>
+        </div>
+        <div class="text-gray-400">
+          Radio Frequency: 433.05 MHz Sub-GHz &bull; Hop Latency: 18ms
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: SUBTERRANEAN GIS MINE MAP ================= -->
   <div id="modal-gis-map" class="modal-overlay">
     <div class="bg-[#1C1A1A] text-white w-full max-w-4xl h-[620px] rounded-[28px] border border-[#383535] shadow-2xl flex flex-col overflow-hidden relative">
       <!-- Modal Header -->
@@ -917,7 +1141,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       <!-- Tactical Map Footer Controls -->
       <div class="px-6 py-3 bg-[#262424] border-t border-[#383535] flex items-center justify-between text-xs font-mono">
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
           <button onclick="focusMapNode(2)" class="px-3 py-1 rounded bg-emerald-950/80 border border-emerald-500/80 text-emerald-300 hover:bg-emerald-900 transition">
             Focus: Pekerja #02 (Agus)
           </button>
@@ -928,12 +1152,12 @@ HTML_CONTENT = """<!DOCTYPE html>
             Simulate 1-Hop Forwarding
           </button>
         </div>
-        <span class="text-gray-400">Fixed Anchor: Lat -8.2465 Lon 113.6965</span>
+        <span class="text-gray-400">Anchor: Lat -8.2465 Lon 113.6965</span>
       </div>
     </div>
   </div>
 
-  <!-- ================= MODAL 2: HARDWARE REV 2.0 SPECIFICATION ================= -->
+  <!-- ================= MODAL 3: HARDWARE REV 2.0 SPECIFICATION ================= -->
   <div id="modal-hardware-spec" class="modal-overlay">
     <div class="bg-[#1C1A1A] text-white w-full max-w-3xl rounded-[28px] border border-[#383535] shadow-2xl p-6 relative">
       <div class="flex items-center justify-between pb-4 border-b border-[#383535]">
@@ -955,9 +1179,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 items-center">
-        <!-- Hardware Prototype Image -->
+        <!-- Hardware Prototype Image (Self-Contained Base64) -->
         <div class="bg-black/60 rounded-2xl p-3 border border-[#333] flex items-center justify-center">
-          <img src="./smartwatch_grey_oled.png" alt="RescueTag Hardware Prototype" class="w-full max-h-[300px] object-contain drop-shadow-2xl" onerror="this.onerror=null; this.src='https://placehold.co/400x300/1a1a1a/e59a43?text=RescueTag+REV+2.0+OLED';" />
+          <img id="hardwarePhotoImg" src="BASE64_IMAGE_PLACEHOLDER" alt="RescueTag Hardware Prototype" class="w-full max-h-[300px] object-contain drop-shadow-2xl" />
         </div>
 
         <!-- Technical Specs -->
@@ -983,7 +1207,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ================= MODAL 3: SAR AUDIT TRAIL LOGS ================= -->
+  <!-- ================= MODAL 4: SAR AUDIT TRAIL LOGS ================= -->
   <div id="modal-audit-trail" class="modal-overlay">
     <div class="bg-[#1C1A1A] text-white w-full max-w-2xl h-[520px] rounded-[28px] border border-[#383535] shadow-2xl flex flex-col p-6 relative">
       <div class="flex items-center justify-between pb-4 border-b border-[#383535]">
@@ -998,13 +1222,95 @@ HTML_CONTENT = """<!DOCTYPE html>
             <p class="text-xs text-gray-400">Live Timestamped Disaster Event Records</p>
           </div>
         </div>
-        <button onclick="closeModal('modal-audit-trail')" class="w-8 h-8 rounded-lg bg-[#333030] hover:bg-[#444040] flex items-center justify-center text-gray-300">
-          &times;
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="dispatchAlphaSquad()" class="px-2.5 py-1 rounded-lg bg-red-900 hover:bg-red-800 text-xs font-mono text-red-200 border border-red-600 transition">
+            Dispatch SAR Squad
+          </button>
+          <button onclick="closeModal('modal-audit-trail')" class="w-8 h-8 rounded-lg bg-[#333030] hover:bg-[#444040] flex items-center justify-center text-gray-300">
+            &times;
+          </button>
+        </div>
       </div>
 
       <div id="auditLogList" class="flex-1 overflow-y-auto mt-4 space-y-2.5 font-mono text-xs pr-1">
         <!-- Log entries populated here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 5: METRIC DETAIL POPOVER ================= -->
+  <div id="modal-metric-detail" class="modal-overlay">
+    <div class="bg-[#1C1A1A] text-white w-full max-w-md rounded-[24px] border border-[#383535] shadow-2xl p-6 relative">
+      <div class="flex items-center justify-between pb-3 border-b border-[#383535]">
+        <h3 id="metricDetailTitle" class="text-sm font-bold font-mono">Metric Diagnostics</h3>
+        <button onclick="closeModal('modal-metric-detail')" class="w-7 h-7 rounded-lg bg-[#333030] hover:bg-[#444040] flex items-center justify-center text-gray-300">
+          &times;
+        </button>
+      </div>
+      <div id="metricDetailBody" class="mt-4 space-y-3 font-mono text-xs">
+        <!-- Populated on click -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 6: TINYML MOTION MODEL DETAIL ================= -->
+  <div id="modal-tinyml-detail" class="modal-overlay">
+    <div class="bg-[#1C1A1A] text-white w-full max-w-lg rounded-[24px] border border-[#383535] shadow-2xl p-6 relative">
+      <div class="flex items-center justify-between pb-3 border-b border-[#383535]">
+        <div class="flex items-center gap-2.5">
+          <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+          <h3 class="text-sm font-bold font-mono">TinyML Edge Kinematics Classifier (BMI160)</h3>
+        </div>
+        <button onclick="closeModal('modal-tinyml-detail')" class="w-7 h-7 rounded-lg bg-[#333030] hover:bg-[#444040] flex items-center justify-center text-gray-300">
+          &times;
+        </button>
+      </div>
+      <div class="mt-4 space-y-3 font-mono text-xs text-gray-300">
+        <p>Model: Quantized Feed-Forward Neural Network (12KB SRAM footprint on STM32).</p>
+        <div class="bg-[#262424] p-3 rounded-xl border border-[#383535] space-y-1">
+          <div><span class="text-gray-400">Input Vector:</span> 6-DOF Accel (X,Y,Z) + Gyro (Roll,Pitch,Yaw) @ 50 Hz</div>
+          <div><span class="text-gray-400">Class 0:</span> Diam / Istirahat Normal (a_total ~ 1.0g)</div>
+          <div><span class="text-gray-400">Class 1:</span> Kerja Aktif Menambang (1.2g - 2.5g)</div>
+          <div><span class="text-gray-400">Class 2:</span> Kelelahan / Tremor Lengan (Vibrasi Mikro)</div>
+          <div><span class="text-gray-400">Class 3:</span> Benturan Jatuh Bebas / Free-Fall (Peak > 3.0g, Imobilitas >30s)</div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button onclick="testSimSOS(); closeModal('modal-tinyml-detail');" class="px-3 py-1.5 rounded bg-red-950 text-red-200 border border-red-700 hover:bg-red-900 transition">
+            Test Free-Fall Trigger
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 7: QUICK SEARCH COMMAND PALETTE ================= -->
+  <div id="modal-search" class="modal-overlay">
+    <div class="bg-[#1C1A1A] text-white w-full max-w-lg rounded-[24px] border border-[#383535] shadow-2xl p-5 relative">
+      <div class="flex items-center gap-3 pb-3 border-b border-[#383535]">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search workers, shafts, sensor nodes..." class="bg-transparent text-white font-mono text-sm w-full outline-none" oninput="onSearchFilter()" />
+        <button onclick="closeModal('modal-search')" class="text-gray-400 hover:text-white">&times;</button>
+      </div>
+      <div id="searchResults" class="mt-3 space-y-2 font-mono text-xs max-h-60 overflow-y-auto">
+        <div onclick="selectWorker(2); closeModal('modal-search');" class="p-2.5 rounded-xl bg-[#262424] hover:bg-[#333030] cursor-pointer flex justify-between">
+          <span>Pekerja #02: Agus Salim</span>
+          <span class="text-emerald-400">Sektor 7 (Lorong C-4)</span>
+        </div>
+        <div onclick="selectWorker(1); closeModal('modal-search');" class="p-2.5 rounded-xl bg-[#262424] hover:bg-[#333030] cursor-pointer flex justify-between">
+          <span>Pekerja #01: Bambang (Relay Host)</span>
+          <span class="text-amber-400">Junction B-02 (Poros Shaft)</span>
+        </div>
+        <div onclick="openModal('modal-gis-map'); closeModal('modal-search');" class="p-2.5 rounded-xl bg-[#262424] hover:bg-[#333030] cursor-pointer flex justify-between">
+          <span>Subterranean GIS Mine Map</span>
+          <span class="text-orange-400">OpenStreetMap Canvas</span>
+        </div>
+        <div onclick="openModal('modal-fleet-roster'); closeModal('modal-search');" class="p-2.5 rounded-xl bg-[#262424] hover:bg-[#333030] cursor-pointer flex justify-between">
+          <span>Dual-Worker Fleet Roster Table</span>
+          <span class="text-blue-400">Full Diagnostics</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1026,7 +1332,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     let gatewayMarker = null;
     let isDarkMapTile = true;
 
-    // Both workers initial state
+    // Both workers state
     const workers = {
       1: {
         id: 'WRK-001',
@@ -1069,89 +1375,142 @@ HTML_CONTENT = """<!DOCTYPE html>
     // -------------------------------------------------------------
     function selectWorker(workerId) {
       currentWorker = workerId;
-      document.getElementById('tabWorker01').classList.toggle('active', workerId === 1);
-      document.getElementById('tabWorker02').classList.toggle('active', workerId === 2);
+      const tab1 = document.getElementById('tabWorker01');
+      const tab2 = document.getElementById('tabWorker02');
+      if (tab1) tab1.classList.toggle('active', workerId === 1);
+      if (tab2) tab2.classList.toggle('active', workerId === 2);
       
       const w = workers[workerId];
-      document.getElementById('headerSectorStatus').textContent = `${w.sector} • ${w.route}`;
+      const sectorEl = document.getElementById('headerSectorStatus');
+      if (sectorEl) sectorEl.textContent = w.sector + ' • ' + w.route;
       
       // Update simulator sliders to match selected worker
-      document.getElementById('sliderHR').value = w.hr;
-      document.getElementById('sliderSpO2').value = w.spo2;
-      document.getElementById('simHRText').textContent = `${w.hr} BPM`;
-      document.getElementById('simSpO2Text').textContent = `${w.spo2} %`;
+      const slHR = document.getElementById('sliderHR');
+      const slSpO2 = document.getElementById('sliderSpO2');
+      if (slHR) slHR.value = w.hr;
+      if (slSpO2) slSpO2.value = w.spo2;
+      
+      const hrText = document.getElementById('simHRText');
+      const spText = document.getElementById('simSpO2Text');
+      if (hrText) hrText.textContent = w.hr + ' BPM';
+      if (spText) spText.textContent = w.spo2 + ' %';
 
       updateTelemetryDisplay(w);
       evaluateSTART(w.hr, w.spo2);
+      updateRosterTableUI();
     }
 
     function updateTelemetryDisplay(w) {
       // 1. HR
-      document.getElementById('val-hr').textContent = w.hr > 0 ? w.hr : '--';
+      const valHR = document.getElementById('val-hr');
+      if (valHR) valHR.textContent = w.hr > 0 ? w.hr : '--';
       const badgeHR = document.getElementById('badge-hr');
-      if (w.hr > 120) {
-        badgeHR.textContent = 'Takikardia';
-        badgeHR.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10px] font-bold';
-      } else if (w.hr < 50 && w.hr > 0) {
-        badgeHR.textContent = 'Bradikardia';
-        badgeHR.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#C0565B] text-[10px] font-bold';
-      } else {
-        badgeHR.textContent = 'Normal';
-        badgeHR.className = 'px-2 py-0.5 rounded-[5px] bg-[#E8F8F0] text-[#1D6A4E] text-[10px] font-bold';
+      if (badgeHR) {
+        if (w.hr > 120) {
+          badgeHR.textContent = 'Takikardia';
+          badgeHR.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10px] font-bold';
+        } else if (w.hr < 50 && w.hr > 0) {
+          badgeHR.textContent = 'Bradikardia';
+          badgeHR.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#C0565B] text-[10px] font-bold';
+        } else {
+          badgeHR.textContent = 'Normal';
+          badgeHR.className = 'px-2 py-0.5 rounded-[5px] bg-[#E8F8F0] text-[#1D6A4E] text-[10px] font-bold';
+        }
       }
 
       // 2. SpO2
-      document.getElementById('val-spo2').textContent = w.spo2 > 0 ? w.spo2 : '--';
+      const valSpO2 = document.getElementById('val-spo2');
+      if (valSpO2) valSpO2.textContent = w.spo2 > 0 ? w.spo2 : '--';
       const badgeSpO2 = document.getElementById('badge-spo2');
-      if (w.spo2 < 90 && w.spo2 > 0) {
-        badgeSpO2.textContent = 'Hipoksia Berat';
-        badgeSpO2.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10px] font-bold';
-      } else if (w.spo2 < 95 && w.spo2 > 0) {
-        badgeSpO2.textContent = 'Hipoksia Ringan';
-        badgeSpO2.className = 'px-2 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10px] font-bold';
-      } else {
-        badgeSpO2.textContent = 'Optimal';
-        badgeSpO2.className = 'px-2 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10px] font-bold';
+      if (badgeSpO2) {
+        if (w.spo2 < 90 && w.spo2 > 0) {
+          badgeSpO2.textContent = 'Hipoksia Berat';
+          badgeSpO2.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10px] font-bold';
+        } else if (w.spo2 < 95 && w.spo2 > 0) {
+          badgeSpO2.textContent = 'Hipoksia Ringan';
+          badgeSpO2.className = 'px-2 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10px] font-bold';
+        } else {
+          badgeSpO2.textContent = 'Optimal';
+          badgeSpO2.className = 'px-2 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10px] font-bold';
+        }
       }
 
       // 3. Temperature
-      document.getElementById('val-temp').textContent = w.temp.toFixed(1);
+      const valTemp = document.getElementById('val-temp');
+      if (valTemp) valTemp.textContent = w.temp.toFixed(1);
       const badgeTemp = document.getElementById('badge-temp');
-      if (w.temp > 38.0) {
-        badgeTemp.textContent = 'Hipertermia';
-        badgeTemp.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10px] font-bold';
-      } else if (w.temp < 35.5) {
-        badgeTemp.textContent = 'Hipotermia';
-        badgeTemp.className = 'px-2 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10px] font-bold';
-      } else {
-        badgeTemp.textContent = 'Normotermia';
-        badgeTemp.className = 'px-2 py-0.5 rounded-[5px] bg-[#F8DFC2] text-[#5C3912] text-[10px] font-bold';
+      if (badgeTemp) {
+        if (w.temp > 38.0) {
+          badgeTemp.textContent = 'Hipertermia';
+          badgeTemp.className = 'px-2 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10px] font-bold';
+        } else if (w.temp < 35.5) {
+          badgeTemp.textContent = 'Hipotermia';
+          badgeTemp.className = 'px-2 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10px] font-bold';
+        } else {
+          badgeTemp.textContent = 'Normotermia';
+          badgeTemp.className = 'px-2 py-0.5 rounded-[5px] bg-[#F8DFC2] text-[#5C3912] text-[10px] font-bold';
+        }
       }
 
       // 4. Acceleration Indicator
       const accelPill = document.getElementById('liveAccelPill');
-      if (w.accel > 3.0) {
-        accelPill.className = 'px-2.5 py-1 rounded-[8px] bg-red-100 text-red-700 font-mono text-[11px] font-bold animate-pulse';
-        accelPill.textContent = `${w.accel.toFixed(2)}g • BENTURAN SHOCK`;
-      } else {
-        accelPill.className = 'px-2.5 py-1 rounded-[8px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[11px] font-bold';
-        accelPill.textContent = `${w.accel.toFixed(2)}g • ${w.activity}`;
+      if (accelPill) {
+        if (w.accel > 3.0) {
+          accelPill.className = 'px-2.5 py-1 rounded-[8px] bg-red-100 text-red-700 font-mono text-[11px] font-bold animate-pulse cursor-pointer';
+          accelPill.textContent = w.accel.toFixed(2) + 'g • BENTURAN SHOCK';
+        } else {
+          accelPill.className = 'px-2.5 py-1 rounded-[8px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[11px] font-bold cursor-pointer';
+          accelPill.textContent = w.accel.toFixed(2) + 'g • ' + w.activity;
+        }
+      }
+    }
+
+    function updateRosterTableUI() {
+      const w1 = workers[1];
+      const w2 = workers[2];
+
+      const v1 = document.getElementById('rosterVitals01');
+      if (v1) v1.innerHTML = w1.hr + ' BPM &bull; ' + w1.spo2 + '% SpO2 &bull; ' + w1.temp.toFixed(1) + '&deg;C';
+      const a1 = document.getElementById('rosterActivity01');
+      if (a1) a1.textContent = w1.activity;
+      const t1 = document.getElementById('rosterTriage01');
+      if (t1) {
+        t1.textContent = w1.triageLabel;
+        t1.className = w1.triageCode === 3 
+          ? 'px-2.5 py-1 rounded bg-red-950 text-red-300 border border-red-600 font-bold text-[10px] animate-pulse'
+          : (w1.triageCode === 1 ? 'px-2.5 py-1 rounded bg-amber-950/80 text-amber-300 border border-amber-600 font-bold text-[10px]' : 'px-2.5 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-600 font-bold text-[10px]');
+      }
+
+      const v2 = document.getElementById('rosterVitals02');
+      if (v2) v2.innerHTML = w2.hr + ' BPM &bull; ' + w2.spo2 + '% SpO2 &bull; ' + w2.temp.toFixed(1) + '&deg;C';
+      const a2 = document.getElementById('rosterActivity02');
+      if (a2) a2.textContent = w2.activity;
+      const t2 = document.getElementById('rosterTriage02');
+      if (t2) {
+        t2.textContent = w2.triageLabel;
+        t2.className = w2.triageCode === 3 
+          ? 'px-2.5 py-1 rounded bg-red-950 text-red-300 border border-red-600 font-bold text-[10px] animate-pulse'
+          : 'px-2.5 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-600 font-bold text-[10px]';
       }
     }
 
     // -------------------------------------------------------------
-    // 3. START TRIAGE RISK SIMULATOR ENGINE
+    // 3. START TRIAGE RISK SIMULATOR ENGINE & DIRECT CLICKS
     // -------------------------------------------------------------
     function onSimulatorInput() {
       isSimulatorMode = true;
-      document.getElementById('simModeLabel').textContent = 'Mode: Simulator';
-      document.getElementById('simModeIndicator').textContent = 'MANUAL SIMULATOR';
+      const label = document.getElementById('simModeLabel');
+      const ind = document.getElementById('simModeIndicator');
+      if (label) label.textContent = 'Mode: Simulator';
+      if (ind) ind.textContent = 'MANUAL SIMULATOR';
       
       const hr = parseInt(document.getElementById('sliderHR').value);
       const spo2 = parseInt(document.getElementById('sliderSpO2').value);
 
-      document.getElementById('simHRText').textContent = `${hr} BPM`;
-      document.getElementById('simSpO2Text').textContent = `${spo2} %`;
+      const hrText = document.getElementById('simHRText');
+      const spText = document.getElementById('simSpO2Text');
+      if (hrText) hrText.textContent = hr + ' BPM';
+      if (spText) spText.textContent = spo2 + ' %';
 
       evaluateSTART(hr, spo2);
     }
@@ -1161,18 +1520,56 @@ HTML_CONTENT = """<!DOCTYPE html>
       const label = document.getElementById('simModeLabel');
       const ind = document.getElementById('simModeIndicator');
       if (isSimulatorMode) {
-        label.textContent = 'Mode: Simulator';
-        ind.textContent = 'MANUAL SIMULATOR';
+        if (label) label.textContent = 'Mode: Simulator';
+        if (ind) ind.textContent = 'MANUAL SIMULATOR';
       } else {
-        label.textContent = 'Mode: Live MQTT';
-        ind.textContent = 'LIVE HARDWARE';
+        if (label) label.textContent = 'Mode: Live MQTT';
+        if (ind) ind.textContent = 'LIVE HARDWARE';
         const w = workers[currentWorker];
-        document.getElementById('sliderHR').value = w.hr;
-        document.getElementById('sliderSpO2').value = w.spo2;
-        document.getElementById('simHRText').textContent = `${w.hr} BPM`;
-        document.getElementById('simSpO2Text').textContent = `${w.spo2} %`;
+        const slHR = document.getElementById('sliderHR');
+        const slSpO2 = document.getElementById('sliderSpO2');
+        if (slHR) slHR.value = w.hr;
+        if (slSpO2) slSpO2.value = w.spo2;
+        const hrText = document.getElementById('simHRText');
+        const spText = document.getElementById('simSpO2Text');
+        if (hrText) hrText.textContent = w.hr + ' BPM';
+        if (spText) spText.textContent = w.spo2 + ' %';
         evaluateSTART(w.hr, w.spo2);
       }
+    }
+
+    function setTriageDirect(tier) {
+      isSimulatorMode = true;
+      const label = document.getElementById('simModeLabel');
+      const ind = document.getElementById('simModeIndicator');
+      if (label) label.textContent = 'Mode: Simulator';
+      if (ind) ind.textContent = 'MANUAL: ' + tier;
+
+      const slHR = document.getElementById('sliderHR');
+      const slSpO2 = document.getElementById('sliderSpO2');
+      if (tier === 'HIJAU') {
+        if (slHR) slHR.value = 75;
+        if (slSpO2) slSpO2.value = 98;
+      } else if (tier === 'KUNING') {
+        if (slHR) slHR.value = 106;
+        if (slSpO2) slSpO2.value = 93;
+      } else if (tier === 'MERAH') {
+        if (slHR) slHR.value = 138;
+        if (slSpO2) slSpO2.value = 86;
+      } else if (tier === 'HITAM') {
+        if (slHR) slHR.value = 40;
+        if (slSpO2) slSpO2.value = 70;
+      }
+      onSimulatorInput();
+    }
+
+    function onTriageBarClick(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      if (pct < 0.25) setTriageDirect('HIJAU');
+      else if (pct < 0.55) setTriageDirect('KUNING');
+      else if (pct < 0.85) setTriageDirect('MERAH');
+      else setTriageDirect('HITAM');
     }
 
     function evaluateSTART(hr, spo2) {
@@ -1181,45 +1578,60 @@ HTML_CONTENT = """<!DOCTYPE html>
       const dot = document.getElementById('triageDot');
       const badge = document.getElementById('triageBadgePill');
 
-      // START Algorithm evaluation logic
-      if (hr === 0 || (hr > 160 && spo2 < 75)) {
+      if (hr <= 40 || (hr > 160 && spo2 < 75)) {
         // HITAM (Expectant)
-        pText.textContent = 'HITAM';
-        pText.className = 'text-[20px] font-extrabold text-gray-400 tracking-tight font-mono leading-tight';
-        subText.textContent = 'Expectant / Non-Salvable';
-        dot.style.left = '94%';
-        badge.textContent = 'Prioritas Rendah • Paliatif';
-        badge.className = 'px-2 py-0.5 rounded-[6px] bg-gray-700 text-gray-200 text-[9.5px] font-bold';
-      } else if (hr > 125 || hr < 45 || spo2 < 88) {
+        if (pText) {
+          pText.textContent = 'HITAM';
+          pText.className = 'text-[20px] font-extrabold text-gray-400 tracking-tight font-mono leading-tight';
+        }
+        if (subText) subText.textContent = 'Expectant / Non-Salvable';
+        if (dot) dot.style.left = '92%';
+        if (badge) {
+          badge.textContent = 'Prioritas Rendah • Paliatif';
+          badge.className = 'px-2 py-0.5 rounded-[6px] bg-gray-700 text-gray-200 text-[9.5px] font-bold';
+        }
+      } else if (hr > 125 || hr < 48 || spo2 < 88) {
         // MERAH (Immediate)
-        pText.textContent = 'MERAH';
-        pText.className = 'text-[20px] font-extrabold text-[#EF4444] tracking-tight font-mono leading-tight animate-pulse';
-        subText.textContent = 'Immediate / Darurat Kritis SAR';
-        dot.style.left = '80%';
-        badge.textContent = 'EVAKUASI SEGERA • PRIORITAS 1';
-        badge.className = 'px-2 py-0.5 rounded-[6px] bg-red-950 text-red-200 border border-red-500 text-[9.5px] font-bold animate-pulse';
+        if (pText) {
+          pText.textContent = 'MERAH';
+          pText.className = 'text-[20px] font-extrabold text-[#EF4444] tracking-tight font-mono leading-tight animate-pulse';
+        }
+        if (subText) subText.textContent = 'Immediate / Darurat Kritis SAR';
+        if (dot) dot.style.left = '80%';
+        if (badge) {
+          badge.textContent = 'EVAKUASI SEGERA • PRIORITAS 1';
+          badge.className = 'px-2 py-0.5 rounded-[6px] bg-red-950 text-red-200 border border-red-500 text-[9.5px] font-bold animate-pulse';
+        }
         if (audioAlertEnabled) playEmergencyBeep();
       } else if (hr > 100 || spo2 < 94) {
         // KUNING (Delayed)
-        pText.textContent = 'KUNING';
-        pText.className = 'text-[20px] font-extrabold text-[#F59E0B] tracking-tight font-mono leading-tight';
-        subText.textContent = 'Delayed / Waspada Kelelahan';
-        dot.style.left = '52%';
-        badge.textContent = 'Pantau Stabil • Prioritas 2';
-        badge.className = 'px-2 py-0.5 rounded-[6px] bg-[#F7E8BA] text-[#5C4511] text-[9.5px] font-bold';
+        if (pText) {
+          pText.textContent = 'KUNING';
+          pText.className = 'text-[20px] font-extrabold text-[#F59E0B] tracking-tight font-mono leading-tight';
+        }
+        if (subText) subText.textContent = 'Delayed / Waspada Kelelahan';
+        if (dot) dot.style.left = '52%';
+        if (badge) {
+          badge.textContent = 'Pantau Stabil • Prioritas 2';
+          badge.className = 'px-2 py-0.5 rounded-[6px] bg-[#F7E8BA] text-[#5C4511] text-[9.5px] font-bold';
+        }
       } else {
         // HIJAU (Minor)
-        pText.textContent = 'HIJAU';
-        pText.className = 'text-[20px] font-extrabold text-[#34D399] tracking-tight font-mono leading-tight';
-        subText.textContent = 'Minor / Personel Stabil Normal';
-        dot.style.left = '16%';
-        badge.textContent = 'Aman • Tidak Perlu Evakuasi Cepat';
-        badge.className = 'px-2 py-0.5 rounded-[6px] bg-[#D5F4EA] text-[#1D4A3D] text-[9.5px] font-bold';
+        if (pText) {
+          pText.textContent = 'HIJAU';
+          pText.className = 'text-[20px] font-extrabold text-[#34D399] tracking-tight font-mono leading-tight';
+        }
+        if (subText) subText.textContent = 'Minor / Personel Stabil Normal';
+        if (dot) dot.style.left = '16%';
+        if (badge) {
+          badge.textContent = 'Aman • Tidak Perlu Evakuasi Cepat';
+          badge.className = 'px-2 py-0.5 rounded-[6px] bg-[#D5F4EA] text-[#1D4A3D] text-[9.5px] font-bold';
+        }
       }
     }
 
     // -------------------------------------------------------------
-    // 4. KINEMATICS ACTIVITY STREAM BARS
+    // 4. KINEMATICS ACTIVITY STREAM BARS & CLICKS
     // -------------------------------------------------------------
     const shiftData = {
       pagi: [
@@ -1252,6 +1664,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function renderKinematicsBars() {
       const container = document.getElementById('kinematicsBarsContainer');
+      if (!container) return;
       container.innerHTML = '';
       const bars = shiftData[currentShiftKey];
 
@@ -1260,31 +1673,57 @@ HTML_CONTENT = """<!DOCTYPE html>
         const col = document.createElement('div');
         col.className = 'day-col flex flex-col items-center justify-end h-full relative cursor-pointer group';
         col.style.width = '18px';
+        col.onclick = () => selectBarInterval(idx, redH, tealH, ochreH);
 
         const totalG = ((redH * 0.045) + (tealH * 0.025) + (ochreH * 0.015)).toFixed(2);
 
         col.innerHTML = `
           <div class="opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 absolute -top-8 bg-[#2C2A2A] text-white text-[9.5px] font-mono font-bold px-2.5 py-1 rounded-md shadow-lg whitespace-nowrap z-20">
-            T+${(idx * 10)}m: ${totalG}g &bull; ${redH > 40 ? 'BENTURAN' : (tealH > 35 ? 'KERJA AKTIF' : 'NORMAL')}
+            T+` + (idx * 10) + `m: ` + totalG + `g &bull; ` + (redH > 40 ? 'BENTURAN' : (tealH > 35 ? 'KERJA AKTIF' : 'NORMAL')) + `
           </div>
           <div class="flex flex-col items-center gap-[4.5px] mb-1">
-            <span class="pill-seg w-[4.5px] rounded-full bg-[#CD8A39]" style="height: ${ochreH}px"></span>
-            <span class="pill-seg w-[4.5px] rounded-full bg-[#438D9B]" style="height: ${tealH}px"></span>
-            <span class="pill-seg w-[4.5px] rounded-full bg-[#DA7468]" style="height: ${redH}px"></span>
+            <span class="pill-seg w-[4.5px] rounded-full bg-[#CD8A39]" style="height: ` + ochreH + `px"></span>
+            <span class="pill-seg w-[4.5px] rounded-full bg-[#438D9B]" style="height: ` + tealH + `px"></span>
+            <span class="pill-seg w-[4.5px] rounded-full bg-[#DA7468]" style="height: ` + redH + `px"></span>
           </div>
           <div class="h-0 w-full flex justify-end">
-            <span class="x-label">T+${idx * 10}m</span>
+            <span class="x-label">T+` + (idx * 10) + `m</span>
           </div>
         `;
         container.appendChild(col);
       });
     }
 
+    function selectBarInterval(idx, r, t, o) {
+      document.querySelectorAll('.day-col').forEach(c => c.classList.remove('selected-bar'));
+      const cols = document.querySelectorAll('.day-col');
+      if (cols[idx]) cols[idx].classList.add('selected-bar');
+      
+      const g = ((r * 0.045) + (t * 0.025) + (o * 0.015)).toFixed(2);
+      const accelPill = document.getElementById('liveAccelPill');
+      if (accelPill) {
+        accelPill.textContent = g + 'g @ T+' + (idx * 10) + 'm';
+      }
+    }
+
     function cycleShift() {
       const nextIdx = (shiftKeys.indexOf(currentShiftKey) + 1) % shiftKeys.length;
       currentShiftKey = shiftKeys[nextIdx];
-      document.getElementById('shiftLabel').textContent = shiftLabels[currentShiftKey];
+      const shiftEl = document.getElementById('shiftLabel');
+      if (shiftEl) shiftEl.textContent = shiftLabels[currentShiftKey];
       renderKinematicsBars();
+    }
+
+    function setFilterActivity(type) {
+      if (type === 'shock') testSimSOS();
+      else if (type === 'work') {
+        const w = workers[currentWorker];
+        w.accel = 1.95;
+        w.activity = 'Kerja Tambang Aktif';
+        updateTelemetryDisplay(w);
+      } else {
+        testSimNormal();
+      }
     }
 
     // -------------------------------------------------------------
@@ -1296,7 +1735,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       if (isHover) {
         ring.style.transform = 'scale(1.08)';
         ring.style.transformOrigin = 'center center';
-        ring.style.filter = 'drop-shadow(0 0 12px rgba(255, 140, 60, 1))';
+        ring.style.filter = 'drop-shadow(0 0 14px rgba(255, 140, 60, 1))';
       } else {
         ring.style.transform = 'scale(1)';
         ring.style.filter = 'drop-shadow(0 0 6px rgba(240, 82, 72, 0.7))';
@@ -1304,16 +1743,71 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     // -------------------------------------------------------------
-    // 6. MODAL SYSTEM & NAVIGATION
+    // 6. METRIC DETAIL POPOVER MODAL
+    // -------------------------------------------------------------
+    function openMetricDetail(type) {
+      const title = document.getElementById('metricDetailTitle');
+      const body = document.getElementById('metricDetailBody');
+      const w = workers[currentWorker];
+
+      if (type === 'hr') {
+        if (title) title.textContent = 'MAX30102 PPG Arterial Pulse Diagnostics';
+        if (body) {
+          body.innerHTML = `
+            <div class="bg-[#262424] p-3 rounded-xl border border-[#383535] space-y-1.5">
+              <div><span class="text-gray-400">Target Personnel:</span> ` + w.name + `</div>
+              <div><span class="text-gray-400">Current Rate:</span> <b class="text-white text-base">` + w.hr + ` BPM</b></div>
+              <div><span class="text-gray-400">Sensor:</span> Dual Red (660nm) & IR (880nm) Photoplethysmography</div>
+              <div><span class="text-gray-400">Sampling Rate:</span> 100 Hz Hardware ADC Buffer</div>
+              <div><span class="text-gray-400">Clinical Status:</span> <span class="text-emerald-400 font-bold">` + (w.hr > 120 ? 'Takikardia (Waspada)' : 'Ritme Sinus Normal') + `</span></div>
+            </div>
+          `;
+        }
+        highlightSensorRing('chestRing', true);
+      } else if (type === 'spo2') {
+        if (title) title.textContent = 'Blood Oxygen Saturation (SpO2)';
+        if (body) {
+          body.innerHTML = `
+            <div class="bg-[#262424] p-3 rounded-xl border border-[#383535] space-y-1.5">
+              <div><span class="text-gray-400">Target Personnel:</span> ` + w.name + `</div>
+              <div><span class="text-gray-400">Current Saturation:</span> <b class="text-cyan-400 text-base">` + w.spo2 + ` %</b></div>
+              <div><span class="text-gray-400">Calculation:</span> AC/DC Ratio Calibration Curve</div>
+              <div><span class="text-gray-400">Subterranean O2 Limit:</span> 19.5% Minimum Ambient Threshold</div>
+              <div><span class="text-gray-400">Hypoxia Risk:</span> <span class="text-emerald-400 font-bold">` + (w.spo2 < 90 ? 'BAHAYA HIPOKSIA KRITIS' : 'Optimal Non-Hypoxic') + `</span></div>
+            </div>
+          `;
+        }
+        highlightSensorRing('chestRing', true);
+      } else if (type === 'temp') {
+        if (title) title.textContent = 'MLX90614 Contactless IR Thermopile';
+        if (body) {
+          body.innerHTML = `
+            <div class="bg-[#262424] p-3 rounded-xl border border-[#383535] space-y-1.5">
+              <div><span class="text-gray-400">Target Personnel:</span> ` + w.name + `</div>
+              <div><span class="text-gray-400">Skin Temperature:</span> <b class="text-amber-400 text-base">` + w.temp.toFixed(1) + ` &deg;C</b></div>
+              <div><span class="text-gray-400">Optics:</span> 90&deg; Field-of-View IR Medical Sensor</div>
+              <div><span class="text-gray-400">Thermal Index:</span> ` + (w.temp > 38 ? 'Hipertermia Bawah Tanah' : 'Normotermia Fisiologis') + `</div>
+            </div>
+          `;
+        }
+        highlightSensorRing('wristRing', true);
+      }
+      openModal('modal-metric-detail');
+    }
+
+    // -------------------------------------------------------------
+    // 7. MODAL SYSTEM & NAVIGATION
     // -------------------------------------------------------------
     function openModal(modalId) {
       const modal = document.getElementById(modalId);
       if (modal) {
         modal.classList.add('open');
-        if (modalId === 'modal-gis-map' && !leafletMap) {
-          setTimeout(initLeafletMap, 150);
-        } else if (modalId === 'modal-gis-map' && leafletMap) {
-          setTimeout(() => leafletMap.invalidateSize(), 150);
+        if (modalId === 'modal-gis-map') {
+          if (!leafletMap) {
+            setTimeout(initLeafletMap, 150);
+          } else {
+            setTimeout(() => leafletMap.invalidateSize(), 150);
+          }
         }
       }
     }
@@ -1330,6 +1824,13 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     });
 
+    // Close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+      }
+    });
+
     function setActiveNav(btn, view) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -1337,15 +1838,30 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function resetToOverview() {
       selectWorker(2);
-      closeModal('modal-gis-map');
-      closeModal('modal-hardware-spec');
-      closeModal('modal-audit-trail');
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+      const btn = document.getElementById('navBtnOverview');
+      if (btn) setActiveNav(btn, 'overview');
+    }
+
+    function focusFromRoster(workerId) {
+      closeModal('modal-fleet-roster');
+      selectWorker(workerId);
+      openModal('modal-gis-map');
+      setTimeout(() => focusMapNode(workerId), 250);
+    }
+
+    function runDiagWatch(workerId) {
+      const w = workers[workerId];
+      alert("DIAGNOSTIK JAM TANGAN #" + (workerId < 10 ? '0' + workerId : workerId) + " (" + w.name + "):\nStatus Hardware: Aktif Normal\nLoRa Link: " + w.route + " (" + w.rssi + " dBm)\nVitals: " + w.hr + " BPM • " + w.spo2 + "% SpO2 • " + w.temp.toFixed(1) + "°C\nTriage: " + w.triageLabel + "\nBaterai LiPo: 81% (4.12V)\nForwarding Mesh: 1-Hop P2P Aktif");
     }
 
     // -------------------------------------------------------------
-    // 7. LEAFLET SUBTERRANEAN GIS MAP
+    // 8. LEAFLET SUBTERRANEAN GIS MAP
     // -------------------------------------------------------------
     function initLeafletMap() {
+      const mapContainer = document.getElementById('leafletMapContainer');
+      if (!mapContainer) return;
+
       const gatewayPos = [-8.2435, 113.6928];
       const watch1Pos = [-8.2465, 113.6965];
       const watch2Pos = [-8.2498, 113.7012];
@@ -1359,14 +1875,14 @@ HTML_CONTENT = """<!DOCTYPE html>
         maxZoom: 16
       }).addTo(leafletMap);
 
-      // Tactical Markers
+      // Tactical Markers with Inline CSS
       const createMarker = (title, subtitle, color) => {
         return L.divIcon({
           className: 'tactical-div-icon',
-          html: `<div class="bg-[#1C1A1A]/95 text-white font-mono text-[10px] px-2.5 py-1 rounded-lg border border-[${color}] shadow-xl flex items-center gap-1.5 whitespace-nowrap">
-                   <span class="w-2 h-2 rounded-full" style="background:${color}"></span>
-                   <span class="font-bold">${title}</span>
-                   <span class="text-[9px] text-gray-400">(${subtitle})</span>
+          html: `<div style="background: rgba(28,26,26,0.96); border: 1.5px solid ` + color + `; padding: 4px 8px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 6px; white-space: nowrap; font-family: monospace; font-size: 10px; color: white;">
+                   <span style="width: 8px; height: 8px; border-radius: 999px; background: ` + color + `;"></span>
+                   <b>` + title + `</b>
+                   <span style="color: #9C9892;">(` + subtitle + `)</span>
                  </div>`,
           iconSize: [180, 26],
           iconAnchor: [90, 24]
@@ -1441,7 +1957,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     // -------------------------------------------------------------
-    // 8. SAR CHRONOLOGICAL AUDIT TRAIL
+    // 9. SAR CHRONOLOGICAL AUDIT TRAIL & DISPATCH
     // -------------------------------------------------------------
     function appendAuditTrail(title, tag, desc, color) {
       const container = document.getElementById('auditLogList');
@@ -1458,18 +1974,17 @@ HTML_CONTENT = """<!DOCTYPE html>
         orange: 'border-l-4 border-orange-500 bg-orange-950/40 text-orange-100'
       };
 
-      div.className = `p-3 rounded-xl border border-[#383535] ${borderColors[color] || borderColors.green} transition`;
+      div.className = 'p-3 rounded-xl border border-[#383535] ' + (borderColors[color] || borderColors.green) + ' transition';
       div.innerHTML = `
         <div class="flex justify-between font-bold">
-          <span>${timeStr} &bull; ${title}</span>
-          <span class="text-[10px] uppercase font-mono tracking-wider">${tag}</span>
+          <span>` + timeStr + ` &bull; ` + title + `</span>
+          <span class="text-[10px] uppercase font-mono tracking-wider">` + tag + `</span>
         </div>
-        <p class="text-[11px] text-gray-300 mt-1">${desc}</p>
+        <p class="text-[11px] text-gray-300 mt-1">` + desc + `</p>
       `;
 
       container.insertBefore(div, container.firstChild);
 
-      // Update badge count
       const badge = document.getElementById('alertCountBadge');
       if (badge && color === 'red') {
         const count = parseInt(badge.textContent || '0') + 1;
@@ -1477,21 +1992,31 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
+    function dispatchAlphaSquad() {
+      alert("PERINTAH DISPATCH TERKIRIM:\nRegu Penolong Alpha Search Squad telah diberangkatkan menuju Sektor 7 (C-4) untuk evakuasi darurat!");
+      appendAuditTrail('SAR Alpha Squad Dispatched', 'DISPATCH', 'Unit penolong bergerak menuju Sektor 7 (C-4)', 'red');
+      pulseHopSimulation();
+    }
+
     // -------------------------------------------------------------
-    // 9. WEB AUDIO API SYNTHESIZER FOR EMERGENCY ALERT
+    // 10. WEB AUDIO API SYNTHESIZER FOR EMERGENCY ALERT
     // -------------------------------------------------------------
     function toggleAudioAlert() {
       audioAlertEnabled = !audioAlertEnabled;
       const btn = document.getElementById('sirenBtn');
       if (audioAlertEnabled) {
-        btn.classList.add('bg-red-500', 'text-white');
-        btn.classList.remove('nav-btn');
-        btn.style.width = '46px';
-        btn.style.height = '46px';
+        if (btn) {
+          btn.classList.add('bg-red-500', 'text-white');
+          btn.classList.remove('nav-btn');
+          btn.style.width = '46px';
+          btn.style.height = '46px';
+        }
         playEmergencyBeep();
       } else {
-        btn.classList.remove('bg-red-500', 'text-white');
-        btn.classList.add('nav-btn');
+        if (btn) {
+          btn.classList.remove('bg-red-500', 'text-white');
+          btn.classList.add('nav-btn');
+        }
       }
     }
 
@@ -1515,12 +2040,23 @@ HTML_CONTENT = """<!DOCTYPE html>
         osc.start();
         osc.stop(audioCtx.currentTime + 0.36);
       } catch (err) {
-        console.warn('Audio alert not permitted by browser policy:', err);
+        console.warn('Audio alert blocked:', err);
       }
     }
 
     // -------------------------------------------------------------
-    // 10. REAL-TIME MQTT ENGINE (broker.emqx.io:8084)
+    // 11. SEARCH PALETTE FILTER
+    // -------------------------------------------------------------
+    function onSearchFilter() {
+      const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+      const items = document.querySelectorAll('#searchResults > div');
+      items.forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 12. REAL-TIME MQTT ENGINE (broker.emqx.io:8084)
     // -------------------------------------------------------------
     function initMQTT() {
       const dot = document.getElementById('mqttDot');
@@ -1546,7 +2082,6 @@ HTML_CONTENT = """<!DOCTYPE html>
             const data = JSON.parse(payload.toString());
             console.log('[MQTT RX]', topic, data);
 
-            // Determine Worker #01 vs Worker #02
             let workerNum = 2;
             if (data.device_id === 'RESCUE-TAG-01' || data.worker_id === 'WRK-001' || (data.worker_name && data.worker_name.includes('Bambang'))) {
               workerNum = 1;
@@ -1568,22 +2103,28 @@ HTML_CONTENT = """<!DOCTYPE html>
               if (data.triage.is_emergency !== undefined) w.isEmergency = data.triage.is_emergency;
             }
 
-            // If current active view is this worker, update screen
+            // Update fleet table
+            updateRosterTableUI();
+
+            // If currently viewing this worker, update active dashboard
             if (currentWorker === workerNum && !isSimulatorMode) {
               updateTelemetryDisplay(w);
               evaluateSTART(w.hr, w.spo2);
-              document.getElementById('sliderHR').value = w.hr;
-              document.getElementById('sliderSpO2').value = w.spo2;
-              document.getElementById('simHRText').textContent = `${w.hr} BPM`;
-              document.getElementById('simSpO2Text').textContent = `${w.spo2} %`;
+              const slHR = document.getElementById('sliderHR');
+              const slSpO2 = document.getElementById('sliderSpO2');
+              if (slHR) slHR.value = w.hr;
+              if (slSpO2) slSpO2.value = w.spo2;
+              const hrText = document.getElementById('simHRText');
+              const spText = document.getElementById('simSpO2Text');
+              if (hrText) hrText.textContent = w.hr + ' BPM';
+              if (spText) spText.textContent = w.spo2 + ' %';
             }
 
-            // Emergency Alert Event
             if (topic === 'rescue/tag/alert' || w.triageCode === 3) {
               appendAuditTrail(
                 'DARURAT MEDIS / IMPACT DETECTED',
                 w.tagId,
-                `${w.name} di ${w.sector}. HR: ${w.hr} BPM, SpO2: ${w.spo2}%. Prioritas SAR MERAH!`,
+                w.name + ' di ' + w.sector + '. HR: ' + w.hr + ' BPM, SpO2: ' + w.spo2 + '%. Prioritas SAR MERAH!',
                 'red'
               );
               if (audioAlertEnabled) playEmergencyBeep();
@@ -1609,7 +2150,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     // -------------------------------------------------------------
-    // 11. DEMO TRIGGER FUNCTIONS FOR COMPETITION JURY
+    // 13. DEMO TRIGGER FUNCTIONS FOR COMPETITION JURY
     // -------------------------------------------------------------
     function testSimSOS() {
       const w = workers[2];
@@ -1643,17 +2184,18 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     function toggleMqttInfo() {
-      alert('MQTT BROKER STATUS:\nBroker: broker.emqx.io\nPort: 8084 (Secure WebSocket)\nTopics: rescue/tag/data, rescue/tag/alert\nRelay: LoRa 1-Hop Mesh P2P');
+      alert("MQTT BROKER STATUS:\nBroker: broker.emqx.io\nPort: 8084 (Secure WebSocket)\nTopics: rescue/tag/data, rescue/tag/alert\nRelay: LoRa 1-Hop Mesh P2P");
     }
 
     // -------------------------------------------------------------
-    // 12. INITIALIZATION ON LOAD
+    // 14. INITIALIZATION ON LOAD
     // -------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
       // 1. Clock
       setInterval(() => {
         const now = new Date();
-        document.getElementById('liveClock').textContent = now.toTimeString().split(' ')[0] + ' UTC';
+        const clk = document.getElementById('liveClock');
+        if (clk) clk.textContent = now.toTimeString().split(' ')[0] + ' UTC';
       }, 1000);
 
       // 2. Kinematics Bars
@@ -1674,7 +2216,10 @@ HTML_CONTENT = """<!DOCTYPE html>
 </html>
 """
 
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(HTML_CONTENT)
+# Replace base64 image placeholder
+final_html = HTML_TEMPLATE.replace("BASE64_IMAGE_PLACEHOLDER", data_uri)
 
-print("Upgraded index.html generated successfully! Length:", len(HTML_CONTENT))
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(final_html)
+
+print(f"Generated index.html successfully! Length: {len(final_html)} bytes.")
