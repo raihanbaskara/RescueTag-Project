@@ -315,14 +315,14 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     .font-tech { font-family: 'Space Grotesk', sans-serif; }
     .font-brand { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
     .role-btn {
-      color: #64748b;
+      color: #7B7874;
       cursor: pointer;
       transition: all 0.15s ease;
     }
     .role-btn.active {
-      background: #ffffff !important;
-      color: #ea580c !important;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      background: #2D2B2A !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
       font-weight: 700;
     }
     .btn-tactile {
@@ -334,65 +334,57 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     }
 </style>
 </head>
-<body class="min-h-screen flex items-center justify-center select-none bg-[#050505]">
+<body class="min-h-screen flex items-center justify-center select-none bg-[#F4EFEB] bg-[radial-gradient(#DBD4C8_1.2px,transparent_1.2px)] [background-size:24px_24px] text-[#2D2B2A]">
 
   <!-- ================= PAGE 1: ACCESS TERMINAL LOGIN PORTAL ================= -->
-<div id="page-login" class="fixed inset-0 z-50 bg-[#f8f5f0] bg-[radial-gradient(#e5dec9_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center p-4 md:p-8 overflow-y-auto select-none">
+  <div id="page-login" class="fixed inset-0 z-50 bg-[#F4EFEB] bg-[radial-gradient(#DBD4C8_1.2px,transparent_1.2px)] [background-size:24px_24px] flex items-center justify-center p-4 md:p-8 overflow-y-auto select-none">
     
-    <!-- Ambient Depth-of-Field Background Silhouettes -->
-    <div class="absolute -left-20 -bottom-20 w-[450px] h-[450px] opacity-15 filter blur-3xl pointer-events-none transform -rotate-12">
-      <img src="BASE64_PLACEHOLDER" alt="" class="w-full h-full object-contain" />
-    </div>
-    <div class="absolute -right-24 -top-24 w-[450px] h-[450px] opacity-10 filter blur-3xl pointer-events-none transform rotate-45">
-      <img src="BASE64_PLACEHOLDER" alt="" class="w-full h-full object-contain" />
-    </div>
-
-    <!-- Outer Double-Bezel Tray (Doppelrand Architecture) -->
-    <div class="w-full max-w-5xl rounded-[2.5rem] p-2 sm:p-3 bg-black/[0.03] border border-black/10 shadow-[0_32px_80px_-16px_rgba(200,100,20,0.14),0_0_0_1px_rgba(255,255,255,0.9)] backdrop-blur-2xl">
+    <!-- Outer Double-Bezel Tray (Doppelrand Architecture matching dashboard) -->
+    <div class="w-full max-w-5xl rounded-[2.5rem] p-2.5 sm:p-3 bg-[#EAE5DC]/80 border border-[#DBD4C8] shadow-[0_32px_80px_-16px_rgba(45,43,42,0.14),0_0_0_1px_rgba(255,255,255,0.8)] backdrop-blur-2xl">
       
       <!-- Inner Core Canvas Container -->
-      <div class="w-full rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-sm min-h-[640px]">
+      <div class="w-full rounded-[2rem] bg-white border border-[#F0ECE6] overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-sm min-h-[640px]">
         
         <!-- Left Column (5 cols): Tactical Command Center Terminal -->
-        <div class="lg:col-span-5 bg-white p-7 md:p-8 lg:border-r border-slate-200/80 flex flex-col justify-between relative z-10">
+        <div class="lg:col-span-5 bg-white p-7 md:p-8 lg:border-r border-[#F0ECE6] flex flex-col justify-between relative z-10">
           <div>
             <!-- Terminal Header & Brand -->
-            <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+            <div class="flex items-center justify-between pb-4 mb-5 border-b border-[#F0ECE6]">
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-orange-500/25">
+                <div class="w-9 h-9 rounded-xl bg-[#2D2B2A] text-white flex items-center justify-center font-bold text-sm shadow-sm">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                   </svg>
                 </div>
                 <div>
-                  <span class="font-brand font-bold text-xl tracking-normal text-slate-900 leading-none block">Rescue-Tag</span>
-                  <span class="text-[9px] font-mono tracking-widest text-orange-700 font-bold uppercase block mt-0.5">DISASTER TRIAGE PORTAL</span>
+                  <span class="font-brand font-bold text-xl tracking-normal text-[#2D2B2A] leading-none block">Rescue-Tag</span>
+                  <span class="text-[9px] font-mono tracking-widest text-[#7B7874] font-bold uppercase block mt-0.5">DISASTER TRIAGE PORTAL</span>
                 </div>
               </div>
-              <span class="font-mono text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+              <span class="font-mono text-[9px] font-bold text-[#7B7874] bg-[#FAF6F1] px-2.5 py-0.5 rounded-md border border-[#E5DFD4]">
                 SEC-01
               </span>
             </div>
 
             <div class="mb-5">
-              <span class="font-tech text-[10px] font-bold uppercase tracking-[0.22em] text-orange-600 block mb-1">
+              <span class="font-tech text-[10px] font-bold uppercase tracking-[0.22em] text-[#7B7874] block mb-1">
                 [ ACCESS TERMINAL // 2026 ]
               </span>
-              <h2 class="font-outfit text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">Command Center</h2>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed font-sans">Sistem Pemantauan Triage Bawah Tanah & Jaringan LoRa 1-Hop Relay</p>
+              <h2 class="font-outfit text-2xl md:text-3xl font-extrabold text-[#2D2B2A] tracking-tight leading-tight">Command Center</h2>
+              <p class="text-xs text-[#7B7874] mt-1.5 leading-relaxed font-sans">Sistem Pemantauan Triage Bawah Tanah &amp; Jaringan LoRa 1-Hop Relay</p>
             </div>
 
             <!-- Segmented Role Selector (Swiss Precision Architecture) -->
             <div class="mb-5">
-              <label class="block text-[10px] font-tech font-bold text-slate-400 uppercase tracking-widest mb-2">OPERATOR ROLE PROFILE:</label>
-              <div class="grid grid-cols-3 p-1 rounded-xl bg-slate-100/80 border border-slate-200/70 text-xs font-tech font-medium" id="login-role-selector">
-                <button type="button" onclick="selectLoginRole('SAR Commander', this)" class="role-btn active py-2 px-1 rounded-lg font-bold text-center text-[11px] transition shadow-xs">
+              <label class="block text-[10px] font-tech font-bold text-[#A6A29C] uppercase tracking-widest mb-2">OPERATOR ROLE PROFILE:</label>
+              <div class="grid grid-cols-3 p-1 rounded-xl bg-[#FAF6F1] border border-[#F0ECE6] text-xs font-tech font-medium" id="login-role-selector">
+                <button type="button" onclick="selectLoginRole('SAR Commander', this)" class="role-btn active py-2 px-1 rounded-lg text-center text-[11px]">
                   SAR Cmd
                 </button>
-                <button type="button" onclick="selectLoginRole('Field Paramedic', this)" class="role-btn py-2 px-1 rounded-lg text-slate-600 hover:text-slate-900 text-center text-[11px] transition">
+                <button type="button" onclick="selectLoginRole('Field Paramedic', this)" class="role-btn py-2 px-1 rounded-lg text-[#7B7874] hover:text-[#2D2B2A] text-center text-[11px]">
                   Medic
                 </button>
-                <button type="button" onclick="selectLoginRole('Mine K3 Lead', this)" class="role-btn py-2 px-1 rounded-lg text-slate-600 hover:text-slate-900 text-center text-[11px] transition">
+                <button type="button" onclick="selectLoginRole('Mine K3 Lead', this)" class="role-btn py-2 px-1 rounded-lg text-[#7B7874] hover:text-[#2D2B2A] text-center text-[11px]">
                   K3 Lead
                 </button>
               </div>
@@ -402,23 +394,23 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             <form onsubmit="handleLogin(event)" class="space-y-3.5">
               <div>
                 <div class="flex justify-between items-center mb-1">
-                  <label class="block text-[11px] font-tech font-semibold text-slate-600">Operator ID / NIP</label>
-                  <span class="text-[9px] font-mono text-slate-400">[REQUIRED]</span>
+                  <label class="block text-[11px] font-tech font-semibold text-[#2D2B2A]">Operator ID / NIP</label>
+                  <span class="text-[9px] font-mono text-[#A6A29C]">[REQUIRED]</span>
                 </div>
-                <input type="text" id="login-nip" value="250534618547" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition shadow-inner" />
+                <input type="text" id="login-nip" value="250534618547" required class="w-full px-3.5 py-2.5 rounded-xl border border-[#E5DFD4] bg-[#FAF6F1] text-xs font-mono text-[#2D2B2A] focus:bg-white focus:outline-none focus:border-[#2D2B2A] focus:ring-2 focus:ring-[#2D2B2A]/10 transition shadow-inner" />
               </div>
               <div>
                 <div class="flex justify-between items-center mb-1">
-                  <label class="block text-[11px] font-tech font-semibold text-slate-600">Security Passcode</label>
-                  <a href="#" class="text-[10px] font-mono text-orange-600 hover:underline font-semibold">Reset Passcode?</a>
+                  <label class="block text-[11px] font-tech font-semibold text-[#2D2B2A]">Security Passcode</label>
+                  <a href="#" class="text-[10px] font-mono text-[#7B7874] hover:text-[#2D2B2A] hover:underline font-semibold">Reset Passcode?</a>
                 </div>
-                <input type="password" id="login-pass" value="rescetag2026" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition shadow-inner" />
+                <input type="password" id="login-pass" value="rescetag2026" required class="w-full px-3.5 py-2.5 rounded-xl border border-[#E5DFD4] bg-[#FAF6F1] text-xs font-mono text-[#2D2B2A] focus:bg-white focus:outline-none focus:border-[#2D2B2A] focus:ring-2 focus:ring-[#2D2B2A]/10 transition shadow-inner" />
               </div>
 
-              <!-- Button-in-Button Tactical CTA Button -->
-              <button type="submit" class="btn-tactile w-full py-2.5 pl-4 pr-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white rounded-xl text-xs font-outfit font-bold tracking-wider uppercase shadow-lg shadow-orange-600/25 transition mt-2 flex items-center justify-between group active:scale-[0.98]">
-                <span>Login</span>
-                <span class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+              <!-- Button-in-Button Tactical CTA Button (Charcoal #2D2B2A matching Dashboard) -->
+              <button type="submit" class="btn-tactile w-full py-2.5 pl-4 pr-2 bg-[#2D2B2A] hover:bg-[#1C1A1A] text-white rounded-xl text-xs font-outfit font-bold tracking-wider uppercase shadow-md transition mt-2 flex items-center justify-between group active:scale-[0.98] cursor-pointer">
+                <span>LOGIN</span>
+                <span class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
                   <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                   </svg>
@@ -428,38 +420,38 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           </div>
 
           <!-- Dramatic Philosophy Creed (Centered & Elevated) -->
-          <div class="mt-6 pt-4 border-t border-slate-100/90 text-center">
-            <p class="font-brand italic text-slate-600 text-[13px] sm:text-sm tracking-normal leading-relaxed">
-              “Engineered for the unseen critical moments.”
+          <div class="mt-6 pt-4 border-t border-[#F0ECE6] text-center">
+            <p class="font-brand italic text-[#7B7874] text-[13px] sm:text-sm tracking-normal leading-relaxed">
+              &ldquo;Engineered for the unseen critical moments.&rdquo;
             </p>
           </div>
         </div>
 
-        <!-- Right Column (7 cols): Art-Directed Minimalist Hardware Showcase -->
-        <div class="lg:col-span-7 bg-[#faf8f5] p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
+        <!-- Right Column (7 cols): Art-Directed Minimalist Hardware Showcase (Warm Sand #FAF6F1) -->
+        <div class="lg:col-span-7 bg-[#FAF6F1] p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
           
           <!-- Subtle Blueprint Corner Ticks -->
-          <div class="absolute top-3 left-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
-          <div class="absolute top-3 right-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
-          <div class="absolute bottom-3 left-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
-          <div class="absolute bottom-3 right-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute top-3 left-3 text-[#D1CDC7] font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute top-3 right-3 text-[#D1CDC7] font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute bottom-3 left-3 text-[#D1CDC7] font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute bottom-3 right-3 text-[#D1CDC7] font-mono text-xs select-none pointer-events-none">+</div>
 
           <!-- Editorial Top Header Strip (Featuring Playfair Display Italic + Outfit) -->
-          <div class="w-full flex items-start justify-between pb-3.5 border-b border-black/[0.06] relative z-10">
+          <div class="w-full flex items-start justify-between pb-3.5 border-b border-[#E5DFD4] relative z-10">
             <div>
-              <span class="font-tech text-[10px] font-bold tracking-[0.22em] text-orange-600 uppercase block mb-1">
-                HARDWARE SPEC // NODE·01
+              <span class="font-tech text-[10px] font-bold tracking-[0.22em] text-[#7B7874] uppercase block mb-1">
+                HARDWARE SPEC // NODE-01
               </span>
               <div class="flex items-baseline gap-2">
-                <h3 class="font-brand italic font-bold text-2xl text-slate-900 leading-none">
+                <h3 class="font-brand italic font-bold text-2xl text-[#2D2B2A] leading-none">
                   Rescue-Tag
                 </h3>
-                <span class="font-outfit font-semibold text-slate-400 text-sm">Wearable Unit</span>
+                <span class="font-outfit font-semibold text-[#7B7874] text-sm">Wearable Unit</span>
               </div>
             </div>
             <div class="text-right">
-              <span class="font-mono text-[9px] text-slate-400 tracking-wider block">433.05 MHz SUB-GHZ</span>
-              <span class="font-tech text-[10px] font-bold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200 block mt-1 shadow-2xs">
+              <span class="font-mono text-[9px] text-[#7B7874] tracking-wider block">433.05 MHz SUB-GHZ</span>
+              <span class="font-tech text-[10px] font-bold text-[#2D2B2A] bg-white px-2.5 py-0.5 rounded-md border border-[#E5DFD4] block mt-1 shadow-2xs">
                 SUB-GHZ &bull; OLED
               </span>
             </div>
@@ -468,37 +460,37 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           <!-- 3D Hardware Stage (Pure Studio Horizon - Proportional & Clean) -->
           <div class="relative w-full my-auto py-6 flex items-center justify-center group">
             
-            <!-- Soft Ambient Warm Horizon Glow -->
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-400/15 via-amber-300/8 to-transparent rounded-full filter blur-3xl transform scale-75 group-hover:scale-90 transition-all duration-700 pointer-events-none"></div>
+            <!-- Soft Ambient Neutral Horizon Glow -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black/[0.03] via-[#2D2B2A]/[0.015] to-transparent rounded-full filter blur-3xl transform scale-75 group-hover:scale-90 transition-all duration-700 pointer-events-none"></div>
 
             <!-- Minimalist Coordinate Ticks -->
-            <span class="absolute top-2 left-2 font-mono text-[9px] text-slate-300 tracking-widest pointer-events-none">LAT -8.2465°</span>
-            <span class="absolute top-2 right-2 font-mono text-[9px] text-slate-300 tracking-widest pointer-events-none">LON 113.6965°</span>
+            <span class="absolute top-2 left-2 font-mono text-[9px] text-[#A6A29C] tracking-widest pointer-events-none">LAT -8.2465&deg;</span>
+            <span class="absolute top-2 right-2 font-mono text-[9px] text-[#A6A29C] tracking-widest pointer-events-none">LON 113.6965&deg;</span>
 
             <!-- 3D Prototype Image (Proportional, Balanced Scale) -->
             <div class="relative py-2 px-4 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-y-1.5 cursor-pointer z-10 flex items-center justify-center">
               <img 
                 src="BASE64_PLACEHOLDER" 
                 alt="Rescue-Tag Industrial Smartwatch Prototype" 
-                class="w-auto h-[270px] sm:h-[295px] md:h-[315px] max-h-[330px] object-contain drop-shadow-[0_22px_36px_rgba(0,0,0,0.22)] filter contrast-105" 
+                class="w-auto h-[270px] sm:h-[295px] md:h-[315px] max-h-[330px] object-contain drop-shadow-[0_20px_32px_rgba(0,0,0,0.18)] filter contrast-105" 
               />
             </div>
 
           </div>
 
           <!-- Bottom Architectural Spec Rail (Clean, Swiss Minimalist Metrics) -->
-          <div class="w-full pt-3.5 border-t border-black/[0.06] grid grid-cols-3 divide-x divide-black/[0.06] text-center relative z-10">
+          <div class="w-full pt-3.5 border-t border-[#E5DFD4] grid grid-cols-3 divide-x divide-[#E5DFD4] text-center relative z-10">
             <div class="px-2">
-              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">ENCLOSURE</span>
-              <span class="font-outfit text-xs font-bold text-slate-900 block mt-0.5">IP68 Rugged ABS</span>
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-[#7B7874] block font-medium">ENCLOSURE</span>
+              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">IP68 Rugged ABS</span>
             </div>
             <div class="px-2">
-              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">TELEMETRY</span>
-              <span class="font-outfit text-xs font-bold text-slate-900 block mt-0.5">0.96" Live OLED</span>
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-[#7B7874] block font-medium">TELEMETRY</span>
+              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">0.96" Live OLED</span>
             </div>
             <div class="px-2">
-              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">RELAY</span>
-              <span class="font-outfit text-xs font-bold text-orange-600 block mt-0.5">1-Hop P2P (18ms)</span>
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-[#7B7874] block font-medium">RELAY</span>
+              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">1-Hop P2P (18ms)</span>
             </div>
           </div>
 
@@ -508,13 +500,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ═════════════════════════════════════════════════════════════════════════
-       MAIN DASHBOARD SHELL (Hidden until login)
-  ══════════════════════════════════════════════════════════════════════════ -->
-  <div 
-
   <!-- ================= PAGE 2: RESCUETAG COMMAND CENTER DASHBOARD (Hidden until login) ================= -->
-  <div id="page-dashboard" class="hidden min-h-screen w-full flex items-center justify-center p-4 md:p-6 bg-[#050505]">
+  <div id="page-dashboard" class="hidden min-h-screen w-full flex items-center justify-center p-4 md:p-6 bg-[#F4EFEB] bg-[radial-gradient(#DBD4C8_1.2px,transparent_1.2px)] [background-size:24px_24px]">
 
 
   <!-- ================= MASTER DASHBOARD CONTAINER (1180px by 856px) ================= -->
@@ -1652,10 +1639,10 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     function selectLoginRole(role, btn) {
       document.querySelectorAll('.role-btn').forEach(b => {
         b.classList.remove('active');
-        b.classList.add('text-slate-600');
+        b.classList.add('text-[#7B7874]');
       });
       btn.classList.add('active');
-      btn.classList.remove('text-slate-600');
+      btn.classList.remove('text-[#7B7874]');
       activeOperatorRole = role;
     }
 
