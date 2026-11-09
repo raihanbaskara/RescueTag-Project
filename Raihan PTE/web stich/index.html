@@ -535,15 +535,6 @@
           </svg>
         </button>
 
-        <!-- 5. RescueTag Wearable Smartwatch Spec Viewer -->
-        <button id="navBtn-hardware-spec" class="nav-btn" onclick="switchCenterView('hardware-spec')" title="RescueTag Wearable Smartwatch">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="6" y="2" width="12" height="20" rx="3"></rect>
-            <circle cx="12" cy="12" r="3"></circle>
-            <line x1="12" y1="18" x2="12.01" y2="18"></line>
-          </svg>
-        </button>
-
         <!-- 6. Emergency Siren Audio Synthesizer Toggle -->
         <button id="sirenBtn" class="nav-btn" onclick="toggleAudioAlert()" title="Toggle Emergency Siren Synthesizer">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -562,11 +553,6 @@
         </button>
       </nav>
 
-      <!-- Bottom Status Pill (MQTT Online indicator) -->
-      <button class="flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none" onclick="toggleMqttInfo()" title="MQTT EMQX Broker Connection Details">
-        <span id="mqttDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
-        <span class="text-[9px] font-mono text-[#8E8B86] font-semibold">EMQX</span>
-      </button>
     </aside>
 
     <!-- ================= 2. CENTER CONTENT (1fr, Warm Sand #FAF6F1) ================= -->
@@ -593,8 +579,7 @@
             <div class="relative" id="workerDropdownContainer">
               <div class="flex items-center gap-1.5">
                 <!-- Selected Worker Badge / Pill -->
-                <button type="button" onclick="toggleWorkerDropdown()" class="flex items-center gap-2.5 px-3 py-1.5 rounded-[12px] bg-white border border-[#E5DFD4] hover:border-[#D0C8BC] transition shadow-[0_2px_6px_rgba(0,0,0,0.03)] cursor-pointer text-[#2D2B2A]">
-                  <span id="selectedWorkerDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                <button type="button" onclick="toggleWorkerDropdown()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-[12px] bg-white border border-[#E5DFD4] hover:border-[#D0C8BC] transition shadow-[0_2px_6px_rgba(0,0,0,0.03)] cursor-pointer text-[#2D2B2A]">
                   <span id="selectedWorkerLabel" class="text-[12.5px] font-bold tracking-tight">Pekerja #02 (Agus)</span>
                 </button>
 
@@ -799,8 +784,8 @@
 
         </section>
 
-        <!-- ROW 2: Kinematics & TinyML Activity Stream (Height 346px) -->
-        <section class="metric-card px-6 py-5 flex flex-col justify-between h-[346px]">
+        <!-- ROW 2: Kinematics & TinyML Activity Stream (Expanded Flex Layout) -->
+        <section class="metric-card px-6 py-5 flex flex-col justify-between flex-1 min-h-[370px] mt-4">
           <!-- Card Header -->
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -867,27 +852,6 @@
               </button>
             </div>
           </div>
-        </section>
-
-        <!-- ROW 3: LoRa 1-Hop Mesh Transmission Link (Height 66px) -->
-        <section class="metric-card px-6 py-4 flex items-center justify-between h-[66px]">
-          <div class="flex items-center gap-3">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-ping"></span>
-            <h3 class="text-[14.5px] font-bold text-[#2D2B2A]">LoRa 1-Hop Mesh Transmission Link</h3>
-          </div>
-          
-          <div class="flex items-center gap-2.5">
-            <span class="px-3 py-1 rounded-[8px] bg-[#CEF0F7] text-[#283B40] text-[10.5px] font-bold tracking-tight font-mono">
-              18ms Estafet Latency &bull; -68 dBm
-            </span>
-            <button onclick="switchCenterView('gis-map')" class="px-3 py-1 rounded-[8px] bg-[#2C2A2A] text-white text-[10.5px] font-semibold hover:bg-[#1D1B1B] transition">
-              Open Subterranean GIS Map
-            </button>
-          </div>
-
-          <button onclick="switchCenterView('fleet-roster')" class="text-[12px] font-semibold text-[#5A5754] hover:text-[#2D2B2A] transition">
-            View Dual-Worker Diagnostics &rarr;
-          </button>
         </section>
 
       </div>
