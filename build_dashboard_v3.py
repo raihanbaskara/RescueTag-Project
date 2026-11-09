@@ -508,75 +508,80 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
   <div class="dashboard-wrapper">
 
     <!-- ================= 1. LEFT SIDEBAR (84px) ================= -->
-    <aside class="left-sidebar bg-white h-full flex flex-col items-center py-8 justify-between border-r border-[#F0ECE6] z-10 select-none">
+    <aside class="left-sidebar bg-white h-full flex flex-col items-center py-7 justify-between border-r border-[#F0ECE6] z-10 select-none">
       
-      <!-- Top Emblem: RescueTag LoRa Intertwined Gold Logo -->
-      <button class="mt-1 cursor-pointer group flex flex-col items-center focus:outline-none" onclick="switchCenterView('overview')" title="RescueTag Command Hub">
-        <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="11.5" y="4.5" width="13" height="27" rx="6.5" transform="rotate(-45 18 18)" stroke="#C68B39" stroke-width="2.3"/>
-          <rect x="11.5" y="4.5" width="13" height="27" rx="6.5" transform="rotate(45 18 18)" stroke="#C68B39" stroke-width="2.3"/>
-        </svg>
-        <span class="text-[9px] font-mono font-bold tracking-widest text-[#9C9892] mt-1.5 uppercase">SEC-01</span>
-      </button>
-
-      <!-- Navigation Tactile Icons -->
-      <nav class="flex flex-col items-center gap-7 -mt-8">
-        <!-- 1. Overview Dashboard (Active) -->
-        <button id="navBtn-overview" class="nav-btn active" onclick="switchCenterView('overview')" title="Command Overview">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-            <rect x="2" y="2" width="6.5" height="6.5" rx="1.2" fill="currentColor"/>
-            <rect x="11.5" y="2" width="6.5" height="4.2" rx="1.2" fill="currentColor"/>
-            <rect x="2" y="11.5" width="6.5" height="6.5" rx="1.2" fill="currentColor"/>
-            <rect x="11.5" y="9.2" width="6.5" height="8.8" rx="1.2" fill="currentColor"/>
+      <!-- Top Cluster: Emblem + Raised Navigation Bar -->
+      <div class="flex flex-col items-center gap-7 w-full">
+        <!-- Top Emblem: RescueTag LoRa Intertwined Gold Logo -->
+        <button class="cursor-pointer group flex flex-col items-center focus:outline-none" onclick="switchCenterView('overview')" title="RescueTag Command Hub">
+          <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="11.5" y="4.5" width="13" height="27" rx="6.5" transform="rotate(-45 18 18)" stroke="#C68B39" stroke-width="2.3"/>
+            <rect x="11.5" y="4.5" width="13" height="27" rx="6.5" transform="rotate(45 18 18)" stroke="#C68B39" stroke-width="2.3"/>
           </svg>
+          <span class="text-[9px] font-mono font-bold tracking-widest text-[#9C9892] mt-1.5 uppercase">SEC-01</span>
         </button>
 
-        <!-- 2. Dual-Worker Fleet Telemetry Roster Table -->
-        <button id="navBtn-fleet-roster" class="nav-btn" onclick="switchCenterView('fleet-roster')" title="Subterranean Worker Fleet Roster & LoRa Diagnostics">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2.5"></rect>
-            <path d="M3 9h18"></path>
-            <path d="M9 21V9"></path>
-          </svg>
-        </button>
+        <!-- Navigation Tactile Icons (Raised to upper position) -->
+        <nav class="flex flex-col items-center gap-5">
+          <!-- 1. Overview Dashboard (Active) -->
+          <button id="navBtn-overview" class="nav-btn active" onclick="switchCenterView('overview')" title="Command Overview">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="2" width="6.5" height="6.5" rx="1.2" fill="currentColor"/>
+              <rect x="11.5" y="2" width="6.5" height="4.2" rx="1.2" fill="currentColor"/>
+              <rect x="2" y="11.5" width="6.5" height="6.5" rx="1.2" fill="currentColor"/>
+              <rect x="11.5" y="9.2" width="6.5" height="8.8" rx="1.2" fill="currentColor"/>
+            </svg>
+          </button>
 
-        <!-- 3. Subterranean Spatial Mine Navigation (OpenStreetMap GIS) -->
-        <button id="navBtn-gis-map" class="nav-btn" onclick="switchCenterView('gis-map')" title="Subterranean Spatial Mine Navigation // OpenStreetMap GIS">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-            <line x1="8" y1="2" x2="8" y2="18"></line>
-            <line x1="16" y1="6" x2="16" y2="22"></line>
-          </svg>
-        </button>
+          <!-- 2. Dual-Worker Fleet Telemetry Roster Table -->
+          <button id="navBtn-fleet-roster" class="nav-btn" onclick="switchCenterView('fleet-roster')" title="Subterranean Worker Fleet Roster & LoRa Diagnostics">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2.5"></rect>
+              <path d="M3 9h18"></path>
+              <path d="M9 21V9"></path>
+            </svg>
+          </button>
 
-        <!-- 4. Chronological SAR Triage & Mesh Audit Trail -->
-        <button id="navBtn-audit-trail" class="nav-btn" onclick="switchCenterView('audit-trail')" title="Chronological SAR Triage & Mesh Audit Trail">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-        </button>
+          <!-- 3. Subterranean Spatial Mine Navigation (OpenStreetMap GIS) -->
+          <button id="navBtn-gis-map" class="nav-btn" onclick="switchCenterView('gis-map')" title="Subterranean Spatial Mine Navigation // OpenStreetMap GIS">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+              <line x1="8" y1="2" x2="8" y2="18"></line>
+              <line x1="16" y1="6" x2="16" y2="22"></line>
+            </svg>
+          </button>
 
-        <!-- 6. Emergency Siren Audio Synthesizer Toggle -->
-        <button id="sirenBtn" class="nav-btn" onclick="toggleAudioAlert()" title="Toggle Emergency Siren Synthesizer">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </button>
+          <!-- 4. Chronological SAR Triage & Mesh Audit Trail -->
+          <button id="navBtn-audit-trail" class="nav-btn" onclick="switchCenterView('audit-trail')" title="Chronological SAR Triage & Mesh Audit Trail">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </button>
 
-        <!-- 7. Logout to Access Terminal -->
-        <button id="logoutBtn" class="nav-btn text-[#8E8B86] hover:text-[#EF4444] transition cursor-pointer" onclick="handleLogout()" title="Logout to Access Terminal">
+          <!-- 5. Emergency Siren Audio Synthesizer Toggle -->
+          <button id="sirenBtn" class="nav-btn" onclick="toggleAudioAlert()" title="Toggle Emergency Siren Synthesizer">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom Cluster: Keluar / Logout to Access Terminal (Pinned at bottom) -->
+      <div class="flex flex-col items-center pb-1">
+        <button id="logoutBtn" class="nav-btn text-[#8E8B86] hover:text-[#EF4444] transition cursor-pointer" onclick="handleLogout()" title="Keluar / Logout ke Access Terminal">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16 17 21 12 16 7"></polyline>
             <line x1="21" y1="12" x2="9" y2="12"></line>
           </svg>
         </button>
-      </nav>
+      </div>
 
     </aside>
 
