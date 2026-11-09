@@ -34,7 +34,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Mulish:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Mulish:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400;1,600;1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Leaflet GIS, Chart.js & MQTT.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -309,9 +309,213 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       opacity: 0;
       transform: scale(0.99);
     }
-  </style>
+  
+    /* Login Page Typography & Styles */
+    .font-outfit { font-family: 'Outfit', sans-serif; }
+    .font-tech { font-family: 'Space Grotesk', sans-serif; }
+    .font-brand { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
+    .role-btn {
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .role-btn.active {
+      background: #ffffff !important;
+      color: #ea580c !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      font-weight: 700;
+    }
+    .btn-tactile {
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+    .btn-tactile:active {
+      transform: scale(0.98);
+    }
+</style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center select-none bg-[#050505]">
+
+  <!-- ================= PAGE 1: ACCESS TERMINAL LOGIN PORTAL ================= -->
+<div id="page-login" class="fixed inset-0 z-50 bg-[#f8f5f0] bg-[radial-gradient(#e5dec9_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center p-4 md:p-8 overflow-y-auto select-none">
+    
+    <!-- Ambient Depth-of-Field Background Silhouettes -->
+    <div class="absolute -left-20 -bottom-20 w-[450px] h-[450px] opacity-15 filter blur-3xl pointer-events-none transform -rotate-12">
+      <img src="BASE64_PLACEHOLDER" alt="" class="w-full h-full object-contain" />
+    </div>
+    <div class="absolute -right-24 -top-24 w-[450px] h-[450px] opacity-10 filter blur-3xl pointer-events-none transform rotate-45">
+      <img src="BASE64_PLACEHOLDER" alt="" class="w-full h-full object-contain" />
+    </div>
+
+    <!-- Outer Double-Bezel Tray (Doppelrand Architecture) -->
+    <div class="w-full max-w-5xl rounded-[2.5rem] p-2 sm:p-3 bg-black/[0.03] border border-black/10 shadow-[0_32px_80px_-16px_rgba(200,100,20,0.14),0_0_0_1px_rgba(255,255,255,0.9)] backdrop-blur-2xl">
+      
+      <!-- Inner Core Canvas Container -->
+      <div class="w-full rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-sm min-h-[640px]">
+        
+        <!-- Left Column (5 cols): Tactical Command Center Terminal -->
+        <div class="lg:col-span-5 bg-white p-7 md:p-8 lg:border-r border-slate-200/80 flex flex-col justify-between relative z-10">
+          <div>
+            <!-- Terminal Header & Brand -->
+            <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-orange-500/25">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  </svg>
+                </div>
+                <div>
+                  <span class="font-brand font-bold text-xl tracking-normal text-slate-900 leading-none block">Rescue-Tag</span>
+                  <span class="text-[9px] font-mono tracking-widest text-orange-700 font-bold uppercase block mt-0.5">DISASTER TRIAGE PORTAL</span>
+                </div>
+              </div>
+              <span class="font-mono text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                SEC-01
+              </span>
+            </div>
+
+            <div class="mb-5">
+              <span class="font-tech text-[10px] font-bold uppercase tracking-[0.22em] text-orange-600 block mb-1">
+                [ ACCESS TERMINAL // 2026 ]
+              </span>
+              <h2 class="font-outfit text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">Command Center</h2>
+              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed font-sans">Sistem Pemantauan Triage Bawah Tanah & Jaringan LoRa 1-Hop Relay</p>
+            </div>
+
+            <!-- Segmented Role Selector (Swiss Precision Architecture) -->
+            <div class="mb-5">
+              <label class="block text-[10px] font-tech font-bold text-slate-400 uppercase tracking-widest mb-2">OPERATOR ROLE PROFILE:</label>
+              <div class="grid grid-cols-3 p-1 rounded-xl bg-slate-100/80 border border-slate-200/70 text-xs font-tech font-medium" id="login-role-selector">
+                <button type="button" onclick="selectLoginRole('SAR Commander', this)" class="role-btn active py-2 px-1 rounded-lg font-bold text-center text-[11px] transition shadow-xs">
+                  SAR Cmd
+                </button>
+                <button type="button" onclick="selectLoginRole('Field Paramedic', this)" class="role-btn py-2 px-1 rounded-lg text-slate-600 hover:text-slate-900 text-center text-[11px] transition">
+                  Medic
+                </button>
+                <button type="button" onclick="selectLoginRole('Mine K3 Lead', this)" class="role-btn py-2 px-1 rounded-lg text-slate-600 hover:text-slate-900 text-center text-[11px] transition">
+                  K3 Lead
+                </button>
+              </div>
+            </div>
+
+            <!-- Form Fields with Double-Bezel Framing -->
+            <form onsubmit="handleLogin(event)" class="space-y-3.5">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-[11px] font-tech font-semibold text-slate-600">Operator ID / NIP</label>
+                  <span class="text-[9px] font-mono text-slate-400">[REQUIRED]</span>
+                </div>
+                <input type="text" id="login-nip" value="250534618547" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition shadow-inner" />
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-[11px] font-tech font-semibold text-slate-600">Security Passcode</label>
+                  <a href="#" class="text-[10px] font-mono text-orange-600 hover:underline font-semibold">Reset Passcode?</a>
+                </div>
+                <input type="password" id="login-pass" value="rescetag2026" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition shadow-inner" />
+              </div>
+
+              <!-- Button-in-Button Tactical CTA Button -->
+              <button type="submit" class="btn-tactile w-full py-2.5 pl-4 pr-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white rounded-xl text-xs font-outfit font-bold tracking-wider uppercase shadow-lg shadow-orange-600/25 transition mt-2 flex items-center justify-between group active:scale-[0.98]">
+                <span>Login</span>
+                <span class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                  <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                  </svg>
+                </span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Dramatic Philosophy Creed (Centered & Elevated) -->
+          <div class="mt-6 pt-4 border-t border-slate-100/90 text-center">
+            <p class="font-brand italic text-slate-600 text-[13px] sm:text-sm tracking-normal leading-relaxed">
+              “Engineered for the unseen critical moments.”
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Column (7 cols): Art-Directed Minimalist Hardware Showcase -->
+        <div class="lg:col-span-7 bg-[#faf8f5] p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
+          
+          <!-- Subtle Blueprint Corner Ticks -->
+          <div class="absolute top-3 left-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute top-3 right-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute bottom-3 left-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+          <div class="absolute bottom-3 right-3 text-slate-300 font-mono text-xs select-none pointer-events-none">+</div>
+
+          <!-- Editorial Top Header Strip (Featuring Playfair Display Italic + Outfit) -->
+          <div class="w-full flex items-start justify-between pb-3.5 border-b border-black/[0.06] relative z-10">
+            <div>
+              <span class="font-tech text-[10px] font-bold tracking-[0.22em] text-orange-600 uppercase block mb-1">
+                HARDWARE SPEC // NODE·01
+              </span>
+              <div class="flex items-baseline gap-2">
+                <h3 class="font-brand italic font-bold text-2xl text-slate-900 leading-none">
+                  Rescue-Tag
+                </h3>
+                <span class="font-outfit font-semibold text-slate-400 text-sm">Wearable Unit</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="font-mono text-[9px] text-slate-400 tracking-wider block">433.05 MHz SUB-GHZ</span>
+              <span class="font-tech text-[10px] font-bold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200 block mt-1 shadow-2xs">
+                SUB-GHZ &bull; OLED
+              </span>
+            </div>
+          </div>
+
+          <!-- 3D Hardware Stage (Pure Studio Horizon - Proportional & Clean) -->
+          <div class="relative w-full my-auto py-6 flex items-center justify-center group">
+            
+            <!-- Soft Ambient Warm Horizon Glow -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-400/15 via-amber-300/8 to-transparent rounded-full filter blur-3xl transform scale-75 group-hover:scale-90 transition-all duration-700 pointer-events-none"></div>
+
+            <!-- Minimalist Coordinate Ticks -->
+            <span class="absolute top-2 left-2 font-mono text-[9px] text-slate-300 tracking-widest pointer-events-none">LAT -8.2465°</span>
+            <span class="absolute top-2 right-2 font-mono text-[9px] text-slate-300 tracking-widest pointer-events-none">LON 113.6965°</span>
+
+            <!-- 3D Prototype Image (Proportional, Balanced Scale) -->
+            <div class="relative py-2 px-4 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-y-1.5 cursor-pointer z-10 flex items-center justify-center">
+              <img 
+                src="BASE64_PLACEHOLDER" 
+                alt="Rescue-Tag Industrial Smartwatch Prototype" 
+                class="w-auto h-[270px] sm:h-[295px] md:h-[315px] max-h-[330px] object-contain drop-shadow-[0_22px_36px_rgba(0,0,0,0.22)] filter contrast-105" 
+              />
+            </div>
+
+          </div>
+
+          <!-- Bottom Architectural Spec Rail (Clean, Swiss Minimalist Metrics) -->
+          <div class="w-full pt-3.5 border-t border-black/[0.06] grid grid-cols-3 divide-x divide-black/[0.06] text-center relative z-10">
+            <div class="px-2">
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">ENCLOSURE</span>
+              <span class="font-outfit text-xs font-bold text-slate-900 block mt-0.5">IP68 Rugged ABS</span>
+            </div>
+            <div class="px-2">
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">TELEMETRY</span>
+              <span class="font-outfit text-xs font-bold text-slate-900 block mt-0.5">0.96" Live OLED</span>
+            </div>
+            <div class="px-2">
+              <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-slate-400 block font-medium">RELAY</span>
+              <span class="font-outfit text-xs font-bold text-orange-600 block mt-0.5">1-Hop P2P (18ms)</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       MAIN DASHBOARD SHELL (Hidden until login)
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div 
+
+  <!-- ================= PAGE 2: RESCUETAG COMMAND CENTER DASHBOARD (Hidden until login) ================= -->
+  <div id="page-dashboard" class="hidden min-h-screen w-full flex items-center justify-center p-4 md:p-6 bg-[#050505]">
+
 
   <!-- ================= MASTER DASHBOARD CONTAINER (1180px by 856px) ================= -->
   <div class="dashboard-wrapper">
@@ -383,6 +587,15 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+
+        <!-- 7. Logout to Access Terminal -->
+        <button id="logoutBtn" class="nav-btn text-[#8E8B86] hover:text-[#EF4444] transition cursor-pointer" onclick="handleLogout()" title="Logout to Access Terminal">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
           </svg>
         </button>
       </nav>
@@ -1427,8 +1640,45 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
   </div>
 
+  </div>
+
   <!-- ================= JAVASCRIPT LOGIC ENGINE ================= -->
   <script>
+    // =============================================================
+    // ACCESS TERMINAL LOGIN & AUTH LOGIC
+    // =============================================================
+    let activeOperatorRole = 'SAR Commander';
+
+    function selectLoginRole(role, btn) {
+      document.querySelectorAll('.role-btn').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-slate-600');
+      });
+      btn.classList.add('active');
+      btn.classList.remove('text-slate-600');
+      activeOperatorRole = role;
+    }
+
+    function handleLogin(e) {
+      if (e) e.preventDefault();
+      const loginPage = document.getElementById('page-login');
+      const dashPage = document.getElementById('page-dashboard');
+      if (loginPage) loginPage.classList.add('hidden');
+      if (dashPage) dashPage.classList.remove('hidden');
+      
+      // Invalidate Leaflet map size on display
+      if (window.leafletMap) {
+        setTimeout(() => { window.leafletMap.invalidateSize(); }, 200);
+      }
+    }
+
+    function handleLogout() {
+      const loginPage = document.getElementById('page-login');
+      const dashPage = document.getElementById('page-dashboard');
+      if (loginPage) loginPage.classList.remove('hidden');
+      if (dashPage) dashPage.classList.add('hidden');
+    }
+
     // -------------------------------------------------------------
     // 1. STATE & DATA MODELS FOR BOTH WORKERS
     // -------------------------------------------------------------
@@ -2321,7 +2571,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 '''
 
 # Replace base64 image placeholder
-final_html = HTML_TEMPLATE.replace("BASE64_IMAGE_PLACEHOLDER", data_uri)
+final_html = HTML_TEMPLATE.replace("BASE64_IMAGE_PLACEHOLDER", data_uri).replace("BASE64_PLACEHOLDER", data_uri)
 
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(final_html)
