@@ -567,12 +567,12 @@
       <div id="view-overview" class="center-view flex flex-col justify-between h-full">
 
         <!-- Header -->
-        <header class="flex items-center justify-between">
+        <header class="flex items-center justify-between pb-1">
           <div>
-            <h1 class="text-[23px] font-bold text-[#2D2B2A] tracking-tight leading-tight">
-              RescueTag Subterranean Command
+            <h1 class="font-brand italic font-bold text-[30px] text-[#2D2B2A] tracking-normal leading-none">
+              Rescue-Tag
             </h1>
-            <p class="text-[12px] font-medium text-[#7B7874] mt-1 flex items-center gap-2">
+            <p class="text-[11.5px] font-medium text-[#7B7874] mt-1.5 flex items-center gap-2">
               <span id="liveDate" class="font-sans">9 November 2026</span>
               <span class="text-[#D1CDC7]">&bull;</span>
               <span id="liveClock" class="font-mono text-[#4A4744]">12:45:00 UTC</span>
@@ -580,28 +580,23 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <!-- Worker Selector Dropdown (Replaces side-by-side tabs; uses Chevron Button like Gambar 4) -->
+            <!-- Worker Selector Dropdown (Unified luxury frame, consistent for both workers) -->
             <div class="relative" id="workerDropdownContainer">
-              <div class="flex items-center gap-1.5">
-                <!-- Selected Worker Badge / Pill -->
-                <button type="button" onclick="toggleWorkerDropdown()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-[12px] bg-white border border-[#E5DFD4] hover:border-[#D0C8BC] transition shadow-[0_2px_6px_rgba(0,0,0,0.03)] cursor-pointer text-[#2D2B2A]">
-                  <span id="selectedWorkerLabel" class="text-[12.5px] font-bold tracking-tight">Pekerja #02 (Agus)</span>
-                </button>
+              <!-- Single Unified Dropdown Trigger Button with consistent frame -->
+              <button type="button" id="workerDropdownBtn" onclick="toggleWorkerDropdown()" class="flex items-center gap-2.5 px-3.5 py-2 rounded-[12px] bg-white border border-[#E5DFD4] hover:border-[#2D2B2A] transition shadow-[0_2px_6px_rgba(0,0,0,0.03)] cursor-pointer text-[#2D2B2A] group" title="Pilih Pekerja Subterranean">
+                <span id="selectedWorkerDot" class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]"></span>
+                <span id="selectedWorkerLabel" class="text-[12px] font-bold tracking-tight">Pekerja #02 (Agus)</span>
+                <svg id="workerChevronIcon" class="transition-transform duration-200 ml-0.5" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7B7874" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
 
-                <!-- Dropdown Trigger Button (Styled exactly like Gambar 4: rounded square with chevron) -->
-                <button type="button" id="workerDropdownBtn" onclick="toggleWorkerDropdown()" class="w-8 h-8 rounded-[11px] bg-white border border-[#D5D0C7] hover:border-[#2D2B2A] flex items-center justify-center transition shadow-[0_2px_4px_rgba(0,0,0,0.04)] cursor-pointer group" title="Pilih Pekerja Subterranean">
-                  <svg id="workerChevronIcon" class="transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D2B2A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </button>
-              </div>
-
-              <!-- Dropdown Options Menu (Expands below trigger) -->
+              <!-- Dropdown Options Menu (Consistent cards for both workers) -->
               <div id="workerDropdownMenu" class="hidden absolute top-full mt-2 right-0 w-[240px] bg-white rounded-2xl border border-[#E5DFD4] shadow-[0_14px_36px_rgba(45,43,42,0.14)] p-1.5 z-50">
                 <div class="px-2.5 py-1.5 text-[9.5px] font-mono font-bold text-[#A6A29C] uppercase tracking-wider border-b border-[#F5F2EB] mb-1">
                   Pilih Pekerja Subterranean
                 </div>
-                
+
                 <!-- Option 1: Worker #02 -->
                 <button type="button" onclick="handleWorkerDropdownSelect(2)" id="workerOpt02" class="w-full flex items-center justify-between p-2 rounded-xl hover:bg-[#FAF6F1] transition text-left cursor-pointer group">
                   <div class="flex items-center gap-2.5">
@@ -792,15 +787,15 @@
         <!-- ROW 2: Kinematics & TinyML Activity Stream (Expanded Flex Layout) -->
         <section class="metric-card px-6 py-5 flex flex-col justify-between flex-1 min-h-[370px] mt-4">
           <!-- Card Header -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <h2 class="text-[16px] font-bold text-[#2D2B2A]">Kinematics & TinyML Activity Stream</h2>
-              <span id="liveAccelPill" class="px-2.5 py-0.5 rounded-[6px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[10.5px] font-bold">
-                1.02g &bull; Normal
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <h2 class="text-[15.5px] font-bold text-[#2D2B2A] whitespace-nowrap">Kinematics &amp; TinyML Activity Stream</h2>
+              <span id="liveAccelPill" class="px-2.5 py-1 rounded-[7px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[10.5px] font-bold whitespace-nowrap flex-shrink-0">
+                1.02g &bull; Diam / Normal
               </span>
             </div>
-            <button id="monthToggleBtn" onclick="cycleShift()" class="flex items-center gap-2.5 px-3 py-1.5 rounded-[10px] border border-[#EAE6E1] text-[11.5px] font-semibold text-[#4A4744] hover:bg-[#FAF6F1] transition">
-              <span id="shiftLabel">Shift Pagi // Sektor 7</span>
+            <button id="monthToggleBtn" onclick="cycleShift()" class="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-[10px] bg-white border border-[#EAE6E1] hover:border-[#2D2B2A] text-[11px] font-semibold text-[#4A4744] hover:bg-[#FAF6F1] transition shadow-2xs">
+              <span id="shiftLabel" class="whitespace-nowrap">Shift Pagi // Sektor 7</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
@@ -831,30 +826,19 @@
             </div>
           </div>
 
-          <!-- Legend & Simulation Controls -->
-          <div class="flex items-center justify-between pt-1">
-            <div class="flex items-center gap-7">
-              <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#DA7468]"></span>
-                <span class="text-[10.5px] font-semibold text-[#6E6B67]">G-Force Shock (>3.0g)</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#438D9B]"></span>
-                <span class="text-[10.5px] font-semibold text-[#6E6B67]">Kerja Aktif (1.2-2.5g)</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#CD8A39]"></span>
-                <span class="text-[10.5px] font-semibold text-[#6E6B67]">Diam / Baseline (1.0g)</span>
-              </div>
+          <!-- Legend -->
+          <div class="flex items-center gap-7 pt-1">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#DA7468]"></span>
+              <span class="text-[10.5px] font-semibold text-[#6E6B67]">G-Force Shock (&gt;3.0g)</span>
             </div>
-
-            <div class="flex items-center gap-2">
-              <button onclick="testSimSOS()" class="px-2.5 py-1 rounded-[6px] bg-red-50 text-red-700 text-[10px] font-bold font-mono hover:bg-red-100 transition border border-red-200">
-                Simulate SOS
-              </button>
-              <button onclick="testSimNormal()" class="px-2.5 py-1 rounded-[6px] bg-emerald-50 text-emerald-700 text-[10px] font-bold font-mono hover:bg-emerald-100 transition border border-emerald-200">
-                Simulate Normal
-              </button>
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#438D9B]"></span>
+              <span class="text-[10.5px] font-semibold text-[#6E6B67]">Kerja Aktif (1.2-2.5g)</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#CD8A39]"></span>
+              <span class="text-[10.5px] font-semibold text-[#6E6B67]">Diam / Baseline (1.0g)</span>
             </div>
           </div>
         </section>
@@ -1744,20 +1728,20 @@
     function selectWorker(workerId) {
       currentWorker = workerId;
 
-      // Update Dropdown Trigger & Checkmarks
+      // Update Dropdown Trigger & Checkmarks (Consistent Frame)
       const labelEl = document.getElementById('selectedWorkerLabel');
       const dotEl = document.getElementById('selectedWorkerDot');
       const check01 = document.getElementById('workerOptCheck01');
       const check02 = document.getElementById('workerOptCheck02');
-      
+
       if (workerId === 2) {
         if (labelEl) labelEl.textContent = 'Pekerja #02 (Agus)';
-        if (dotEl) dotEl.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]';
+        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]';
         if (check01) check01.classList.add('hidden');
         if (check02) check02.classList.remove('hidden');
       } else {
         if (labelEl) labelEl.textContent = 'Pekerja #01 (Bambang)';
-        if (dotEl) dotEl.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]';
+        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]';
         if (check01) check01.classList.remove('hidden');
         if (check02) check02.classList.add('hidden');
       }
@@ -1837,11 +1821,12 @@
       const accelPill = document.getElementById('liveAccelPill');
       if (accelPill) {
         if (w.accel > 3.0) {
-          accelPill.className = 'px-2.5 py-0.5 rounded-[6px] bg-red-100 text-red-700 font-mono text-[10.5px] font-bold animate-pulse';
+          accelPill.className = 'px-2.5 py-1 rounded-[7px] bg-red-100 text-red-700 font-mono text-[10.5px] font-bold animate-pulse whitespace-nowrap flex-shrink-0';
           accelPill.textContent = w.accel.toFixed(2) + 'g • BENTURAN SHOCK';
         } else {
-          accelPill.className = 'px-2.5 py-0.5 rounded-[6px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[10.5px] font-bold';
-          accelPill.textContent = w.accel.toFixed(2) + 'g • ' + w.activity;
+          accelPill.className = 'px-2.5 py-1 rounded-[7px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[10.5px] font-bold whitespace-nowrap flex-shrink-0';
+          const shortAct = w.activity.includes('Diam') ? 'Diam / Normal' : w.activity;
+          accelPill.textContent = w.accel.toFixed(2) + 'g • ' + shortAct;
         }
       }
     }
