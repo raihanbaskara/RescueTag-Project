@@ -407,9 +407,9 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
               RescueTag Subterranean Command
             </h1>
             <p class="text-[12px] font-medium text-[#7B7874] mt-1 flex items-center gap-2">
+              <span id="liveDate" class="font-sans">9 November 2026</span>
+              <span class="text-[#D1CDC7]">&bull;</span>
               <span id="liveClock" class="font-mono text-[#4A4744]">12:45:00 UTC</span>
-              <span>&bull;</span>
-              <span id="headerSectorStatus">Sektor 7 Tambang Bawah Tanah &bull; 1-Hop Mesh Relaying</span>
             </p>
           </div>
 
@@ -1587,8 +1587,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       if (tab2) tab2.classList.toggle('active', workerId === 2);
       
       const w = workers[workerId];
-      const sectorEl = document.getElementById('headerSectorStatus');
-      if (sectorEl) sectorEl.textContent = w.sector + '   ' + w.route;
+      // headerSectorStatus removed per user request
       
       const slHR = document.getElementById('sliderHR');
       const slSpO2 = document.getElementById('sliderSpO2');
@@ -2295,6 +2294,12 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         const now = new Date();
         const clk = document.getElementById('liveClock');
         if (clk) clk.textContent = now.toTimeString().split(' ')[0] + ' UTC';
+        const dEl = document.getElementById('liveDate');
+        if (dEl && !dEl.dataset.initialized) {
+          const options = { day: 'numeric', month: 'long', year: 'numeric' };
+          dEl.textContent = now.toLocaleDateString('id-ID', options);
+          dEl.dataset.initialized = 'true';
+        }
       }, 1000);
 
       // 2. Kinematics Bars
