@@ -52,14 +52,14 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     body {
       margin: 0;
       padding: 0;
-      background-color: #050505;
+      background-color: #F4EFEB;
       font-family: 'Mulish', 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #2D2B2A;
-      overflow-x: auto;
+      overflow-x: hidden;
     }
 
     .font-mono {
@@ -82,17 +82,18 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       user-select: none;
     }
 
+    /* ================= RESPONSIVE ENGINE (MOBILE & TABLET ADAPTATION) ================= */
     @media (max-width: 1220px) {
       body {
         align-items: flex-start;
-        padding: 1rem;
+        padding: 0.75rem;
       }
       .dashboard-wrapper {
-        min-width: unset;
+        min-width: 0;
         width: 100%;
         max-width: 1180px;
         height: auto;
-        min-height: 856px;
+        min-height: auto;
         grid-template-columns: 84px 1fr;
       }
       .right-tactical-panel {
@@ -103,26 +104,171 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       }
     }
 
-    @media (max-width: 768px) {
-      .dashboard-wrapper {
-        grid-template-columns: 1fr;
-        border-radius: 20px;
+    @media (max-width: 1024px) {
+      body {
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding: 0.5rem !important;
+        min-height: 100vh !important;
+        height: auto !important;
+        overflow-x: hidden !important;
       }
+
+      .dashboard-wrapper {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        border-radius: 20px !important;
+        overflow: visible !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+      }
+
       .left-sidebar {
         flex-direction: row !important;
         width: 100% !important;
         height: auto !important;
-        padding: 0.75rem 1rem !important;
+        padding: 0.6rem 0.85rem !important;
         border-right: none !important;
         border-bottom: 1px solid #F0ECE6 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 50 !important;
+        background: rgba(255, 255, 255, 0.97) !important;
+        backdrop-filter: blur(12px) !important;
+        border-radius: 20px 20px 0 0 !important;
       }
+
+      .left-sidebar .top-cluster {
+        flex-direction: row !important;
+        width: auto !important;
+        gap: 0.65rem !important;
+        align-items: center !important;
+      }
+
       .left-sidebar nav {
         flex-direction: row !important;
         margin: 0 !important;
+        gap: 0.35rem !important;
+        overflow-x: auto !important;
+      }
+
+      .left-sidebar .bottom-cluster {
+        margin-left: auto !important;
+        padding-bottom: 0 !important;
+      }
+
+      .nav-btn {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 10px !important;
+      }
+
+      .nav-btn svg {
+        width: 17px !important;
+        height: 17px !important;
+      }
+
+      main {
+        padding: 1.25rem 1rem !important;
+        height: auto !important;
+        overflow-y: visible !important;
+      }
+
+      .center-view {
+        height: auto !important;
+        min-height: auto !important;
+      }
+
+      .right-tactical-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 0 20px 20px !important;
+        border-left: none !important;
+        border-top: 1px solid #3D3A3A !important;
+        padding: 1.5rem 1rem !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .triage-simulator-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.85rem !important;
+      }
+
+      .sensor-ergo-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+      }
+
+      .sensor-cards-stack {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+      }
+
+      .sensor-cards-stack .measure-card {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 66px !important;
+        padding: 0.5rem !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0.25rem !important;
+      }
+
+      .dashboard-wrapper {
+        border-radius: 14px !important;
+      }
+
+      .left-sidebar {
+        padding: 0.5rem 0.65rem !important;
+        border-radius: 14px 14px 0 0 !important;
+      }
+
+      .left-sidebar .sec-tag {
+        display: none !important;
+      }
+
+      main {
+        padding: 1rem 0.65rem !important;
+      }
+
+      .vitals-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.65rem !important;
+      }
+
+      .metric-card {
+        border-radius: 14px !important;
+      }
+
+      .kinematics-card {
+        min-height: auto !important;
+        padding: 1rem 0.75rem !important;
+      }
+
+      .right-tactical-panel {
+        padding: 1.25rem 0.75rem !important;
+        border-radius: 0 0 14px 14px !important;
+      }
+
+      .sensor-cards-stack {
+        grid-template-columns: 1fr !important;
         gap: 0.5rem !important;
       }
-      .right-tactical-panel {
-        grid-column: span 1;
+
+      .sensor-cards-stack .measure-card {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        padding: 0.6rem 0.85rem !important;
       }
     }
 
@@ -511,14 +657,14 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     <aside class="left-sidebar bg-white h-full flex flex-col items-center py-7 justify-between border-r border-[#F0ECE6] z-10 select-none">
       
       <!-- Top Cluster: Emblem + Raised Navigation Bar -->
-      <div class="flex flex-col items-center gap-7 w-full">
+      <div class="top-cluster flex flex-col items-center gap-7 w-full">
         <!-- Top Emblem: RescueTag LoRa Intertwined Gold Logo -->
-        <button class="cursor-pointer group flex flex-col items-center focus:outline-none" onclick="switchCenterView('overview')" title="RescueTag Command Hub">
-          <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <button class="cursor-pointer group flex flex-col items-center focus:outline-none flex-shrink-0" onclick="switchCenterView('overview')" title="RescueTag Command Hub">
+          <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="11.5" y="4.5" width="13" height="27" rx="6.5" transform="rotate(-45 18 18)" stroke="#C68B39" stroke-width="2.3"/>
             <rect x="11.5" y="4.5" width="13" height="27" rx="6.5" transform="rotate(45 18 18)" stroke="#C68B39" stroke-width="2.3"/>
           </svg>
-          <span class="text-[9px] font-mono font-bold tracking-widest text-[#9C9892] mt-1.5 uppercase">SEC-01</span>
+          <span class="sec-tag text-[9px] font-mono font-bold tracking-widest text-[#9C9892] mt-1 uppercase">SEC-01</span>
         </button>
 
         <!-- Navigation Tactile Icons (Raised to upper position) -->
@@ -573,7 +719,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       </div>
 
       <!-- Bottom Cluster: Keluar / Logout to Access Terminal (Pinned at bottom) -->
-      <div class="flex flex-col items-center pb-1">
+      <div class="bottom-cluster flex flex-col items-center pb-1 flex-shrink-0">
         <button id="logoutBtn" class="nav-btn text-[#8E8B86] hover:text-[#EF4444] transition cursor-pointer" onclick="handleLogout()" title="Keluar / Logout ke Access Terminal">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -586,7 +732,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     </aside>
 
     <!-- ================= 2. CENTER CONTENT (1fr, Warm Sand #FAF6F1) ================= -->
-    <main class="px-9 py-8 flex flex-col justify-between h-full overflow-y-auto relative">
+    <main class="px-4 py-5 sm:px-6 sm:py-6 lg:px-9 lg:py-8 flex flex-col justify-between h-auto lg:h-full overflow-y-auto relative">
 
       <!-- ================= VIEW 1: COMMAND OVERVIEW (DEFAULT) ================= -->
       <div id="view-overview" class="center-view flex flex-col justify-between h-full">
@@ -666,7 +812,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         </header>
 
         <!-- ROW 1: 3 Live Telemetry Cards -->
-        <section class="grid grid-cols-3 gap-5 my-1">
+        <section class="vitals-grid grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-5 my-1">
           
           <!-- Metric Card 1: Heart Rate (MAX30102 PPG) -->
           <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[218px] relative overflow-hidden" 
@@ -810,7 +956,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         </section>
 
         <!-- ROW 2: Kinematics & TinyML Activity Stream (Expanded Flex Layout) -->
-        <section class="metric-card px-6 py-5 flex flex-col justify-between flex-1 min-h-[370px] mt-4">
+        <section class="kinematics-card metric-card p-4 sm:p-5 lg:px-6 lg:py-5 flex flex-col justify-between flex-1 min-h-[360px] mt-3 sm:mt-4">
           <!-- Card Header -->
           <div class="flex items-center justify-between gap-4">
             <div class="flex items-center gap-3 min-w-0">
@@ -838,7 +984,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             </div>
 
             <!-- Horizontal Grid Lines + 18 Multi-Segment Pill Bars -->
-            <div class="flex-1 relative flex flex-col justify-between pb-7 pt-3">
+            <div class="flex-1 relative flex flex-col justify-between pb-7 pt-3 min-w-[340px] sm:min-w-0">
               <div class="w-full border-b border-[#F4F1ED]"></div>
               <div class="w-full border-b border-[#F4F1ED]"></div>
               <div class="w-full border-b border-[#F4F1ED]"></div>
@@ -871,9 +1017,9 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       </div>
 
       <!-- ================= VIEW 2: SUBTERRANEAN WORKER FLEET ROSTER & LORA DIAGNOSTICS ================= -->
-      <div id="view-fleet-roster" class="center-view hidden flex flex-col justify-between h-full">
+      <div id="view-fleet-roster" class="center-view hidden flex flex-col justify-between h-auto lg:h-full">
         <!-- Header -->
-        <header class="flex items-center justify-between pb-3 border-b border-[#F0ECE6]">
+        <header class="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-[#F0ECE6]">
           <div>
             <h1 class="text-[20px] font-bold text-[#2D2B2A] tracking-tight">
               Subterranean Worker Fleet Roster &amp; LoRa Diagnostics
@@ -908,7 +1054,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             </div>
 
             <!-- Vitals Grid -->
-            <div class="grid grid-cols-3 gap-2.5 mb-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5">
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Heart Rate</div>
                 <div id="rosterHR02" class="text-sm font-bold font-mono text-emerald-700 mt-0.5">75 BPM</div>
@@ -965,7 +1111,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             </div>
 
             <!-- Vitals Grid -->
-            <div class="grid grid-cols-3 gap-2.5 mb-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5">
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Heart Rate</div>
                 <div id="rosterHR01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">106 BPM</div>
@@ -1036,9 +1182,9 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       </div>
 
       <!-- ================= VIEW 3: SUBTERRANEAN SPATIAL MINE NAVIGATION (GIS MAP) ================= -->
-      <div id="view-gis-map" class="center-view hidden flex flex-col justify-between h-full">
+      <div id="view-gis-map" class="center-view hidden flex flex-col justify-between h-auto lg:h-full">
         <!-- Header -->
-        <header class="flex items-center justify-between pb-3 border-b border-[#F0ECE6]">
+        <header class="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-[#F0ECE6]">
           <div>
             <h1 class="text-[20px] font-bold text-[#2D2B2A] tracking-tight">
               Subterranean Spatial Mine Navigation // OpenStreetMap GIS
@@ -1059,11 +1205,11 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
         <!-- GIS Map Card Container -->
         <div class="metric-card p-3 my-3 flex-1 flex flex-col overflow-hidden relative">
-          <div id="leafletMapContainer" class="w-full flex-1 rounded-xl bg-[#E8E4DE] overflow-hidden min-h-[460px]"></div>
+          <div id="leafletMapContainer" class="w-full flex-1 rounded-xl bg-[#E8E4DE] overflow-hidden min-h-[300px] sm:min-h-[440px]"></div>
         </div>
 
         <!-- GIS Map Footer Bar -->
-        <div class="flex items-center justify-between text-xs font-mono">
+        <div class="flex flex-wrap items-center justify-between gap-2.5 text-xs font-mono pt-1">
           <div class="flex items-center gap-2">
             <button onclick="focusMapNode(2)" class="px-3 py-1 rounded bg-emerald-100 text-emerald-800 font-bold hover:bg-emerald-200 transition">
               Focus: Agus (#02)
@@ -1080,9 +1226,9 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       </div>
 
       <!-- ================= VIEW 4: CHRONOLOGICAL SAR TRIAGE & MESH AUDIT TRAIL ================= -->
-      <div id="view-audit-trail" class="center-view hidden flex flex-col justify-between h-full">
+      <div id="view-audit-trail" class="center-view hidden flex flex-col justify-between h-auto lg:h-full">
         <!-- Header -->
-        <header class="flex items-center justify-between pb-3 border-b border-[#F0ECE6]">
+        <header class="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-[#F0ECE6]">
           <div>
             <h1 class="text-[20px] font-bold text-[#2D2B2A] tracking-tight">
               Chronological SAR Triage &amp; Mesh Audit Trail
@@ -1329,7 +1475,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     </main>
 
     <!-- ================= 3. RIGHT DARK TACTICAL PANEL (414px, #2D2B2B) ================= -->
-    <aside class="right-tactical-panel bg-[#2D2B2B] h-full rounded-l-[34px] px-8 py-8 flex flex-col justify-between text-white relative overflow-hidden select-none border-l border-[#3D3A3A]">
+    <aside class="right-tactical-panel bg-[#2D2B2B] h-full rounded-l-[34px] px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8 flex flex-col justify-between text-white relative overflow-hidden select-none border-l border-[#3D3A3A]">
 
       <!-- TOP SECTION: START Triage Risk Simulator -->
       <div>
@@ -1345,7 +1491,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         </div>
 
         <!-- Sliders & Result Grid -->
-        <div class="grid grid-cols-[152px_1fr] gap-3.5 mt-5">
+        <div class="triage-simulator-grid grid grid-cols-1 sm:grid-cols-[152px_1fr] gap-3.5 mt-4 sm:mt-5">
           
           <!-- Left Column: Height & Weight Style Ruler Cards -->
           <div class="flex flex-col gap-3.5">
@@ -1430,7 +1576,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       <!-- BOTTOM SECTION: Wearable Sensor Ergonomics -->
       <div class="flex-1 flex flex-col justify-between pt-1 relative">
         
-        <div class="grid grid-cols-[175px_1fr] h-full items-start relative">
+        <div class="sensor-ergo-grid grid grid-cols-1 sm:grid-cols-[165px_1fr] h-full items-start gap-3 sm:gap-4 relative">
           
           <!-- Left Column: Info + 3 Stacked White Sensor Cards -->
           <div class="flex flex-col justify-between h-full z-10 pr-1">
@@ -1443,7 +1589,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             </div>
 
             <!-- 3 Stacked White Measurement Cards -->
-            <div class="flex flex-col gap-3 mb-1 mt-3">
+            <div class="sensor-cards-stack flex flex-col gap-2.5 sm:gap-3 mb-1 mt-2 sm:mt-3">
               
               <!-- Chest Card (MAX30102) -->
               <div class="measure-card bg-white rounded-[13px] w-[122px] h-[74px] flex flex-col items-center justify-center shadow-md p-2" 
