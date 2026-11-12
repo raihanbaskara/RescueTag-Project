@@ -747,10 +747,10 @@
                 <!-- Option 1: Worker #02 -->
                 <button type="button" onclick="handleWorkerDropdownSelect(2)" id="workerOpt02" class="w-full flex items-center justify-between p-2 rounded-xl hover:bg-[#FAF6F1] transition text-left cursor-pointer group">
                   <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span id="workerOptDot02" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                     <div>
                       <div class="text-[12px] font-bold text-[#2D2B2A] group-hover:text-emerald-700">Pekerja #02 (Agus Salim)</div>
-                      <div class="text-[10px] text-[#7B7874] font-mono">Sektor 7 &bull; Lorong C-4</div>
+                      <div id="workerOptSub02" class="text-[10px] text-[#7B7874] font-mono">Sektor 7 &bull; Lorong C-4</div>
                     </div>
                   </div>
                   <span id="workerOptCheck02" class="text-emerald-600 font-bold text-xs">
@@ -761,10 +761,10 @@
                 <!-- Option 2: Worker #01 -->
                 <button type="button" onclick="handleWorkerDropdownSelect(1)" id="workerOpt01" class="w-full flex items-center justify-between p-2 rounded-xl hover:bg-[#FAF6F1] transition text-left cursor-pointer group">
                   <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span id="workerOptDot01" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                     <div>
                       <div class="text-[12px] font-bold text-[#2D2B2A] group-hover:text-amber-700">Pekerja #01 (Bambang)</div>
-                      <div class="text-[10px] text-[#7B7874] font-mono">Junction B-02 &bull; Relay Host</div>
+                      <div id="workerOptSub01" class="text-[10px] text-[#7B7874] font-mono">Junction B-02 &bull; Relay Host</div>
                     </div>
                   </div>
                   <span id="workerOptCheck01" class="hidden text-amber-600 font-bold text-xs">
@@ -831,8 +831,8 @@
                     <stop offset="95%" stop-color="#FBE7E8" stop-opacity="0.0"/>
                   </linearGradient>
                 </defs>
-                <path d="M 0 34 C 14 25, 28 24, 42 32 C 55 39, 66 41, 76 31 C 86 21, 95 16, 110 18 C 125 20, 142 12, 160 6 L 160 52 L 0 52 Z" fill="url(#heartGrad)"/>
-                <path d="M 0 34 C 14 25, 28 24, 42 32 C 55 39, 66 41, 76 31 C 86 21, 95 16, 110 18 C 125 20, 142 12, 160 6" fill="none" stroke="#DE6D72" stroke-width="1.6" stroke-linecap="round"/>
+                <path id="sparkHeartFill" d="M 0 34 C 14 25, 28 24, 42 32 C 55 39, 66 41, 76 31 C 86 21, 95 16, 110 18 C 125 20, 142 12, 160 6 L 160 52 L 0 52 Z" fill="url(#heartGrad)"/>
+                <path id="sparkHeartLine" d="M 0 34 C 14 25, 28 24, 42 32 C 55 39, 66 41, 76 31 C 86 21, 95 16, 110 18 C 125 20, 142 12, 160 6" fill="none" stroke="#DE6D72" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
@@ -877,8 +877,8 @@
                     <stop offset="95%" stop-color="#D0F1F8" stop-opacity="0.0"/>
                   </linearGradient>
                 </defs>
-                <path d="M 0 32 C 12 38, 26 39, 38 29 C 50 18, 60 14, 76 17 C 90 19, 102 22, 114 14 C 128 5, 144 4, 160 28 L 160 52 L 0 52 Z" fill="url(#bpGrad)"/>
-                <path d="M 0 32 C 12 38, 26 39, 38 29 C 50 18, 60 14, 76 17 C 90 19, 102 22, 114 14 C 128 5, 144 4, 160 28" fill="none" stroke="#53ACC0" stroke-width="1.6" stroke-linecap="round"/>
+                <path id="sparkSpo2Fill" d="M 0 32 C 12 38, 26 39, 38 29 C 50 18, 60 14, 76 17 C 90 19, 102 22, 114 14 C 128 5, 144 4, 160 28 L 160 52 L 0 52 Z" fill="url(#bpGrad)"/>
+                <path id="sparkSpo2Line" d="M 0 32 C 12 38, 26 39, 38 29 C 50 18, 60 14, 76 17 C 90 19, 102 22, 114 14 C 128 5, 144 4, 160 28" fill="none" stroke="#53ACC0" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
@@ -923,8 +923,8 @@
                     <stop offset="95%" stop-color="#F8DFC2" stop-opacity="0.0"/>
                   </linearGradient>
                 </defs>
-                <path d="M 0 38 C 16 28, 30 22, 46 28 C 60 33, 74 34, 88 22 C 100 11, 108 6, 120 12 C 132 18, 140 31, 160 24 L 160 52 L 0 52 Z" fill="url(#sugarGrad)"/>
-                <path d="M 0 38 C 16 28, 30 22, 46 28 C 60 33, 74 34, 88 22 C 100 11, 108 6, 120 12 C 132 18, 140 31, 160 24" fill="none" stroke="#E59A43" stroke-width="1.6" stroke-linecap="round"/>
+                <path id="sparkTempFill" d="M 0 38 C 16 28, 30 22, 46 28 C 60 33, 74 34, 88 22 C 100 11, 108 6, 120 12 C 132 18, 140 31, 160 24 L 160 52 L 0 52 Z" fill="url(#sugarGrad)"/>
+                <path id="sparkTempLine" d="M 0 38 C 16 28, 30 22, 46 28 C 60 33, 74 34, 88 22 C 100 11, 108 6, 120 12 C 132 18, 140 31, 160 24" fill="none" stroke="#E59A43" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
@@ -942,7 +942,7 @@
               </span>
             </div>
             <button id="monthToggleBtn" onclick="cycleShift()" class="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-[10px] bg-white border border-[#EAE6E1] hover:border-[#2D2B2A] text-[11px] font-semibold text-[#4A4744] hover:bg-[#FAF6F1] transition shadow-2xs">
-              <span id="shiftLabel" class="whitespace-nowrap">Shift Pagi // Sektor 7</span>
+              <span id="shiftLabel" class="whitespace-nowrap">Live Stream // Sektor 7</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
@@ -1016,10 +1016,10 @@
           <div id="rosterCard02" class="metric-card p-4 transition">
             <div class="flex items-center justify-between border-b border-[#F5F2EB] pb-2.5 mb-2.5">
               <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                <span id="rosterDot02" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
                 <div>
                   <div class="text-[14px] font-bold text-[#2D2B2A]">Pekerja #02 (Agus Salim)</div>
-                  <div class="text-[10.5px] text-[#7B7874] font-mono">Jam Tangan #02 &bull; Sektor 7 (Lorong C-4)</div>
+                  <div id="rosterSector02" class="text-[10.5px] text-[#7B7874] font-mono">Jam Tangan #02 &bull; Sektor 7 (Lorong C-4)</div>
                 </div>
               </div>
               <div class="flex items-center gap-2">
@@ -1034,27 +1034,27 @@
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Heart Rate</div>
                 <div id="rosterHR02" class="text-sm font-bold font-mono text-emerald-700 mt-0.5">75 BPM</div>
-                <div class="text-[9.5px] text-[#A6A29C]">Normal (60-100)</div>
+                <div id="rosterHRSub02" class="text-[9.5px] text-[#A6A29C]">Normal (60-100)</div>
               </div>
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Blood O2 (SpO2)</div>
                 <div id="rosterSpO2_02" class="text-sm font-bold font-mono text-emerald-700 mt-0.5">98%</div>
-                <div class="text-[9.5px] text-[#A6A29C]">Optimal (&ge;95%)</div>
+                <div id="rosterSpO2Sub02" class="text-[9.5px] text-[#A6A29C]">Optimal (&ge;95%)</div>
               </div>
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Skin IR Temp</div>
                 <div id="rosterTemp02" class="text-sm font-bold font-mono text-emerald-700 mt-0.5">36.5&deg;C</div>
-                <div class="text-[9.5px] text-[#A6A29C]">Normotermia</div>
+                <div id="rosterTempSub02" class="text-[9.5px] text-[#A6A29C]">Normotermia</div>
               </div>
             </div>
 
             <!-- Bottom Row: Activity, Route, and Actions -->
-            <div class="flex items-center justify-between text-xs">
-              <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex flex-wrap items-center gap-2">
                 <span id="rosterActivity02" class="px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10.5px]">
                   Diam / Istirahat Normal
                 </span>
-                <span class="px-2.5 py-0.5 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-[10.5px] font-mono">
+                <span id="rosterRoute02" class="px-2.5 py-0.5 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-[10.5px] font-mono">
                   1-Hop Relay via Jam #01
                 </span>
               </div>
@@ -1073,10 +1073,10 @@
           <div id="rosterCard01" class="metric-card p-4 transition">
             <div class="flex items-center justify-between border-b border-[#F5F2EB] pb-2.5 mb-2.5">
               <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></span>
+                <span id="rosterDot01" class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></span>
                 <div>
                   <div class="text-[14px] font-bold text-[#2D2B2A]">Pekerja #01 (Bambang)</div>
-                  <div class="text-[10.5px] text-[#7B7874] font-mono">Jam Tangan #01 &bull; Junction B-02 (Shaft Poros)</div>
+                  <div id="rosterSector01" class="text-[10.5px] text-[#7B7874] font-mono">Jam Tangan #01 &bull; Junction B-02 (Shaft Poros)</div>
                 </div>
               </div>
               <div class="flex items-center gap-2">
@@ -1091,27 +1091,27 @@
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Heart Rate</div>
                 <div id="rosterHR01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">106 BPM</div>
-                <div class="text-[9.5px] text-[#A6A29C]">Takikardia Ringan</div>
+                <div id="rosterHRSub01" class="text-[9.5px] text-[#A6A29C]">Takikardia Ringan</div>
               </div>
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Blood O2 (SpO2)</div>
                 <div id="rosterSpO2_01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">93%</div>
-                <div class="text-[9.5px] text-[#A6A29C]">Hipoksia Ringan</div>
+                <div id="rosterSpO2Sub01" class="text-[9.5px] text-[#A6A29C]">Hipoksia Ringan</div>
               </div>
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Skin IR Temp</div>
                 <div id="rosterTemp01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">37.6&deg;C</div>
-                <div class="text-[9.5px] text-[#A6A29C]">Hipertermia Ringan</div>
+                <div id="rosterTempSub01" class="text-[9.5px] text-[#A6A29C]">Hipertermia Ringan</div>
               </div>
             </div>
 
             <!-- Bottom Row: Activity, Route, and Actions -->
-            <div class="flex items-center justify-between text-xs">
-              <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex flex-wrap items-center gap-2">
                 <span id="rosterActivity01" class="px-2.5 py-0.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-[10.5px]">
                   Tremor / Kelelahan Ringan
                 </span>
-                <span class="px-2.5 py-0.5 rounded-lg bg-orange-50 text-orange-800 border border-orange-200 text-[10.5px] font-mono">
+                <span id="rosterRoute01" class="px-2.5 py-0.5 rounded-lg bg-orange-50 text-orange-800 border border-orange-200 text-[10.5px] font-mono">
                   Direct + Relay Host (Hop 1)
                 </span>
               </div>
@@ -1127,18 +1127,18 @@
           </div>
 
           <!-- Bottom Battery & Signal Diagnostics Cards -->
-          <div class="grid grid-cols-3 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="p-3 bg-white rounded-xl border border-[#F0ECE6] shadow-sm">
               <span class="text-[9.5px] text-[#7B7874] font-mono block">RF LINK QUALITY</span>
-              <span class="font-bold text-xs text-[#2D2B2A] font-mono">RSSI -68 dBm // SNR +8.5 dB</span>
+              <span id="rosterRfQuality" class="font-bold text-xs text-[#2D2B2A] font-mono">RSSI -68 dBm // SNR +8.5 dB</span>
             </div>
             <div class="p-3 bg-white rounded-xl border border-[#F0ECE6] shadow-sm">
-              <span class="text-[9.5px] text-[#7B7874] font-mono block">JAM TANGAN #01 BATTERY</span>
-              <span class="font-bold text-xs text-amber-700 font-mono">81% (4.12V LiPo) &bull; Relay Active</span>
+              <span class="text-[9.5px] text-[#7B7874] font-mono block">JAM TANGAN #01 NODE</span>
+              <span id="rosterNode01Status" class="font-bold text-xs text-amber-700 font-mono">81% (4.12V LiPo) &bull; Relay Active</span>
             </div>
             <div class="p-3 bg-white rounded-xl border border-[#F0ECE6] shadow-sm">
-              <span class="text-[9.5px] text-[#7B7874] font-mono block">JAM TANGAN #02 BATTERY</span>
-              <span class="font-bold text-xs text-emerald-700 font-mono">78% (4.06V LiPo) &bull; P2P Connected</span>
+              <span class="text-[9.5px] text-[#7B7874] font-mono block">JAM TANGAN #02 NODE</span>
+              <span id="rosterNode02Status" class="font-bold text-xs text-emerald-700 font-mono">78% (4.06V LiPo) &bull; P2P Connected</span>
             </div>
           </div>
         </div>
@@ -1461,7 +1461,8 @@
             <h2 class="text-[17px] font-semibold text-[#F4F1EA] tracking-tight">START Triage Risk Simulator</h2>
             <p class="text-[11px] font-medium text-[#B8B4B0] mt-0.5">Simple Triage and Rapid Treatment</p>
           </div>
-          <button id="simModeToggleBtn" onclick="toggleSimMode()" class="flex items-center gap-2 px-3 py-1 rounded-[10px] border border-[#6E6C6C] text-[11px] font-medium text-[#D1CECA] hover:border-[#9E9C9C] transition font-mono">
+          <button id="simModeToggleBtn" onclick="toggleSimMode()" class="flex items-center gap-2 px-3 py-1 rounded-[10px] border border-[#6E6C6C] text-[11px] font-medium text-[#D1CECA] hover:border-[#9E9C9C] transition font-mono cursor-pointer" title="Klik untuk ganti Mode Live MQTT / Manual Simulator">
+            <span id="mqttDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
             <span id="simModeLabel">Live MQTT</span>
           </button>
         </div>
@@ -1559,8 +1560,8 @@
             <div>
               <h2 class="text-[17px] font-semibold text-[#F4F1EA] tracking-tight">Sensor Ergonomics</h2>
               <p class="text-[11.5px] font-medium text-[#B8B4B0] mt-0.5">Hardware Anatomical Placement</p>
-              <div class="mt-2.5 inline-block px-3 py-1 rounded-[8px] bg-[#494747] text-[#DFDCD8] text-[10.5px] font-mono">
-                SEC-01 // NODE-01
+              <div id="ergoNodeBadge" class="mt-2.5 inline-block px-3 py-1 rounded-[8px] bg-[#494747] text-[#DFDCD8] text-[10.5px] font-mono">
+                SEC-01 // NODE-02
               </div>
             </div>
 
@@ -1755,11 +1756,40 @@
     let watch2Marker = null;
     let gatewayMarker = null;
     let isDarkMapTile = false;
+    let mqttClient = null;
+    let mqttConnected = false;
+    let mqttPacketCount = 0;
+    let lastMqttRxTime = null;
+    let hasLoggedFirstLiveRx = false;
 
     // In-memory Audit Trail Log Data for Excel Export
     const auditLogsData = [];
 
-    // Both workers initial state
+    const janData = [
+      [27, 46, 19], [11, 65, 22], [48, 17, 13], [38, 22, 8], [13, 25, 42],
+      [24, 42, 11], [54, 30, 17], [27, 40, 21], [12, 46, 33], [17, 16, 46],
+      [21, 13, 18], [38, 14, 17], [25, 36, 36], [39, 17, 36], [41, 16, 18],
+      [53, 30, 11], [29, 12, 9],  [38, 39, 18]
+    ];
+
+    const febData = [
+      [34, 38, 18], [20, 52, 20], [42, 22, 16], [30, 28, 14], [18, 32, 34],
+      [28, 38, 15], [48, 26, 20], [32, 36, 18], [18, 42, 28], [22, 20, 40],
+      [26, 18, 20], [34, 20, 18], [28, 34, 30], [35, 22, 32], [38, 20, 20],
+      [48, 26, 15], [32, 18, 12], [40, 34, 20]
+    ];
+
+    function makeSeedBars(baseArr) {
+      return baseArr.map((seg, i) => ({
+        red: seg[0],
+        teal: seg[1],
+        ochre: seg[2],
+        g: ((seg[0] * 0.04) + (seg[1] * 0.02) + (seg[2] * 0.015)).toFixed(2),
+        label: 'T+' + (i * 10) + 'm'
+      }));
+    }
+
+    // Both workers initial state + rolling live buffers
     const workers = {
       1: {
         id: 'WRK-001',
@@ -1767,16 +1797,28 @@
         name: 'Bambang (Relay Host)',
         role: 'SAR Relawan & LoRa Relay Host',
         sector: 'Junction Poros Shaft B-02',
+        lat: -8.2465,
+        lng: 113.6965,
         hr: 106,
         spo2: 93,
         temp: 37.6,
         accel: 1.45,
         activity: 'Tremor / Kelelahan Ringan',
-        route: 'Direct Uplink (Hop 1 Host)',
+        route: 'Direct + Relay Host (Hop 1)',
         rssi: -65,
+        isRelayed: false,
         triageCode: 1, // KUNING
         triageLabel: 'KUNING - Delayed',
-        isEmergency: false
+        isEmergency: false,
+        rxCount: 0,
+        lastRxAt: null,
+        lastLoggedTriage: null,
+        lastLoggedRoute: null,
+        lastAlertTs: 0,
+        hrHist: [96, 98, 102, 100, 104, 108, 105, 103, 107, 109, 105, 106],
+        spo2Hist: [96, 95, 95, 94, 94, 93, 94, 93, 93, 94, 93, 93],
+        tempHist: [37.1, 37.2, 37.3, 37.3, 37.4, 37.5, 37.5, 37.6, 37.5, 37.6, 37.6, 37.6],
+        kinematicsHist: makeSeedBars(febData)
       },
       2: {
         id: 'WRK-002',
@@ -1784,6 +1826,8 @@
         name: 'Agus Salim (Active Miner)',
         role: 'Operator Tambang Batubara',
         sector: 'Sektor 7 (Lorong C-4)',
+        lat: -8.2498,
+        lng: 113.7012,
         hr: 75,
         spo2: 98,
         temp: 36.5,
@@ -1791,11 +1835,137 @@
         activity: 'Diam / Istirahat Normal',
         route: '1-Hop Relay via Jam #01',
         rssi: -68,
+        isRelayed: true,
         triageCode: 0, // HIJAU
         triageLabel: 'HIJAU - Minor (Aman)',
-        isEmergency: false
+        isEmergency: false,
+        rxCount: 0,
+        lastRxAt: null,
+        lastLoggedTriage: null,
+        lastLoggedRoute: null,
+        lastAlertTs: 0,
+        hrHist: [72, 74, 73, 75, 76, 74, 73, 75, 77, 76, 74, 75],
+        spo2Hist: [98, 98, 99, 98, 98, 97, 98, 99, 98, 98, 98, 98],
+        tempHist: [36.4, 36.4, 36.5, 36.5, 36.6, 36.5, 36.4, 36.5, 36.6, 36.5, 36.5, 36.5],
+        kinematicsHist: makeSeedBars(janData)
       }
     };
+
+    const TRIAGE_THEMES = {
+      0: {
+        short: 'HIJAU',
+        dotClass: 'w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]',
+        optDotClass: 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]',
+        pillClass: 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[10.5px] whitespace-nowrap',
+        actClass: 'px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10.5px]',
+        textClass: 'text-sm font-bold font-mono text-emerald-700 mt-0.5',
+        hex: '#059669',
+        defaultLabel: 'HIJAU - Minor (Aman)'
+      },
+      1: {
+        short: 'KUNING',
+        dotClass: 'w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]',
+        optDotClass: 'w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]',
+        pillClass: 'px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10.5px] whitespace-nowrap',
+        actClass: 'px-2.5 py-0.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-[10.5px]',
+        textClass: 'text-sm font-bold font-mono text-amber-700 mt-0.5',
+        hex: '#D97706',
+        defaultLabel: 'KUNING - Kerja Aktif'
+      },
+      2: {
+        short: 'ORANYE',
+        dotClass: 'w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_6px_rgba(249,115,22,0.55)]',
+        optDotClass: 'w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_6px_rgba(249,115,22,0.55)]',
+        pillClass: 'px-2.5 py-1 rounded-full bg-orange-50 text-orange-800 border border-orange-200 font-bold text-[10.5px] whitespace-nowrap',
+        actClass: 'px-2.5 py-0.5 rounded-lg bg-orange-50 text-orange-800 border border-orange-200 text-[10.5px]',
+        textClass: 'text-sm font-bold font-mono text-orange-700 mt-0.5',
+        hex: '#EA580C',
+        defaultLabel: 'ORANYE - Waspada Dini'
+      },
+      3: {
+        short: 'MERAH',
+        dotClass: 'w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.85)] animate-pulse',
+        optDotClass: 'w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.85)] animate-pulse',
+        pillClass: 'px-2.5 py-1 rounded-full bg-red-100 text-red-900 border border-red-300 font-bold text-[10.5px] whitespace-nowrap animate-pulse',
+        actClass: 'px-2.5 py-0.5 rounded-lg bg-red-100 text-red-900 border border-red-300 text-[10.5px] font-bold',
+        textClass: 'text-sm font-bold font-mono text-red-700 mt-0.5',
+        hex: '#DC2626',
+        defaultLabel: 'MERAH - Darurat SOS'
+      },
+      4: {
+        short: 'STANDBY',
+        dotClass: 'w-2 h-2 rounded-full bg-slate-400',
+        optDotClass: 'w-2.5 h-2.5 rounded-full bg-slate-400',
+        pillClass: 'px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-300 font-bold text-[10.5px] whitespace-nowrap',
+        actClass: 'px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-300 text-[10.5px]',
+        textClass: 'text-sm font-bold font-mono text-slate-600 mt-0.5',
+        hex: '#64748B',
+        defaultLabel: 'STANDBY - Jam Dilepas'
+      }
+    };
+
+    function getTriageTheme(code) {
+      return TRIAGE_THEMES[code] || TRIAGE_THEMES[0];
+    }
+
+    function getVitalMeta(w) {
+      let hrSub = 'Normal (60-100)';
+      let hrBadge = 'Normal';
+      let hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#E8F8F0] text-[#1D6A4E] text-[10.5px] font-bold';
+      if (w.triageCode === 4 || w.hr <= 0) {
+        hrSub = w.triageCode === 4 ? 'Jam Dilepas' : 'Mengukur nadi...';
+        hrBadge = w.triageCode === 4 ? 'Standby' : 'Mengukur...';
+        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-slate-100 text-slate-600 text-[10.5px] font-bold';
+      } else if (w.hr > 120) {
+        hrSub = 'Takikardia';
+        hrBadge = 'Takikardia';
+        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
+      } else if (w.hr > 100) {
+        hrSub = 'Takikardia Ringan';
+        hrBadge = 'Tinggi';
+        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
+      } else if (w.hr < 50) {
+        hrSub = 'Bradikardia';
+        hrBadge = 'Bradikardia';
+        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#C0565B] text-[10.5px] font-bold';
+      }
+
+      let spSub = 'Optimal (>=95%)';
+      let spBadge = 'Normal';
+      let spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#263C41] text-[10.5px] font-bold';
+      if (w.triageCode === 4 || w.spo2 <= 0) {
+        spSub = w.triageCode === 4 ? 'Jam Dilepas' : 'Mengukur SpO2...';
+        spBadge = w.triageCode === 4 ? 'Standby' : 'Mengukur...';
+        spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-slate-100 text-slate-600 text-[10.5px] font-bold';
+      } else if (w.spo2 < 88) {
+        spSub = 'Hipoksia Berat';
+        spBadge = 'Hipoksia Berat';
+        spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
+      } else if (w.spo2 < 95) {
+        spSub = 'Hipoksia Ringan';
+        spBadge = 'Hipoksia Ringan';
+        spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
+      }
+
+      let tmSub = 'Normotermia';
+      let tmBadge = 'Normal';
+      let tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#F8DFC2] text-[#3B352E] text-[10.5px] font-bold';
+      if (w.temp > 38.0) {
+        tmSub = 'Hipertermia';
+        tmBadge = 'Hipertermia';
+        tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
+      } else if (w.temp >= 37.4) {
+        tmSub = 'Hipertermia Ringan';
+        tmBadge = 'Hangat';
+        tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
+      } else if (w.temp > 0 && w.temp < 35.5) {
+        tmSub = 'Hipotermia';
+        tmBadge = 'Hipotermia';
+        tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10.5px] font-bold';
+      }
+
+      return { hrSub, hrBadge, hrClass, spSub, spBadge, spClass, tmSub, tmBadge, tmClass };
+    }
 
     // -------------------------------------------------------------
     // 2. CENTER VIEW CONTROLLER (FULL VIEWS IN CONTAINER)
@@ -1872,25 +2042,47 @@
       }
     }
 
+    function updateDropdownMeta() {
+      const w1 = workers[1];
+      const w2 = workers[2];
+      const th1 = getTriageTheme(w1.triageCode);
+      const th2 = getTriageTheme(w2.triageCode);
+
+      const od1 = document.getElementById('workerOptDot01');
+      const od2 = document.getElementById('workerOptDot02');
+      if (od1) od1.className = th1.optDotClass;
+      if (od2) od2.className = th2.optDotClass;
+
+      const os1 = document.getElementById('workerOptSub01');
+      const os2 = document.getElementById('workerOptSub02');
+      if (os1) os1.textContent = (w1.hr > 0 ? w1.hr + ' BPM' : '-- BPM') + ' • ' + (w1.spo2 > 0 ? w1.spo2 + '%' : '--%') + ' • ' + th1.short;
+      if (os2) os2.textContent = (w2.hr > 0 ? w2.hr + ' BPM' : '-- BPM') + ' • ' + (w2.spo2 > 0 ? w2.spo2 + '%' : '--%') + ' • ' + th2.short;
+
+      const w = workers[currentWorker];
+      const thCur = getTriageTheme(w.triageCode);
+      const dotEl = document.getElementById('selectedWorkerDot');
+      if (dotEl) dotEl.className = thCur.dotClass;
+    }
+
     function selectWorker(workerId) {
       currentWorker = workerId;
 
       // Update Dropdown Trigger & Checkmarks (Consistent Frame)
       const labelEl = document.getElementById('selectedWorkerLabel');
-      const dotEl = document.getElementById('selectedWorkerDot');
       const check01 = document.getElementById('workerOptCheck01');
       const check02 = document.getElementById('workerOptCheck02');
+      const ergoBadge = document.getElementById('ergoNodeBadge');
 
       if (workerId === 2) {
         if (labelEl) labelEl.textContent = 'Pekerja #02 (Agus)';
-        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]';
         if (check01) check01.classList.add('hidden');
         if (check02) check02.classList.remove('hidden');
+        if (ergoBadge) ergoBadge.textContent = 'SEC-01 // NODE-02';
       } else {
         if (labelEl) labelEl.textContent = 'Pekerja #01 (Bambang)';
-        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]';
         if (check01) check01.classList.remove('hidden');
         if (check02) check02.classList.add('hidden');
+        if (ergoBadge) ergoBadge.textContent = 'SEC-01 // NODE-01';
       }
 
       const tab1 = document.getElementById('tabWorker01');
@@ -1899,77 +2091,116 @@
       if (tab2) tab2.classList.toggle('active', workerId === 2);
       
       const w = workers[workerId];
-      // headerSectorStatus removed per user request
+      updateDropdownMeta();
       
-      const slHR = document.getElementById('sliderHR');
-      const slSpO2 = document.getElementById('sliderSpO2');
-      if (slHR) slHR.value = w.hr;
-      if (slSpO2) slSpO2.value = w.spo2;
-      
-      const hrText = document.getElementById('simHRText');
-      const spText = document.getElementById('simSpO2Text');
-      if (hrText) hrText.textContent = w.hr + ' bpm';
-      if (spText) spText.textContent = w.spo2 + ' %';
+      if (!isSimulatorMode) {
+        const slHR = document.getElementById('sliderHR');
+        const slSpO2 = document.getElementById('sliderSpO2');
+        if (slHR) slHR.value = Math.max(40, Math.min(180, w.hr > 0 ? w.hr : 40));
+        if (slSpO2) slSpO2.value = Math.max(70, Math.min(100, w.spo2 > 0 ? w.spo2 : 70));
+        
+        const hrText = document.getElementById('simHRText');
+        const spText = document.getElementById('simSpO2Text');
+        if (hrText) hrText.textContent = (w.hr > 0 ? w.hr : '--') + ' bpm';
+        if (spText) spText.textContent = (w.spo2 > 0 ? w.spo2 : '--') + ' %';
+        evaluateSTART(w.hr, w.spo2, w.triageCode, w.accel);
+      }
 
       updateTelemetryDisplay(w);
-      evaluateSTART(w.hr, w.spo2);
+      updateSparklines(w);
+      renderKinematicsBars();
       updateRosterTableUI();
     }
 
+    function buildSmoothPath(values, minVal, maxVal) {
+      const n = values.length;
+      if (!n) return { line: 'M 0 26 L 160 26', fill: 'M 0 26 L 160 26 L 160 52 L 0 52 Z' };
+      const w = 160;
+      const topPad = 6;
+      const bottomPad = 42;
+      const span = Math.max(1, maxVal - minVal);
+      const pts = values.map((v, i) => {
+        const clamped = Math.max(minVal, Math.min(maxVal, v));
+        const norm = (clamped - minVal) / span;
+        const x = n === 1 ? w : (i * w) / (n - 1);
+        const y = bottomPad - norm * (bottomPad - topPad);
+        return [Number(x.toFixed(1)), Number(y.toFixed(1))];
+      });
+
+      let line = `M ${pts[0][0]} ${pts[0][1]}`;
+      for (let i = 1; i < pts.length; i++) {
+        const prev = pts[i - 1];
+        const curr = pts[i];
+        const mx = ((prev[0] + curr[0]) / 2).toFixed(1);
+        line += ` C ${mx} ${prev[1]}, ${mx} ${curr[1]}, ${curr[0]} ${curr[1]}`;
+      }
+      const fill = `${line} L 160 52 L 0 52 Z`;
+      return { line, fill };
+    }
+
+    function updateSparklines(w) {
+      const hrData = w.hrHist.length ? w.hrHist : [75, 75];
+      const spData = w.spo2Hist.length ? w.spo2Hist : [98, 98];
+      const tmData = w.tempHist.length ? w.tempHist : [36.5, 36.5];
+
+      const hrPath = buildSmoothPath(hrData, 50, 155);
+      const spPath = buildSmoothPath(spData, 80, 100);
+      const tmPath = buildSmoothPath(tmData, 34.5, 40.0);
+
+      const hf = document.getElementById('sparkHeartFill');
+      const hl = document.getElementById('sparkHeartLine');
+      if (hf) hf.setAttribute('d', hrPath.fill);
+      if (hl) hl.setAttribute('d', hrPath.line);
+
+      const sf = document.getElementById('sparkSpo2Fill');
+      const sl = document.getElementById('sparkSpo2Line');
+      if (sf) sf.setAttribute('d', spPath.fill);
+      if (sl) sl.setAttribute('d', spPath.line);
+
+      const tf = document.getElementById('sparkTempFill');
+      const tl = document.getElementById('sparkTempLine');
+      if (tf) tf.setAttribute('d', tmPath.fill);
+      if (tl) tl.setAttribute('d', tmPath.line);
+    }
+
     function updateTelemetryDisplay(w) {
+      const meta = getVitalMeta(w);
+
       const valHR = document.getElementById('val-hr');
-      if (valHR) valHR.textContent = w.hr > 0 ? w.hr : '--';
+      if (valHR) valHR.textContent = (w.hr > 0 && w.triageCode !== 4) ? w.hr : '--';
       const badgeHR = document.getElementById('badge-hr');
       if (badgeHR) {
-        if (w.hr > 120) {
-          badgeHR.textContent = 'Takikardia';
-          badgeHR.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
-        } else if (w.hr < 50 && w.hr > 0) {
-          badgeHR.textContent = 'Bradikardia';
-          badgeHR.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#C0565B] text-[10.5px] font-bold';
-        } else {
-          badgeHR.textContent = 'Normal';
-          badgeHR.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#E8F8F0] text-[#1D6A4E] text-[10.5px] font-bold';
-        }
+        badgeHR.textContent = meta.hrBadge;
+        badgeHR.className = meta.hrClass;
       }
 
       const valSpO2 = document.getElementById('val-spo2');
-      if (valSpO2) valSpO2.textContent = w.spo2 > 0 ? w.spo2 : '--';
+      if (valSpO2) valSpO2.textContent = (w.spo2 > 0 && w.triageCode !== 4) ? w.spo2 : '--';
       const badgeSpO2 = document.getElementById('badge-spo2');
       if (badgeSpO2) {
-        if (w.spo2 < 90 && w.spo2 > 0) {
-          badgeSpO2.textContent = 'Hipoksia Berat';
-          badgeSpO2.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
-        } else if (w.spo2 < 95 && w.spo2 > 0) {
-          badgeSpO2.textContent = 'Hipoksia Ringan';
-          badgeSpO2.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
-        } else {
-          badgeSpO2.textContent = 'Normal';
-          badgeSpO2.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#263C41] text-[10.5px] font-bold';
-        }
+        badgeSpO2.textContent = meta.spBadge;
+        badgeSpO2.className = meta.spClass;
       }
 
       const valTemp = document.getElementById('val-temp');
-      if (valTemp) valTemp.textContent = w.temp.toFixed(1);
+      if (valTemp) valTemp.textContent = w.temp > 0 ? w.temp.toFixed(1) : '--';
       const badgeTemp = document.getElementById('badge-temp');
       if (badgeTemp) {
-        if (w.temp > 38.0) {
-          badgeTemp.textContent = 'Hipertermia';
-          badgeTemp.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
-        } else if (w.temp < 35.5) {
-          badgeTemp.textContent = 'Hipotermia';
-          badgeTemp.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10.5px] font-bold';
-        } else {
-          badgeTemp.textContent = 'Normal';
-          badgeTemp.className = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#F8DFC2] text-[#3B352E] text-[10.5px] font-bold';
-        }
+        badgeTemp.textContent = meta.tmBadge;
+        badgeTemp.className = meta.tmClass;
       }
 
       const accelPill = document.getElementById('liveAccelPill');
       if (accelPill) {
-        if (w.accel > 3.0) {
+        if (w.triageCode === 3 || w.accel > 3.0) {
           accelPill.className = 'px-2.5 py-1 rounded-[7px] bg-red-100 text-red-700 font-mono text-[10.5px] font-bold animate-pulse whitespace-nowrap flex-shrink-0';
           accelPill.textContent = w.accel.toFixed(2) + 'g • BENTURAN SHOCK';
+        } else if (w.triageCode === 2) {
+          accelPill.className = 'px-2.5 py-1 rounded-[7px] bg-orange-100 text-orange-800 font-mono text-[10.5px] font-bold whitespace-nowrap flex-shrink-0';
+          accelPill.textContent = w.accel.toFixed(2) + 'g • Waspada Lelah';
+        } else if (w.triageCode === 4) {
+          accelPill.className = 'px-2.5 py-1 rounded-[7px] bg-slate-100 text-slate-600 font-mono text-[10.5px] font-bold whitespace-nowrap flex-shrink-0';
+          accelPill.textContent = w.accel.toFixed(2) + 'g • Jam Dilepas';
         } else {
           accelPill.className = 'px-2.5 py-1 rounded-[7px] bg-[#EFE9E0] text-[#3E3C39] font-mono text-[10.5px] font-bold whitespace-nowrap flex-shrink-0';
           const shortAct = w.activity.includes('Diam') ? 'Diam / Normal' : w.activity;
@@ -1978,58 +2209,117 @@
       }
     }
 
-    function updateRosterTableUI() {
-      const w1 = workers[1];
-      const w2 = workers[2];
+    function updateWorkerRosterCard(num, w) {
+      const suf = '0' + num;
+      const th = getTriageTheme(w.triageCode);
+      const meta = getVitalMeta(w);
 
-      // Worker 01 UI updates
-      const hr1 = document.getElementById('rosterHR01');
-      if (hr1) hr1.textContent = (w1.hr > 0 ? w1.hr : '--') + ' BPM';
-      const sp1 = document.getElementById('rosterSpO2_01');
-      if (sp1) sp1.textContent = (w1.spo2 > 0 ? w1.spo2 : '--') + '%';
-      const tm1 = document.getElementById('rosterTemp01');
-      if (tm1) tm1.innerHTML = w1.temp.toFixed(1) + '&deg;C';
-      const v1 = document.getElementById('rosterVitals01');
-      if (v1) v1.innerHTML = w1.hr + ' BPM &bull; ' + w1.spo2 + '% SpO2 &bull; ' + w1.temp.toFixed(1) + '&deg;C';
-      const a1 = document.getElementById('rosterActivity01');
-      if (a1) a1.textContent = w1.activity;
-      const t1 = document.getElementById('rosterTriage01');
-      if (t1) {
-        t1.textContent = w1.triageLabel;
-        t1.className = w1.triageCode === 3 
-          ? 'px-2.5 py-1 rounded-full bg-red-100 text-red-900 border border-red-300 font-bold text-[10.5px] whitespace-nowrap animate-pulse'
-          : (w1.triageCode === 1 ? 'px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10.5px] whitespace-nowrap' : 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[10.5px] whitespace-nowrap');
+      const dotEl = document.getElementById('rosterDot' + suf);
+      if (dotEl) dotEl.className = th.optDotClass;
+
+      const secEl = document.getElementById('rosterSector' + suf);
+      if (secEl) secEl.innerHTML = 'Jam Tangan #' + suf + ' &bull; ' + w.sector;
+
+      const hrEl = document.getElementById('rosterHR' + suf);
+      if (hrEl) {
+        hrEl.textContent = (w.hr > 0 && w.triageCode !== 4 ? w.hr : '--') + ' BPM';
+        hrEl.className = th.textClass;
+      }
+      const hrSubEl = document.getElementById('rosterHRSub' + suf);
+      if (hrSubEl) hrSubEl.textContent = meta.hrSub;
+
+      const spEl = document.getElementById('rosterSpO2_' + suf);
+      if (spEl) {
+        spEl.textContent = (w.spo2 > 0 && w.triageCode !== 4 ? w.spo2 : '--') + '%';
+        spEl.className = th.textClass;
+      }
+      const spSubEl = document.getElementById('rosterSpO2Sub' + suf);
+      if (spSubEl) spSubEl.textContent = meta.spSub;
+
+      const tmEl = document.getElementById('rosterTemp' + suf);
+      if (tmEl) {
+        tmEl.innerHTML = (w.temp > 0 ? w.temp.toFixed(1) : '--') + '&deg;C';
+        tmEl.className = th.textClass;
+      }
+      const tmSubEl = document.getElementById('rosterTempSub' + suf);
+      if (tmSubEl) tmSubEl.innerHTML = meta.tmSub;
+
+      const actEl = document.getElementById('rosterActivity' + suf);
+      if (actEl) {
+        actEl.textContent = w.activity;
+        actEl.className = th.actClass;
       }
 
-      // Worker 02 UI updates
-      const hr2 = document.getElementById('rosterHR02');
-      if (hr2) hr2.textContent = (w2.hr > 0 ? w2.hr : '--') + ' BPM';
-      const sp2 = document.getElementById('rosterSpO2_02');
-      if (sp2) sp2.textContent = (w2.spo2 > 0 ? w2.spo2 : '--') + '%';
-      const tm2 = document.getElementById('rosterTemp02');
-      if (tm2) tm2.innerHTML = w2.temp.toFixed(1) + '&deg;C';
-      const v2 = document.getElementById('rosterVitals02');
-      if (v2) v2.innerHTML = w2.hr + ' BPM &bull; ' + w2.spo2 + '% SpO2 &bull; ' + w2.temp.toFixed(1) + '&deg;C';
-      const a2 = document.getElementById('rosterActivity02');
-      if (a2) a2.textContent = w2.activity;
-      const t2 = document.getElementById('rosterTriage02');
-      if (t2) {
-        t2.textContent = w2.triageLabel;
-        t2.className = w2.triageCode === 3 
-          ? 'px-2.5 py-1 rounded-full bg-red-100 text-red-900 border border-red-300 font-bold text-[10.5px] whitespace-nowrap animate-pulse'
-          : 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[10.5px] whitespace-nowrap';
+      const routeEl = document.getElementById('rosterRoute' + suf);
+      if (routeEl) {
+        routeEl.textContent = w.route;
+        if (w.isRelayed) {
+          routeEl.className = 'px-2.5 py-0.5 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-[10.5px] font-mono';
+        } else if (num === 1) {
+          routeEl.className = 'px-2.5 py-0.5 rounded-lg bg-orange-50 text-orange-800 border border-orange-200 text-[10.5px] font-mono';
+        } else {
+          routeEl.className = 'px-2.5 py-0.5 rounded-lg bg-teal-50 text-teal-800 border border-teal-200 text-[10.5px] font-mono';
+        }
+      }
+
+      const triEl = document.getElementById('rosterTriage' + suf);
+      if (triEl) {
+        triEl.textContent = w.triageLabel || th.defaultLabel;
+        triEl.className = th.pillClass;
+      }
+    }
+
+    function updateRosterTableUI() {
+      updateWorkerRosterCard(1, workers[1]);
+      updateWorkerRosterCard(2, workers[2]);
+
+      const rfEl = document.getElementById('rosterRfQuality');
+      if (rfEl) {
+        const wActive = workers[currentWorker];
+        const rxStr = lastMqttRxTime ? (' • RX ' + lastMqttRxTime) : ' • 433.05 MHz';
+        rfEl.textContent = 'RSSI ' + wActive.rssi + ' dBm // SF7' + rxStr;
+      }
+
+      const n1El = document.getElementById('rosterNode01Status');
+      if (n1El) {
+        const th1 = getTriageTheme(workers[1].triageCode);
+        n1El.textContent = th1.short + ' • ' + (workers[1].lastRxAt ? 'Live ' + workers[1].lastRxAt : 'Relay Host Standby');
+        n1El.className = 'font-bold text-xs font-mono ' + th1.textClass.replace('text-sm ', '').replace(' mt-0.5', '');
+      }
+
+      const n2El = document.getElementById('rosterNode02Status');
+      if (n2El) {
+        const th2 = getTriageTheme(workers[2].triageCode);
+        const hopTxt = workers[2].isRelayed ? '1-Hop Relay' : 'Direct P2P';
+        n2El.textContent = th2.short + ' • ' + hopTxt + (workers[2].lastRxAt ? ' (' + workers[2].lastRxAt + ')' : '');
+        n2El.className = 'font-bold text-xs font-mono ' + th2.textClass.replace('text-sm ', '').replace(' mt-0.5', '');
       }
     }
 
     // -------------------------------------------------------------
     // 4. START TRIAGE RISK SIMULATOR ENGINE
     // -------------------------------------------------------------
+    function syncMqttDotVisual(isPulse = false) {
+      const dot = document.getElementById('mqttDot');
+      if (!dot) return;
+      if (isSimulatorMode) {
+        dot.className = 'w-2 h-2 rounded-full bg-sky-400';
+      } else if (mqttConnected) {
+        dot.className = isPulse
+          ? 'w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.95)] scale-125 transition-transform'
+          : 'w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] transition-transform';
+      } else {
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+      }
+    }
+
     function onSimulatorInput() {
       isSimulatorMode = true;
       const label = document.getElementById('simModeLabel');
       const ind = document.getElementById('simModeIndicator');
       if (label) label.textContent = 'Simulator';
       if (ind) ind.textContent = 'MANUAL';
+      syncMqttDotVisual(false);
       
       const hr = parseInt(document.getElementById('sliderHR').value);
       const spo2 = parseInt(document.getElementById('sliderSpO2').value);
@@ -2039,7 +2329,7 @@
       if (hrText) hrText.textContent = hr + ' bpm';
       if (spText) spText.textContent = spo2 + ' %';
 
-      evaluateSTART(hr, spo2);
+      evaluateSTART(hr, spo2, null, 1.0);
     }
 
     function toggleSimMode() {
@@ -2051,18 +2341,19 @@
         if (ind) ind.textContent = 'MANUAL';
       } else {
         if (label) label.textContent = 'Live MQTT';
-        if (ind) ind.textContent = 'LIVE';
+        if (ind) ind.textContent = lastMqttRxTime ? ('LIVE • ' + lastMqttRxTime) : 'LIVE';
         const w = workers[currentWorker];
         const slHR = document.getElementById('sliderHR');
         const slSpO2 = document.getElementById('sliderSpO2');
-        if (slHR) slHR.value = w.hr;
-        if (slSpO2) slSpO2.value = w.spo2;
+        if (slHR) slHR.value = Math.max(40, Math.min(180, w.hr > 0 ? w.hr : 40));
+        if (slSpO2) slSpO2.value = Math.max(70, Math.min(100, w.spo2 > 0 ? w.spo2 : 70));
         const hrText = document.getElementById('simHRText');
         const spText = document.getElementById('simSpO2Text');
-        if (hrText) hrText.textContent = w.hr + ' bpm';
-        if (spText) spText.textContent = w.spo2 + ' %';
-        evaluateSTART(w.hr, w.spo2);
+        if (hrText) hrText.textContent = (w.hr > 0 ? w.hr : '--') + ' bpm';
+        if (spText) spText.textContent = (w.spo2 > 0 ? w.spo2 : '--') + ' %';
+        evaluateSTART(w.hr, w.spo2, w.triageCode, w.accel);
       }
+      syncMqttDotVisual(false);
     }
 
     function setTriageDirect(tier) {
@@ -2071,6 +2362,7 @@
       const ind = document.getElementById('simModeIndicator');
       if (label) label.textContent = 'Simulator';
       if (ind) ind.textContent = tier;
+      syncMqttDotVisual(false);
 
       const slHR = document.getElementById('sliderHR');
       const slSpO2 = document.getElementById('sliderSpO2');
@@ -2099,12 +2391,27 @@
       else setTriageDirect('HITAM');
     }
 
-    function evaluateSTART(hr, spo2) {
+    function evaluateSTART(hr, spo2, liveTriageCode = null, accel = 1.0) {
       const pText = document.getElementById('triagePriorityText');
       const dot = document.getElementById('triageDot');
       const badge = document.getElementById('triageBadgePill');
 
-      if (hr <= 40 || (hr > 160 && spo2 < 75)) {
+      // Standby / watch removed in Live MQTT mode (do not misclassify HR=0 as HITAM)
+      if (liveTriageCode === 4) {
+        if (pText) {
+          pText.textContent = 'STANDBY';
+          pText.className = 'text-[18px] font-extrabold text-slate-300 leading-none font-mono';
+        }
+        if (dot) dot.style.left = '8%';
+        if (badge) {
+          badge.textContent = 'Jam Dilepas';
+          badge.className = 'px-2.5 py-1 rounded-[7px] bg-slate-600 text-slate-100 text-[10px] font-bold';
+        }
+        return;
+      }
+
+      // Manual Simulator mode allows explicit HITAM test via low sliders
+      if (liveTriageCode === null && (hr <= 40 || (hr > 160 && spo2 < 75))) {
         if (pText) {
           pText.textContent = 'HITAM';
           pText.className = 'text-[20px] font-extrabold text-gray-400 leading-none font-mono';
@@ -2114,7 +2421,14 @@
           badge.textContent = 'Expectant';
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-gray-700 text-gray-200 text-[10px] font-bold';
         }
-      } else if (hr > 125 || hr < 48 || spo2 < 88) {
+        return;
+      }
+
+      const isEmergency = (liveTriageCode === 3) || (accel >= 3.0) || (hr > 125) || (hr > 0 && hr < 48) || (spo2 > 0 && spo2 < 88);
+      const isOrangeWarn = !isEmergency && (liveTriageCode === 2);
+      const isDelayed = !isEmergency && !isOrangeWarn && ((liveTriageCode === 1) || (hr > 100) || (spo2 > 0 && spo2 < 94));
+
+      if (isEmergency) {
         if (pText) {
           pText.textContent = 'MERAH';
           pText.className = 'text-[20px] font-extrabold text-[#EF4444] leading-none font-mono animate-pulse';
@@ -2125,12 +2439,22 @@
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#FAD2D4] text-[#4A1C1F] text-[10px] font-bold animate-pulse';
         }
         if (audioAlertEnabled) playEmergencyBeep();
-      } else if (hr > 100 || spo2 < 94) {
+      } else if (isOrangeWarn) {
+        if (pText) {
+          pText.textContent = 'ORANYE';
+          pText.className = 'text-[20px] font-extrabold text-[#FB923C] leading-none font-mono';
+        }
+        if (dot) dot.style.left = '64%';
+        if (badge) {
+          badge.textContent = 'Waspada Dini';
+          badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#FFEDD5] text-[#7C2D12] text-[10px] font-bold';
+        }
+      } else if (isDelayed) {
         if (pText) {
           pText.textContent = 'KUNING';
           pText.className = 'text-[20px] font-extrabold text-[#F59E0B] leading-none font-mono';
         }
-        if (dot) dot.style.left = '52%';
+        if (dot) dot.style.left = '50%';
         if (badge) {
           badge.textContent = 'Delayed';
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#F7E8BA] text-[#453813] text-[10px] font-bold';
@@ -2149,59 +2473,78 @@
     }
 
     // -------------------------------------------------------------
-    // 5. 18 MULTI-SEGMENT BARS MATCHING DESKTOP - 2.JPG
+    // 5. 18 MULTI-SEGMENT BARS (LIVE TELEMETRY + SHIFT PRESETS)
     // -------------------------------------------------------------
-    const janData = [
-      [27, 46, 19], [11, 65, 22], [48, 17, 13], [38, 22, 8], [13, 25, 42],
-      [24, 42, 11], [54, 30, 17], [27, 40, 21], [12, 46, 33], [17, 16, 46],
-      [21, 13, 18], [38, 14, 17], [25, 36, 36], [39, 17, 36], [41, 16, 18],
-      [53, 30, 11], [29, 12, 9],  [38, 39, 18]
-    ];
-
-    const febData = [
-      [34, 38, 18], [20, 52, 20], [42, 22, 16], [30, 28, 14], [18, 32, 34],
-      [28, 38, 15], [48, 26, 20], [32, 36, 18], [18, 42, 28], [22, 20, 40],
-      [26, 18, 20], [34, 20, 18], [28, 34, 30], [35, 22, 32], [38, 20, 20],
-      [48, 26, 15], [32, 18, 12], [40, 34, 20]
-    ];
-
     let currentShiftIndex = 0;
-    const shifts = [
-      { label: 'Shift Pagi // Sektor 7', prefix: 'T+', data: janData },
-      { label: 'Shift Siang // Lorong C', prefix: 'T+', data: febData }
+    const shiftModes = [
+      { label: 'Live Stream // Sektor 7', type: 'live' },
+      { label: 'Shift Pagi // Sektor 7', type: 'static', data: janData },
+      { label: 'Shift Siang // Lorong C', type: 'static', data: febData }
     ];
+
+    function pushKinematicsBar(w, triageCode, aMax, gTotal) {
+      let redH = 6;
+      let tealH = 14;
+      let ochreH = 22;
+
+      if (triageCode === 3 || aMax >= 3.0) {
+        redH = Math.round(Math.max(40, Math.min(72, aMax * 14)));
+        tealH = 18;
+        ochreH = 10;
+      } else if (triageCode === 2 || triageCode === 1 || aMax >= 1.25 || gTotal >= 35) {
+        redH = Math.round(Math.max(8, Math.min(26, aMax * 9)));
+        tealH = Math.round(Math.max(28, Math.min(64, aMax * 26)));
+        ochreH = 16;
+      } else {
+        redH = Math.round(Math.max(4, Math.min(14, aMax * 6)));
+        tealH = Math.round(Math.max(10, Math.min(24, aMax * 12)));
+        ochreH = Math.round(Math.max(20, Math.min(44, aMax * 26)));
+      }
+
+      const now = new Date();
+      const shortTs = now.toTimeString().split(' ')[0].slice(3); // MM:SS
+      w.kinematicsHist.push({
+        red: redH,
+        teal: tealH,
+        ochre: ochreH,
+        g: aMax.toFixed(2),
+        label: shortTs
+      });
+      if (w.kinematicsHist.length > 18) {
+        w.kinematicsHist.shift();
+      }
+    }
 
     function renderKinematicsBars() {
       const container = document.getElementById('kinematicsBarsContainer');
       if (!container) return;
-      const activeShift = shifts[currentShiftIndex];
+      const mode = shiftModes[currentShiftIndex];
+      const bars = mode.type === 'live'
+        ? workers[currentWorker].kinematicsHist
+        : makeSeedBars(mode.data);
+
       container.innerHTML = '';
 
-      activeShift.data.forEach((segments, idx) => {
-        const [redH, tealH, ochreH] = segments;
-        const intervalNum = (idx * 10);
-
+      bars.forEach((bar) => {
         const col = document.createElement('div');
         col.className = 'day-col flex flex-col items-center justify-end h-full relative cursor-pointer group';
         col.style.width = '18px';
         col.onclick = () => {
-          const g = ((redH * 0.04) + (tealH * 0.02) + (ochreH * 0.015)).toFixed(2);
           const pill = document.getElementById('liveAccelPill');
-          if (pill) pill.textContent = g + 'g @ T+' + intervalNum + 'm';
+          if (pill) pill.textContent = bar.g + 'g @ ' + bar.label;
         };
 
-        const totalG = ((redH * 0.04) + (tealH * 0.02) + (ochreH * 0.015)).toFixed(2);
         col.innerHTML = `
           <div class="opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 absolute -top-7 bg-[#2C2A2A] text-white text-[9.5px] font-mono font-bold px-2 py-0.5 rounded shadow-md whitespace-nowrap z-20">
-            T+` + intervalNum + `m: ` + totalG + `g
+            ` + bar.label + `: ` + bar.g + `g
           </div>
           <div class="flex flex-col items-center gap-[5px] mb-1">
-            <span class="pill-seg w-[4.5px] rounded-full bg-[#CC8B3C]" style="height: ` + ochreH + `px"></span>
-            <span class="pill-seg w-[4.5px] rounded-full bg-[#3E8D9B]" style="height: ` + tealH + `px"></span>
-            <span class="pill-seg w-[4.5px] rounded-full bg-[#DA7468]" style="height: ` + redH + `px"></span>
+            <span class="pill-seg w-[4.5px] rounded-full bg-[#CC8B3C]" style="height: ` + bar.ochre + `px"></span>
+            <span class="pill-seg w-[4.5px] rounded-full bg-[#3E8D9B]" style="height: ` + bar.teal + `px"></span>
+            <span class="pill-seg w-[4.5px] rounded-full bg-[#DA7468]" style="height: ` + bar.red + `px"></span>
           </div>
           <div class="h-0 w-full flex justify-end">
-            <span class="x-label">T+` + intervalNum + `m</span>
+            <span class="x-label">` + bar.label + `</span>
           </div>
         `;
         container.appendChild(col);
@@ -2209,9 +2552,9 @@
     }
 
     function cycleShift() {
-      currentShiftIndex = (currentShiftIndex + 1) % shifts.length;
+      currentShiftIndex = (currentShiftIndex + 1) % shiftModes.length;
       const shiftEl = document.getElementById('shiftLabel');
-      if (shiftEl) shiftEl.textContent = shifts[currentShiftIndex].label;
+      if (shiftEl) shiftEl.textContent = shiftModes[currentShiftIndex].label;
       renderKinematicsBars();
     }
 
@@ -2236,15 +2579,75 @@
     }
 
     // -------------------------------------------------------------
-    // 7. LEAFLET SUBTERRANEAN GIS MINE MAP
+    // 7. LEAFLET SUBTERRANEAN GIS MINE MAP (LIVE MARKERS & MESH LINES)
     // -------------------------------------------------------------
+    const GATEWAY_POS = [-8.2435, 113.6928];
+
+    function buildTacticalIcon(title, subtitle, color, isPulse) {
+      const pulseCss = isPulse ? 'box-shadow: 0 0 0 3px rgba(239,68,68,0.35), 0 4px 12px rgba(0,0,0,0.16);' : 'box-shadow: 0 4px 12px rgba(0,0,0,0.12);';
+      return L.divIcon({
+        className: 'tactical-div-icon',
+        html: `<div style="background: rgba(255,255,255,0.96); border: 1.8px solid ` + color + `; padding: 4px 8px; border-radius: 8px; ` + pulseCss + ` display: flex; align-items: center; gap: 6px; white-space: nowrap; font-family: monospace; font-size: 10px; color: #2D2B2A;">
+                 <span style="width: 8px; height: 8px; border-radius: 999px; background: ` + color + `;"></span>
+                 <b>` + title + `</b>
+                 <span style="color: #7B7874;">(` + subtitle + `)</span>
+               </div>`,
+        iconSize: [195, 26],
+        iconAnchor: [97, 24]
+      });
+    }
+
+    function updateMapNodesRealtime() {
+      if (!leafletMap) return;
+      const w1 = workers[1];
+      const w2 = workers[2];
+      const th1 = getTriageTheme(w1.triageCode);
+      const th2 = getTriageTheme(w2.triageCode);
+
+      const pos1 = [w1.lat || -8.2465, w1.lng || 113.6965];
+      const pos2 = [w2.lat || -8.2498, w2.lng || 113.7012];
+
+      if (watch1Marker) {
+        watch1Marker.setLatLng(pos1);
+        watch1Marker.setIcon(buildTacticalIcon('JAM #01: BAMBANG', th1.short + ' • ' + (w1.hr > 0 ? w1.hr + 'bpm' : '--'), th1.hex, w1.triageCode === 3));
+        watch1Marker.setPopupContent(
+          `<div class="font-mono text-xs"><b>Jam Tangan #01: Bambang</b><br/>` + w1.sector + `<br/>Triage: <b>` + w1.triageLabel + `</b><br/>Vitals: ` + (w1.hr > 0 ? w1.hr : '--') + ` BPM &bull; ` + (w1.spo2 > 0 ? w1.spo2 : '--') + `% &bull; ` + w1.temp.toFixed(1) + `&deg;C<br/>Rute: ` + w1.route + ` (` + w1.rssi + ` dBm)</div>`
+        );
+      }
+
+      if (watch2Marker) {
+        watch2Marker.setLatLng(pos2);
+        watch2Marker.setIcon(buildTacticalIcon('JAM #02: AGUS', th2.short + ' • ' + (w2.hr > 0 ? w2.hr + 'bpm' : '--'), th2.hex, w2.triageCode === 3));
+        watch2Marker.setPopupContent(
+          `<div class="font-mono text-xs"><b>Jam Tangan #02: Agus Salim</b><br/>` + w2.sector + `<br/>Triage: <b>` + w2.triageLabel + `</b><br/>Vitals: ` + (w2.hr > 0 ? w2.hr : '--') + ` BPM &bull; ` + (w2.spo2 > 0 ? w2.spo2 : '--') + `% &bull; ` + w2.temp.toFixed(1) + `&deg;C<br/>Rute: ` + w2.route + ` (` + w2.rssi + ` dBm)</div>`
+        );
+      }
+
+      if (hopPolyline) {
+        hopPolyline.setLatLngs(w2.isRelayed ? [pos2, pos1] : [pos2, GATEWAY_POS]);
+        hopPolyline.setStyle({
+          color: w2.triageCode === 3 ? '#EF4444' : (w2.isRelayed ? '#10B981' : '#0EA5E9'),
+          weight: w2.triageCode === 3 ? 4.5 : 3.5,
+          dashArray: w2.isRelayed ? null : '5, 5'
+        });
+      }
+
+      if (uplinkPolyline) {
+        uplinkPolyline.setLatLngs([pos1, GATEWAY_POS]);
+        uplinkPolyline.setStyle({
+          color: w2.triageCode === 3 ? '#EA580C' : '#D97706',
+          weight: 3.5,
+          dashArray: '6, 6'
+        });
+      }
+    }
+
     function initLeafletMap() {
       const mapContainer = document.getElementById('leafletMapContainer');
       if (!mapContainer || leafletMap) return;
 
-      const gatewayPos = [-8.2435, 113.6928];
-      const watch1Pos = [-8.2465, 113.6965];
-      const watch2Pos = [-8.2498, 113.7012];
+      const watch1Pos = [workers[1].lat, workers[1].lng];
+      const watch2Pos = [workers[2].lat, workers[2].lng];
 
       leafletMap = L.map('leafletMapContainer', {
         zoomControl: true,
@@ -2255,30 +2658,17 @@
         maxZoom: 16
       }).addTo(leafletMap);
 
-      const createMarker = (title, subtitle, color) => {
-        return L.divIcon({
-          className: 'tactical-div-icon',
-          html: `<div style="background: rgba(255,255,255,0.96); border: 1.5px solid ` + color + `; padding: 4px 8px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 6px; white-space: nowrap; font-family: monospace; font-size: 10px; color: #2D2B2A;">
-                   <span style="width: 8px; height: 8px; border-radius: 999px; background: ` + color + `;"></span>
-                   <b>` + title + `</b>
-                   <span style="color: #7B7874;">(` + subtitle + `)</span>
-                 </div>`,
-          iconSize: [180, 26],
-          iconAnchor: [90, 24]
-        });
-      };
-
-      gatewayMarker = L.marker(gatewayPos, {
-        icon: createMarker('GATEWAY BASECAMP', 'Surface Node', '#059669')
-      }).addTo(leafletMap).bindPopup('<div class="font-mono text-xs"><b>Posko Permukaan Basecamp</b><br/>ESP32 Gateway + LTE Uplink</div>');
+      gatewayMarker = L.marker(GATEWAY_POS, {
+        icon: buildTacticalIcon('GATEWAY BASECAMP', 'Surface Node', '#059669', false)
+      }).addTo(leafletMap).bindPopup('<div class="font-mono text-xs"><b>Posko Permukaan Basecamp</b><br/>ESP32 Gateway (COM14) + MQTT Uplink</div>');
 
       watch1Marker = L.marker(watch1Pos, {
-        icon: createMarker('JAM #01: BAMBANG', 'Relay Host', '#D97706')
-      }).addTo(leafletMap).bindPopup('<div class="font-mono text-xs"><b>Jam Tangan #01: Bambang</b><br/>Junction B-02 Poros Shaft<br/>Peran: LoRa 1-Hop Mesh Relay Forwarder</div>');
+        icon: buildTacticalIcon('JAM #01: BAMBANG', 'Relay Host', '#D97706', false)
+      }).addTo(leafletMap).bindPopup('<div class="font-mono text-xs"><b>Jam Tangan #01: Bambang</b></div>');
 
       watch2Marker = L.marker(watch2Pos, {
-        icon: createMarker('JAM #02: AGUS SALIM', 'Sektor 7 Miner', '#2563EB')
-      }).addTo(leafletMap).bindPopup('<div class="font-mono text-xs"><b>Jam Tangan #02: Agus Salim</b><br/>Lorong C-4 Sektor 7 Tambang<br/>Status: Normal / Terhubung Mesh</div>');
+        icon: buildTacticalIcon('JAM #02: AGUS', 'Sektor 7 Miner', '#059669', false)
+      }).addTo(leafletMap).bindPopup('<div class="font-mono text-xs"><b>Jam Tangan #02: Agus Salim</b></div>');
 
       hopPolyline = L.polyline([watch2Pos, watch1Pos], {
         color: '#10B981',
@@ -2286,12 +2676,14 @@
         opacity: 0.85
       }).addTo(leafletMap);
 
-      uplinkPolyline = L.polyline([watch1Pos, gatewayPos], {
+      uplinkPolyline = L.polyline([watch1Pos, GATEWAY_POS], {
         color: '#EA580C',
         weight: 4,
         dashArray: '6, 6',
         opacity: 0.9
       }).addTo(leafletMap);
+
+      updateMapNodesRealtime();
     }
 
     function toggleMapTileStyle() {
@@ -2342,7 +2734,7 @@
 
     function runDiagWatch(workerId) {
       const w = workers[workerId];
-      alert("DIAGNOSTIK JAM TANGAN #" + (workerId < 10 ? '0' + workerId : workerId) + " (" + w.name + "):\nStatus Hardware: Aktif Normal\nLoRa Link: " + w.route + " (" + w.rssi + " dBm)\nVitals: " + w.hr + " BPM • " + w.spo2 + "% SpO2 • " + w.temp.toFixed(1) + "°C\nTriage: " + w.triageLabel + "\nBaterai LiPo: 81% (4.12V)\nForwarding Mesh: 1-Hop P2P Aktif");
+      alert("DIAGNOSTIK JAM TANGAN #" + (workerId < 10 ? '0' + workerId : workerId) + " (" + w.name + "):\nStatus Hardware: Aktif Normal\nLoRa Link: " + w.route + " (" + w.rssi + " dBm)\nVitals: " + w.hr + " BPM • " + w.spo2 + "% SpO2 • " + w.temp.toFixed(1) + "°C\nTriage: " + w.triageLabel + "\nLast Live RX: " + (w.lastRxAt || 'Waiting packet') + "\nForwarding Mesh: 1-Hop P2P Aktif");
     }
 
     // -------------------------------------------------------------
@@ -2352,15 +2744,21 @@
       const now = new Date();
       const timeStr = now.toTimeString().split(' ')[0] + ' UTC';
       
+      const statusLabel = level === 'red' ? 'MERAH (Immediate)'
+        : (level === 'orange' ? 'ORANYE (Waspada)'
+        : (level === 'amber' ? 'KUNING (Delayed)'
+        : (level === 'slate' ? 'STANDBY (Lepas)' : 'HIJAU (Normal)')));
+
       const logItem = {
         time: timeStr,
         title: title,
         node: nodeName,
         desc: detailText,
-        status: level === 'red' ? 'MERAH (Immediate)' : (level === 'amber' ? 'KUNING (Delayed)' : 'HIJAU (Normal)'),
+        status: statusLabel,
         severity: level
       };
       auditLogsData.unshift(logItem);
+      if (auditLogsData.length > 250) auditLogsData.pop();
 
       const container = document.getElementById('auditLogList');
       if (!container) return;
@@ -2370,10 +2768,14 @@
       let borderClass = 'border-l-4 border-emerald-500 bg-white text-slate-800';
       if (level === 'red') {
         borderClass = 'border-l-4 border-red-500 bg-red-50/70 text-red-900';
+      } else if (level === 'orange') {
+        borderClass = 'border-l-4 border-orange-500 bg-orange-50/70 text-orange-900';
       } else if (level === 'amber') {
         borderClass = 'border-l-4 border-amber-500 bg-amber-50/70 text-amber-900';
       } else if (level === 'teal') {
         borderClass = 'border-l-4 border-teal-500 bg-teal-50/70 text-teal-900';
+      } else if (level === 'slate') {
+        borderClass = 'border-l-4 border-slate-400 bg-slate-50 text-slate-700';
       }
 
       div.className = 'p-3.5 rounded-xl border border-[#F0ECE6] shadow-sm ' + borderClass + ' transition';
@@ -2386,6 +2788,9 @@
       `;
 
       container.insertBefore(div, container.firstChild);
+      while (container.children.length > 100) {
+        container.removeChild(container.lastChild);
+      }
 
       const badge = document.getElementById('alertCountBadge');
       if (badge && level === 'red') {
@@ -2469,94 +2874,266 @@
     }
 
     // -------------------------------------------------------------
-    // 10. REAL-TIME MQTT ENGINE (broker.emqx.io:8084)
+    // 10. REAL-TIME MQTT ENGINE (broker.emqx.io:8084) + FULL UI SYNC
     // -------------------------------------------------------------
+    function deriveActivityText(code, accel, summary) {
+      if (summary) return summary;
+      if (code === 3 || accel >= 3.0) return 'Free-Fall & Benturan (' + accel.toFixed(2) + 'g)';
+      if (code === 2) return 'Waspada Kelelahan / Suhu Tinggi';
+      if (code === 1) return 'Kerja Aktif (' + accel.toFixed(2) + 'g)';
+      if (code === 4) return 'Standby (Jam Dilepas)';
+      return 'Diam / Istirahat Normal';
+    }
+
+    function normalizeRawPacket(rawStr) {
+      // Fallback: support raw FEAT string if ever sent directly without Node-RED wrapper
+      let str = rawStr.trim();
+      let isNode01 = false;
+      let isRelayed = false;
+      if (str.startsWith('RELAY,')) {
+        isRelayed = true;
+        const pos = str.indexOf('FEAT,');
+        if (pos !== -1) str = str.substring(pos);
+      } else if (str.startsWith('NODE01,')) {
+        isNode01 = true;
+        const pos = str.indexOf('FEAT,');
+        if (pos !== -1) str = str.substring(pos);
+      }
+      if (!str.startsWith('FEAT,')) return null;
+      const p = str.split(',').map(s => s.trim());
+      if (p.length < 13) return null;
+      const aMax = parseFloat(p[3]) || 1.0;
+      const gTotal = parseFloat(p[2]) || 0.0;
+      const tCode = parseInt(p[12]) || 0;
+      const hr = p.length > 13 ? (parseInt(p[13]) || 0) : 0;
+      const spo2 = p.length > 14 ? (parseInt(p[14]) || 0) : 0;
+      const temp = p.length > 15 ? (parseFloat(p[15]) || 36.6) : 36.6;
+      const th = getTriageTheme(tCode);
+      return {
+        device_id: isNode01 ? 'RESCUE-TAG-01' : 'RESCUE-TAG-02',
+        worker_id: isNode01 ? 'WRK-001' : 'WRK-002',
+        vitals: { hr, spo2, temp },
+        kinematics: { a_max: aMax, g_total: gTotal },
+        triage: { code: tCode, label: th.defaultLabel, is_emergency: tCode === 3 },
+        network: {
+          route: isNode01 ? 'Direct Relay Host (Hop 1)' : (isRelayed ? '1-Hop LoRa Relay via Jam #01' : 'Direct LoRa P2P'),
+          rssi: isRelayed ? -78 : -68,
+          is_relayed: isRelayed
+        }
+      };
+    }
+
+    function applyTelemetryPacket(topic, data) {
+      if (!data) return;
+
+      // Support standalone alert packet cleanly
+      if (topic === 'rescue/tag/alert' && !data.vitals && data.alert_type) {
+        const wTarget = (data.worker && data.worker.includes('Bambang')) ? workers[1] : workers[2];
+        appendAuditTrail(
+          'EMERGENCY ALERT: ' + (data.alert_type || 'SOS'),
+          wTarget.tagId,
+          (data.worker || wTarget.name) + ' • ' + (data.kinematics || 'SOS Triggered'),
+          'red'
+        );
+        if (audioAlertEnabled) playEmergencyBeep();
+        return;
+      }
+
+      let workerNum = 2;
+      if (data.device_id === 'RESCUE-TAG-01' || data.worker_id === 'WRK-001' || (data.worker_name && data.worker_name.includes('Bambang'))) {
+        workerNum = 1;
+      }
+
+      const w = workers[workerNum];
+      const nowTime = new Date().toTimeString().split(' ')[0];
+      mqttPacketCount++;
+      lastMqttRxTime = nowTime;
+      w.rxCount++;
+      w.lastRxAt = nowTime;
+
+      if (data.sector) w.sector = data.sector;
+      if (data.location) {
+        if (typeof data.location.lat === 'number' && data.location.lat !== 0) w.lat = data.location.lat;
+        if (typeof data.location.lng === 'number' && data.location.lng !== 0) w.lng = data.location.lng;
+      }
+
+      if (data.vitals) {
+        if (data.vitals.hr !== undefined && data.vitals.hr !== null) w.hr = Number(data.vitals.hr);
+        if (data.vitals.spo2 !== undefined && data.vitals.spo2 !== null) w.spo2 = Number(data.vitals.spo2);
+        if (data.vitals.temp !== undefined && data.vitals.temp !== null) w.temp = Number(data.vitals.temp);
+      }
+
+      let gTotal = 0;
+      if (data.kinematics) {
+        if (data.kinematics.a_max !== undefined && data.kinematics.a_max !== null) w.accel = Number(data.kinematics.a_max);
+        if (data.kinematics.g_total !== undefined && data.kinematics.g_total !== null) gTotal = Number(data.kinematics.g_total);
+      }
+
+      if (data.triage) {
+        if (data.triage.code !== undefined && data.triage.code !== null) w.triageCode = Number(data.triage.code);
+        w.triageLabel = data.triage.label || getTriageTheme(w.triageCode).defaultLabel;
+        if (data.triage.is_emergency !== undefined) w.isEmergency = Boolean(data.triage.is_emergency);
+        else w.isEmergency = (w.triageCode === 3);
+      }
+
+      if (data.network) {
+        if (data.network.route) w.route = data.network.route;
+        if (data.network.rssi !== undefined && data.network.rssi !== null) w.rssi = Number(data.network.rssi);
+        if (data.network.is_relayed !== undefined) w.isRelayed = Boolean(data.network.is_relayed);
+        else if (data.network.route) w.isRelayed = data.network.route.includes('Relay via');
+      }
+
+      w.activity = deriveActivityText(w.triageCode, w.accel, data.kinematics && data.kinematics.summary);
+
+      // Push rolling sparkline history (ignore 0 reading during sensor calibration)
+      if (w.hr > 0) {
+        w.hrHist.push(w.hr);
+        if (w.hrHist.length > 12) w.hrHist.shift();
+      }
+      if (w.spo2 > 0) {
+        w.spo2Hist.push(w.spo2);
+        if (w.spo2Hist.length > 12) w.spo2Hist.shift();
+      }
+      if (w.temp > 0) {
+        w.tempHist.push(w.temp);
+        if (w.tempHist.length > 12) w.tempHist.shift();
+      }
+
+      // Push rolling Kinematics Bar
+      pushKinematicsBar(w, w.triageCode, w.accel, gTotal);
+
+      // Pulse MQTT RX indicator
+      syncMqttDotVisual(true);
+      setTimeout(() => syncMqttDotVisual(false), 320);
+
+      // Refresh global elements (Dropdown, Roster, Map)
+      updateDropdownMeta();
+      updateRosterTableUI();
+      updateMapNodesRealtime();
+
+      // Refresh Overview + Right Panel for currently viewed worker
+      if (currentWorker === workerNum) {
+        updateTelemetryDisplay(w);
+        updateSparklines(w);
+        if (currentShiftIndex === 0) renderKinematicsBars();
+
+        if (!isSimulatorMode) {
+          const ind = document.getElementById('simModeIndicator');
+          if (ind) ind.textContent = 'LIVE • ' + nowTime;
+          const slHR = document.getElementById('sliderHR');
+          const slSpO2 = document.getElementById('sliderSpO2');
+          if (slHR) slHR.value = Math.max(40, Math.min(180, w.hr > 0 ? w.hr : 40));
+          if (slSpO2) slSpO2.value = Math.max(70, Math.min(100, w.spo2 > 0 ? w.spo2 : 70));
+          const hrText = document.getElementById('simHRText');
+          const spText = document.getElementById('simSpO2Text');
+          if (hrText) hrText.textContent = (w.hr > 0 ? w.hr : '--') + ' bpm';
+          if (spText) spText.textContent = (w.spo2 > 0 ? w.spo2 : '--') + ' %';
+          evaluateSTART(w.hr, w.spo2, w.triageCode, w.accel);
+        }
+      }
+
+      // Intelligent Chronological Audit Logging (first RX + state changes + throttled SOS)
+      if (!hasLoggedFirstLiveRx) {
+        hasLoggedFirstLiveRx = true;
+        appendAuditTrail(
+          'Live Telemetry Stream Active',
+          w.tagId,
+          'Gateway COM14 -> MQTT bridge streaming (' + w.hr + ' BPM, ' + w.spo2 + '% SpO2, ' + w.temp.toFixed(1) + '°C)',
+          'teal'
+        );
+      }
+
+      const nowMs = Date.now();
+      const levelMap = { 0: 'green', 1: 'amber', 2: 'orange', 3: 'red', 4: 'slate' };
+      const curLevel = levelMap[w.triageCode] || 'green';
+
+      if (w.lastLoggedTriage !== null && w.lastLoggedTriage !== w.triageCode) {
+        appendAuditTrail(
+          'Triage Transition -> ' + getTriageTheme(w.triageCode).short,
+          w.tagId,
+          w.name + ': ' + w.triageLabel + ' | HR ' + w.hr + ' BPM, SpO2 ' + w.spo2 + '%, Accel ' + w.accel.toFixed(2) + 'g',
+          curLevel
+        );
+      } else if (w.triageCode === 3 && (nowMs - w.lastAlertTs > 15000)) {
+        w.lastAlertTs = nowMs;
+        appendAuditTrail(
+          'DARURAT MEDIS / IMPACT DETECTED',
+          w.tagId,
+          w.name + ' di ' + w.sector + '. HR: ' + w.hr + ' BPM, SpO2: ' + w.spo2 + '%. Prioritas SAR MERAH!',
+          'red'
+        );
+      }
+      w.lastLoggedTriage = w.triageCode;
+
+      if (w.lastLoggedRoute !== null && w.lastLoggedRoute !== w.route) {
+        appendAuditTrail(
+          'Mesh Route Updated',
+          w.tagId,
+          w.name + ' beralih ke rute: ' + w.route + ' (' + w.rssi + ' dBm)',
+          w.isRelayed ? 'amber' : 'teal'
+        );
+      }
+      w.lastLoggedRoute = w.route;
+
+      if (w.triageCode === 3 && audioAlertEnabled) {
+        playEmergencyBeep();
+      }
+    }
+
     function initMQTT() {
-      const dot = document.getElementById('mqttDot');
       try {
         const clientId = 'rescuetag_cmd_' + Math.random().toString(16).substring(2, 8);
-        const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+        mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
           clientId: clientId,
           clean: true,
           connectTimeout: 5000,
           reconnectPeriod: 3000
         });
 
-        client.on('connect', () => {
+        mqttClient.on('connect', () => {
+          mqttConnected = true;
           console.log('[MQTT] Connected to broker.emqx.io:8084');
-          if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]';
-          client.subscribe('rescue/tag/data');
-          client.subscribe('rescue/tag/alert');
+          syncMqttDotVisual(false);
+          const ind = document.getElementById('simModeIndicator');
+          if (ind && !isSimulatorMode && !lastMqttRxTime) ind.textContent = 'ONLINE';
+          mqttClient.subscribe('rescue/tag/data');
+          mqttClient.subscribe('rescue/tag/alert');
           appendAuditTrail('MQTT EMQX Online', 'EMQX BROKER', 'Listening to rescue/tag/data & rescue/tag/alert', 'teal');
         });
 
-        client.on('message', (topic, payload) => {
+        mqttClient.on('message', (topic, payload) => {
           try {
-            const data = JSON.parse(payload.toString());
+            const rawStr = payload.toString();
+            let data = null;
+            if (rawStr.trim().startsWith('{')) {
+              data = JSON.parse(rawStr);
+            } else {
+              data = normalizeRawPacket(rawStr);
+            }
             console.log('[MQTT RX]', topic, data);
-
-            let workerNum = 2;
-            if (data.device_id === 'RESCUE-TAG-01' || data.worker_id === 'WRK-001' || (data.worker_name && data.worker_name.includes('Bambang'))) {
-              workerNum = 1;
-            }
-
-            const w = workers[workerNum];
-            if (data.vitals) {
-              if (data.vitals.hr) w.hr = data.vitals.hr;
-              if (data.vitals.spo2) w.spo2 = data.vitals.spo2;
-              if (data.vitals.temp) w.temp = data.vitals.temp;
-            }
-            if (data.kinematics) {
-              if (data.kinematics.a_max) w.accel = data.kinematics.a_max;
-              if (data.kinematics.summary) w.activity = data.kinematics.summary;
-            }
-            if (data.triage) {
-              if (data.triage.code !== undefined) w.triageCode = data.triage.code;
-              if (data.triage.label) w.triageLabel = data.triage.label;
-              if (data.triage.is_emergency !== undefined) w.isEmergency = data.triage.is_emergency;
-            }
-
-            updateRosterTableUI();
-
-            if (currentWorker === workerNum && !isSimulatorMode) {
-              updateTelemetryDisplay(w);
-              evaluateSTART(w.hr, w.spo2);
-              const slHR = document.getElementById('sliderHR');
-              const slSpO2 = document.getElementById('sliderSpO2');
-              if (slHR) slHR.value = w.hr;
-              if (slSpO2) slSpO2.value = w.spo2;
-              const hrText = document.getElementById('simHRText');
-              const spText = document.getElementById('simSpO2Text');
-              if (hrText) hrText.textContent = w.hr + ' bpm';
-              if (spText) spText.textContent = w.spo2 + ' %';
-            }
-
-            if (topic === 'rescue/tag/alert' || w.triageCode === 3) {
-              appendAuditTrail(
-                'DARURAT MEDIS / IMPACT DETECTED',
-                w.tagId,
-                w.name + ' di ' + w.sector + '. HR: ' + w.hr + ' BPM, SpO2: ' + w.spo2 + '%. Prioritas SAR MERAH!',
-                'red'
-              );
-              if (audioAlertEnabled) playEmergencyBeep();
-            }
-
+            applyTelemetryPacket(topic, data);
           } catch (err) {
             console.warn('[MQTT PARSE ERR]', err);
           }
         });
 
-        client.on('offline', () => {
-          if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+        mqttClient.on('offline', () => {
+          mqttConnected = false;
+          syncMqttDotVisual(false);
+          const ind = document.getElementById('simModeIndicator');
+          if (ind && !isSimulatorMode) ind.textContent = 'OFFLINE';
         });
 
-        client.on('error', (err) => {
-          if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-red-500';
+        mqttClient.on('error', (err) => {
+          mqttConnected = false;
+          const dot = document.getElementById('mqttDot');
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-red-500';
         });
 
       } catch (e) {
         console.warn('Running in autonomous simulation mode', e);
-        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-gray-500';
+        mqttConnected = false;
+        syncMqttDotVisual(false);
       }
     }
 
@@ -2564,38 +3141,47 @@
     // 11. DEMO TRIGGER FUNCTIONS FOR COMPETITION JURY
     // -------------------------------------------------------------
     function testSimSOS() {
-      const w = workers[2];
-      w.hr = 138;
-      w.spo2 = 86;
-      w.temp = 38.6;
-      w.accel = 4.85;
-      w.activity = 'Free-Fall & Immobility >30s';
-      w.triageCode = 3;
-      w.triageLabel = 'MERAH - Immediate (SOS)';
-      w.isEmergency = true;
-
+      isSimulatorMode = false;
+      const label = document.getElementById('simModeLabel');
+      if (label) label.textContent = 'Live MQTT';
+      applyTelemetryPacket('rescue/tag/data', {
+        device_id: 'RESCUE-TAG-02',
+        worker_id: 'WRK-002',
+        sector: 'Sektor 7 (Lorong C-4)',
+        vitals: { hr: 138, spo2: 86, temp: 38.6 },
+        kinematics: { a_max: 4.85, g_total: 18.5, summary: 'Free-Fall & Immobility >30s' },
+        triage: { code: 3, label: 'MERAH - Immediate (SOS)', is_emergency: true },
+        network: { route: '1-Hop LoRa Relay via Jam #01', rssi: -78, is_relayed: true }
+      });
       selectWorker(2);
-      appendAuditTrail('Simulated Free-Fall Shock & Tachycardia', 'Agus Salim', 'Sektor 7: Benturan 4.85g dan Hipoksia 86%', 'red');
       pulseHopSimulation();
     }
 
     function testSimNormal() {
-      const w = workers[2];
-      w.hr = 75;
-      w.spo2 = 98;
-      w.temp = 36.5;
-      w.accel = 1.02;
-      w.activity = 'Diam / Istirahat Normal';
-      w.triageCode = 0;
-      w.triageLabel = 'HIJAU - Minor (Aman)';
-      w.isEmergency = false;
-
+      isSimulatorMode = false;
+      const label = document.getElementById('simModeLabel');
+      if (label) label.textContent = 'Live MQTT';
+      applyTelemetryPacket('rescue/tag/data', {
+        device_id: 'RESCUE-TAG-02',
+        worker_id: 'WRK-002',
+        sector: 'Sektor 7 (Lorong C-4)',
+        vitals: { hr: 75, spo2: 98, temp: 36.5 },
+        kinematics: { a_max: 1.02, g_total: 2.15, summary: 'Diam / Istirahat Normal' },
+        triage: { code: 0, label: 'HIJAU - Minor (Aman)', is_emergency: false },
+        network: { route: 'Direct LoRa P2P', rssi: -68, is_relayed: false }
+      });
       selectWorker(2);
-      appendAuditTrail('Simulated Normal Baseline Telemetry', 'Agus Salim', 'Sektor 7: Vitals stabil', 'green');
     }
 
     function toggleMqttInfo() {
-      alert("MQTT BROKER STATUS:\nBroker: broker.emqx.io\nPort: 8084 (Secure WebSocket)\nTopics: rescue/tag/data, rescue/tag/alert\nRelay: LoRa 1-Hop Mesh P2P");
+      alert(
+        "MQTT BROKER STATUS:\n" +
+        "Status: " + (mqttConnected ? "CONNECTED" : "CONNECTING / OFFLINE") + "\n" +
+        "Broker: wss://broker.emqx.io:8084/mqtt\n" +
+        "Topics: rescue/tag/data, rescue/tag/alert\n" +
+        "Total Packets RX: " + mqttPacketCount + "\n" +
+        "Last RX Time: " + (lastMqttRxTime || "Belum ada paket live dari COM14 -> Node-RED")
+      );
     }
 
     // -------------------------------------------------------------
