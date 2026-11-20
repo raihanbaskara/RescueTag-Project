@@ -1080,7 +1080,7 @@
               </div>
               <div class="flex items-center gap-2">
                 <span id="rosterTriage01" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10.5px] whitespace-nowrap">
-                  KUNING - Delayed
+                  KUNING - Kerja Aktif
                 </span>
               </div>
             </div>
@@ -1089,18 +1089,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5">
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Heart Rate</div>
-                <div id="rosterHR01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">106 BPM</div>
-                <div id="rosterHRSub01" class="text-[9.5px] text-[#A6A29C]">Takikardia Ringan</div>
+                <div id="rosterHR01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">98 BPM</div>
+                <div id="rosterHRSub01" class="text-[9.5px] text-[#A6A29C]">Normal (50-114)</div>
               </div>
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Blood O2 (SpO2)</div>
-                <div id="rosterSpO2_01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">93%</div>
-                <div id="rosterSpO2Sub01" class="text-[9.5px] text-[#A6A29C]">Hipoksia Ringan</div>
+                <div id="rosterSpO2_01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">96%</div>
+                <div id="rosterSpO2Sub01" class="text-[9.5px] text-[#A6A29C]">Optimal (>=95%)</div>
               </div>
               <div class="bg-[#FAF6F1] p-2.5 rounded-xl border border-[#F0ECE6]">
                 <div class="text-[9.5px] font-mono text-[#7B7874] uppercase tracking-wider">Skin IR Temp</div>
-                <div id="rosterTemp01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">37.6&deg;C</div>
-                <div id="rosterTempSub01" class="text-[9.5px] text-[#A6A29C]">Hipertermia Ringan</div>
+                <div id="rosterTemp01" class="text-sm font-bold font-mono text-amber-700 mt-0.5">36.9&deg;C</div>
+                <div id="rosterTempSub01" class="text-[9.5px] text-[#A6A29C]">Normotermia</div>
               </div>
             </div>
 
@@ -1108,7 +1108,7 @@
             <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
               <div class="flex flex-wrap items-center gap-2">
                 <span id="rosterActivity01" class="px-2.5 py-0.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-[10.5px]">
-                  Tremor / Kelelahan Ringan
+                  Kerja Aktif (1.63g)
                 </span>
                 <span id="rosterRoute01" class="px-2.5 py-0.5 rounded-lg bg-orange-50 text-orange-800 border border-orange-200 text-[10.5px] font-mono">
                   Direct + Relay Host (Hop 1)
@@ -1744,6 +1744,7 @@
     // -------------------------------------------------------------
     let currentWorker = 2; // Default viewing Worker #02 (Agus Salim)
     let isSimulatorMode = false;
+    let simAccel = 1.02;
     let audioAlertEnabled = false;
     let audioCtx = null;
     let leafletMap = null;
@@ -1796,25 +1797,25 @@
         sector: 'Junction Poros Shaft B-02',
         lat: -8.2465,
         lng: 113.6965,
-        hr: 106,
-        spo2: 93,
-        temp: 37.6,
-        accel: 1.45,
-        activity: 'Tremor / Kelelahan Ringan',
+        hr: 98,
+        spo2: 96,
+        temp: 36.9,
+        accel: 1.63,
+        activity: 'Kerja Aktif (1.63g)',
         route: 'Direct + Relay Host (Hop 1)',
         rssi: -65,
         isRelayed: false,
         triageCode: 1, // KUNING
-        triageLabel: 'KUNING - Delayed',
+        triageLabel: 'KUNING - Kerja Aktif',
         isEmergency: false,
         rxCount: 0,
         lastRxAt: null,
         lastLoggedTriage: null,
         lastLoggedRoute: null,
         lastAlertTs: 0,
-        hrHist: [96, 98, 102, 100, 104, 108, 105, 103, 107, 109, 105, 106],
-        spo2Hist: [96, 95, 95, 94, 94, 93, 94, 93, 93, 94, 93, 93],
-        tempHist: [37.1, 37.2, 37.3, 37.3, 37.4, 37.5, 37.5, 37.6, 37.5, 37.6, 37.6, 37.6],
+        hrHist: [92, 94, 96, 95, 97, 99, 98, 96, 99, 100, 97, 98],
+        spo2Hist: [97, 97, 96, 96, 97, 96, 96, 97, 96, 96, 96, 96],
+        tempHist: [36.7, 36.7, 36.8, 36.8, 36.8, 36.9, 36.9, 36.9, 36.8, 36.9, 36.9, 36.9],
         kinematicsHist: makeSeedBars(febData)
       },
       2: {
@@ -1906,25 +1907,21 @@
     }
 
     function getVitalMeta(w) {
-      let hrSub = 'Normal (60-100)';
+      let hrSub = 'Normal (50-114)';
       let hrBadge = 'Normal';
       let hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#E8F8F0] text-[#1D6A4E] text-[10.5px] font-bold';
       if (w.triageCode === 4 || w.hr <= 0) {
         hrSub = w.triageCode === 4 ? 'Jam Dilepas' : 'Mengukur nadi...';
         hrBadge = w.triageCode === 4 ? 'Standby' : 'Mengukur...';
         hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-slate-100 text-slate-600 text-[10.5px] font-bold';
-      } else if (w.hr > 120) {
-        hrSub = 'Takikardia';
-        hrBadge = 'Takikardia';
-        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
-      } else if (w.hr > 100) {
-        hrSub = 'Takikardia Ringan';
-        hrBadge = 'Tinggi';
-        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
+      } else if (w.hr >= 115) {
+        hrSub = 'Takikardia (>=115)';
+        hrBadge = 'Takikardia (>=115)';
+        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFEDD5] text-[#C2410C] text-[10.5px] font-bold';
       } else if (w.hr < 50) {
-        hrSub = 'Bradikardia';
-        hrBadge = 'Bradikardia';
-        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#C0565B] text-[10.5px] font-bold';
+        hrSub = 'Bradikardia (<50)';
+        hrBadge = 'Bradikardia (<50)';
+        hrClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFEDD5] text-[#C2410C] text-[10.5px] font-bold';
       }
 
       let spSub = 'Optimal (>=95%)';
@@ -1935,28 +1932,24 @@
         spBadge = w.triageCode === 4 ? 'Standby' : 'Mengukur...';
         spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-slate-100 text-slate-600 text-[10.5px] font-bold';
       } else if (w.spo2 < 88) {
-        spSub = 'Hipoksia Berat';
+        spSub = 'Hipoksia Berat (<88%)';
         spBadge = 'Hipoksia Berat';
         spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
-      } else if (w.spo2 < 95) {
-        spSub = 'Hipoksia Ringan';
+      } else if (w.spo2 <= 94) {
+        spSub = 'Hipoksia Ringan (88-94%)';
         spBadge = 'Hipoksia Ringan';
-        spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
+        spClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFEDD5] text-[#C2410C] text-[10.5px] font-bold';
       }
 
       let tmSub = 'Normotermia';
       let tmBadge = 'Normal';
       let tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#F8DFC2] text-[#3B352E] text-[10.5px] font-bold';
-      if (w.temp > 38.0) {
-        tmSub = 'Hipertermia';
+      if (w.temp >= 38.5) {
+        tmSub = 'Hipertermia (>=38.5 C)';
         tmBadge = 'Hipertermia';
-        tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FBE7E8] text-[#DE6D72] text-[10.5px] font-bold';
-      } else if (w.temp >= 37.4) {
-        tmSub = 'Hipertermia Ringan';
-        tmBadge = 'Hangat';
-        tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFF2DE] text-[#A6681E] text-[10.5px] font-bold';
-      } else if (w.temp > 0 && w.temp < 35.5) {
-        tmSub = 'Hipotermia';
+        tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#FFEDD5] text-[#C2410C] text-[10.5px] font-bold';
+      } else if (w.temp > 0 && w.temp <= 34.5) {
+        tmSub = 'Hipotermia (<=34.5 C)';
         tmBadge = 'Hipotermia';
         tmClass = 'inline-block px-2.5 py-0.5 rounded-[5px] bg-[#D0F1F8] text-[#1E4D57] text-[10.5px] font-bold';
       }
@@ -2310,8 +2303,9 @@
       }
     }
 
-    function onSimulatorInput() {
+    function onSimulatorInput(keepKinematics = false) {
       isSimulatorMode = true;
+      if (!keepKinematics) simAccel = 1.02;
       const label = document.getElementById('simModeLabel');
       const ind = document.getElementById('simModeIndicator');
       if (label) label.textContent = 'Simulator';
@@ -2326,7 +2320,7 @@
       if (hrText) hrText.textContent = hr + ' bpm';
       if (spText) spText.textContent = spo2 + ' %';
 
-      evaluateSTART(hr, spo2, null, 1.0);
+      evaluateSTART(hr, spo2, null, simAccel);
     }
 
     function toggleSimMode() {
@@ -2364,19 +2358,23 @@
       const slHR = document.getElementById('sliderHR');
       const slSpO2 = document.getElementById('sliderSpO2');
       if (tier === 'HIJAU') {
+        simAccel = 1.02;
         if (slHR) slHR.value = 75;
         if (slSpO2) slSpO2.value = 98;
       } else if (tier === 'KUNING') {
-        if (slHR) slHR.value = 106;
+        simAccel = 1.63;
+        if (slHR) slHR.value = 98;
         if (slSpO2) slSpO2.value = 96;
       } else if (tier === 'ORANYE') {
+        simAccel = 1.63;
         if (slHR) slHR.value = 122;
         if (slSpO2) slSpO2.value = 92;
       } else if (tier === 'MERAH') {
+        simAccel = 19.65;
         if (slHR) slHR.value = 138;
         if (slSpO2) slSpO2.value = 86;
       }
-      onSimulatorInput();
+      onSimulatorInput(true);
     }
 
     function onTriageBarClick(e) {
@@ -2393,6 +2391,8 @@
       const dot = document.getElementById('triageDot');
       const badge = document.getElementById('triageBadgePill');
 
+      const isLive = (liveTriageCode !== null && liveTriageCode !== undefined);
+
       // Standby / watch removed in Live MQTT mode
       if (liveTriageCode === 4) {
         if (pText) {
@@ -2407,9 +2407,12 @@
         return;
       }
 
-      const isEmergency = (liveTriageCode === 3) || (accel >= 3.0) || (spo2 > 0 && spo2 < 88) || (liveTriageCode === null && (hr >= 135 || (hr > 0 && hr < 45)));
-      const isOrangeWarn = !isEmergency && ((liveTriageCode === 2) || (liveTriageCode === null && (hr >= 115 || (hr > 0 && hr < 50) || (spo2 >= 88 && spo2 <= 94))));
-      const isDelayed = !isEmergency && !isOrangeWarn && ((liveTriageCode === 1) || (hr > 100));
+      // Diseragamkan dengan firmware evaluate_clinical_triage() di stm32_transmitter.ino:
+      // Live MQTT mengikuti kode firmware 100%; Manual Simulator memakai ambang identik:
+      // Merah (3): SpO2 < 88% atau benturan >= 2.2g; Oranye (2): HR >= 115 / < 50 atau SpO2 88-94%; Kuning (1): kinematika kerja aktif (>= 1.25g)
+      const isEmergency = isLive ? (liveTriageCode === 3) : ((accel >= 2.2) || (spo2 > 0 && spo2 < 88));
+      const isOrangeWarn = !isEmergency && (isLive ? (liveTriageCode === 2) : ((hr >= 115) || (hr > 0 && hr < 50) || (spo2 >= 88 && spo2 <= 94)));
+      const isDelayed = !isEmergency && !isOrangeWarn && (isLive ? (liveTriageCode === 1) : (accel >= 1.25));
 
       if (isEmergency) {
         if (pText) {
@@ -2861,7 +2864,7 @@
     // -------------------------------------------------------------
     function deriveActivityText(code, accel, summary) {
       if (summary) return summary;
-      if (code === 3 || accel >= 3.0) return 'Free-Fall & Benturan (' + accel.toFixed(2) + 'g)';
+      if (code === 3) return 'Free-Fall & Benturan (' + accel.toFixed(2) + 'g)';
       if (code === 2) return 'Waspada Kelelahan / Suhu Tinggi';
       if (code === 1) return 'Kerja Aktif (' + accel.toFixed(2) + 'g)';
       if (code === 4) return 'Standby (Jam Dilepas)';
@@ -3132,7 +3135,7 @@
         worker_id: 'WRK-002',
         sector: 'Sektor 7 (Lorong C-4)',
         vitals: { hr: 138, spo2: 86, temp: 38.6 },
-        kinematics: { a_max: 4.85, g_total: 18.5, summary: 'Free-Fall & Immobility >30s' },
+        kinematics: { a_max: 19.65, g_total: 5.4, summary: 'Benturan Keras & Imobilitas >30s' },
         triage: { code: 3, label: 'MERAH - Immediate (SOS)', is_emergency: true },
         network: { route: '1-Hop LoRa Relay via Jam #01', rssi: -78, is_relayed: true }
       });
