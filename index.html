@@ -790,12 +790,12 @@
         <!-- ROW 1: 3 Live Telemetry Cards -->
         <section class="vitals-grid grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-5 my-1">
           
-          <!-- Metric Card 1: Heart Rate (MAX30102 PPG) -->
+          <!-- Metric Card 1: Heart Rate (MAX30105 PPG) -->
           <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[218px] relative overflow-hidden" 
                onmouseenter="highlightSensorRing('chestRing', true)" 
                onmouseleave="highlightSensorRing('chestRing', false)"
                onclick="switchCenterView('fleet-roster')"
-               title="MAX30102 PPG Arterial Pulse">
+               title="MAX30105 Wrist Optical PPG">
             <div>
               <div class="flex items-center gap-3">
                 <div class="w-[46px] h-[46px] rounded-[13px] bg-[#FBF0F1] flex items-center justify-center shrink-0">
@@ -806,7 +806,7 @@
                 </div>
                 <div>
                   <span class="text-[14px] font-bold text-[#2D2B2A] block leading-tight">Heart Rate</span>
-                  <span class="text-[10px] font-mono text-[#86837F]">MAX30102 PPG</span>
+                  <span class="text-[10px] font-mono text-[#86837F]">MAX30105 PPG</span>
                 </div>
               </div>
 
@@ -842,7 +842,7 @@
                onmouseenter="highlightSensorRing('chestRing', true)" 
                onmouseleave="highlightSensorRing('chestRing', false)"
                onclick="switchCenterView('fleet-roster')"
-               title="MAX30102 Blood Oxygen">
+               title="MAX30105 Blood Oxygen">
             <div>
               <div class="flex items-center gap-3">
                 <div class="w-[46px] h-[46px] rounded-[13px] bg-[#D5F2F8] flex items-center justify-center shrink-0">
@@ -1335,11 +1335,11 @@
                 </div>
                 <div class="flex-1 text-xs">
                   <div class="flex items-center justify-between">
-                    <span class="font-bold text-[#2D2B2A]">MAX30102 Optical Biometric Array</span>
-                    <span class="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200">660nm / 880nm</span>
+                    <span class="font-bold text-[#2D2B2A]">MAX30105 Optical Biometric Array</span>
+                    <span class="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200">537 / 660 / 880nm</span>
                   </div>
                   <p class="text-[11px] text-[#7B7874] mt-0.5">
-                    Dual-wavelength arterial reflectance PPG delivering continuous Heart Rate (30-220 BPM) &amp; SpO2 saturation.
+                    Tri-wavelength wrist reflectance PPG delivering continuous Heart Rate (30-220 BPM) &amp; SpO2 saturation.
                   </p>
                 </div>
               </div>
@@ -1568,17 +1568,17 @@
             <!-- 3 Stacked White Measurement Cards -->
             <div class="sensor-cards-stack flex flex-col gap-2.5 sm:gap-3 mb-1 mt-2 sm:mt-3">
               
-              <!-- Chest Card (MAX30102) -->
+              <!-- PPG Card (MAX30105) -->
               <div class="measure-card bg-white rounded-[13px] w-[122px] h-[74px] flex flex-col items-center justify-center shadow-md p-2" 
                    onmouseenter="highlightRing('chestRing', true)" 
                    onmouseleave="highlightRing('chestRing', false)"
                    onclick="switchCenterView('overview')"
-                   title="MAX30102 PPG Arterial Pulse">
+                   title="MAX30105 Wrist Optical PPG">
                 <span class="text-[10px] font-bold text-[#6E6B68]">PPG Pulse Sensor</span>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                  <span class="text-[17px] font-bold text-[#242221]">MAX30102</span>
+                  <span class="text-[17px] font-bold text-[#242221]">MAX30105</span>
                 </div>
-                <span class="text-[9px] text-[#A6A29C] font-mono">Chest &bull; Arterial</span>
+                <span class="text-[9px] text-[#A6A29C] font-mono">Wrist &bull; Optical</span>
               </div>
 
               <!-- Waist Card (BMI160 IMU) -->
