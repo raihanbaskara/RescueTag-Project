@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Hardware-STM32%20%7C%20ESP32-00599C?logo=stmicroelectronics)](firmware/)
-[![LoRa](https://img.shields.io/badge/Radio-LoRa%20915MHz-green?logo=semtech)](firmware/)
+[![LoRa](https://img.shields.io/badge/Radio-LoRa%20433MHz-green?logo=semtech)](firmware/)
 [![Edge AI](https://img.shields.io/badge/TinyML-Decision%20Tree%20C--Code-orange)](Pengambilan_Data_LoRa/triage_model.h)
 [![IoT Middleware](https://img.shields.io/badge/Middleware-Node--RED%20%26%20MQTT-red?logo=nodered)](flows_rescue_tag.json)
 [![Dashboard](https://img.shields.io/badge/Frontend-GIS%20Web%20Dashboard-brightgreen?logo=leaflet)](Raihan%20PTE/web%20stich/index.html)
@@ -35,7 +35,7 @@ Dalam skenario bencana alam (gempa bumi, tanah longsor, bangunan runtuh), infras
 | **False Alarm pada Kondisi Diam** | **0.3%** (99.7% bersih) | Hanya 3 jendela salah dari 921 jendela diam |
 | **Reduksi Alarm Palsu vs Baseline Statis** | **Memangkas >59%** alarm palsu | Dibandingkan baseline statis $a_{\max} \ge 2.2\text{g}$ |
 | **Inference Latency** | **< 15 mikrodetik** | Pure integer/float branching C-code pada ARM Cortex-M |
-| **Kemandirian Jaringan** | **100% Zero-Cloud** | Transmisi P2P LoRa 915 MHz non-internet |
+| **Kemandirian Jaringan** | **100% Zero-Cloud** | Transmisi P2P LoRa 433 MHz non-internet |
 
 <div align="center">
   <img src="docs/dashboard_pencapaian_proposal_90.png" width="85%" alt="Dashboard Pencapaian Kriteria Proposal"/>
@@ -52,9 +52,9 @@ Arsitektur Rescue-Tag mengadopsi model *Decoupled IoT Architecture* yang menjami
 flowchart LR
     subgraph WearableNode ["Wearable Node (Korban / Relawan)"]
         IMU["BMI160 (6-DOF IMU) 50 Hz"]
-        PPG["MAX30102 (HR & SpO2)"]
-        MCU["STM32 (ARM Cortex-M)\n• 250ms Feature Extractor\n• TinyML Decision Tree\n• 30s Post-Fall Immobility FSM"]
-        LoRaTX["SX1278 / RFM95 LoRa TX (915 MHz)"]
+        PPG["MAX30105 (HR & SpO2)"]
+        MCU["STM32F401CCU6 (ARM Cortex-M4)\n• 250ms Feature Extractor\n• TinyML Decision Tree\n• 30s Post-Fall Immobility FSM"]
+        LoRaTX["SX1278 LoRa TX (433 MHz)"]
         IMU --> MCU
         PPG --> MCU
         MCU --> LoRaTX
@@ -108,22 +108,22 @@ Untuk menjaga dimensi perangkat tetap kompak di tangan korban bencana, komponen 
 
 | No | Komponen / Modul | Fungsi Utama dalam Sistem |
 |:---:|---|---|
-| **1** | **OLED Display 0.96" (I2C SSD1306)** | Menampilkan status triase langsung di tangan korban, visualisasi detak jantung, SpO2, dan hitung mundur pembatalan FSM 30 detik. |
-| **2** | **Emergency Push Button** | Tombol konfirmasi manual untuk membatalkan alarm false-fall atau mentrigger sinyal SOS instan. |
-| **3** | **TP4056 Type-C LiPo Charger** | Modul manajemen daya & pengisian ulang baterai dengan proteksi overcharge/overdischarge. |
+| **1** | **OLED Display 0.96" (I2C SSD1306)** | Menampilkan status triase langsung di pergelangan tangan, visualisasi HR/SpO2/suhu, dan hitung mundur imobilitas 30 detik. |
+| **2** | **Tactile Push Button (PB1)** | Klik tunggal untuk Sleep/Wake layar OLED (tetap aktif saat status Darurat Merah/countdown); klik ganda (<800 ms) untuk toggle simulasi demo gas beracun (SpO2 84%). Pembatalan alarm jatuh dilakukan melalui pergerakan fisik atau perintah Serial `'R'`. |
+| **3** | **TP4056 Type-C LiPo Charger + 1500mAh 3.7V LiPo** | Baterai LiPo 1500 mAh 3,7 V dengan manajemen daya & pengisian ulang USB-C. |
 | **4** | **STM32F401CCU6 (BlackPill)** | Main Processing Unit (MCU ARM Cortex-M4 84 MHz) yang menjalankan TinyML Decision Tree & FSM imobilitas. |
-| **5** | **BMI160 (6-DOF IMU)** | Sensor inersia ultra-low power 50 Hz (Akselerometer & Giroskop) untuk deteksi benturan dan aktivitas. |
+| **5** | **BMI160 (6-DOF IMU)** | Sensor inersia 50 Hz di pergelangan tangan (Akselerometer & Giroskop) untuk deteksi benturan dan aktivitas. |
 | **6** | **MLX90614 (GY-906)** | Sensor suhu inframerah non-kontak medis untuk pemantauan hipotermia/demam korban bencana. |
-| **7** | **MAX30102 / MAX30105** | Sensor biosensor optik fotopletismografi (PPG) untuk mengukur denyut nadi (*Heart Rate*) dan saturasi oksigen darah (*SpO2*). |
-| **8** | **SX1278 (Ra-02 LoRa 915 MHz)** | Transceiver radio modulasi Chirp Spread Spectrum (CSS) untuk transmisi data darurat jarak jauh nirkabel. |
-| **9** | **Helical LoRa Spring Antenna** | Antena spiral kompak 915 MHz terintegrasi di dalam sasis casing. |
+| **7** | **MAX30105** | Sensor biosensor optik fotopletismografi (PPG) pergelangan tangan untuk mengukur denyut nadi (*Heart Rate*) dan saturasi oksigen darah (*SpO2*). |
+| **8** | **SX1278 (Ra-02 LoRa 433 MHz)** | Transceiver radio modulasi Chirp Spread Spectrum (CSS) 433 MHz (SF7, BW 125 kHz, CR 4/5) untuk transmisi telemetri jarak jauh. |
+| **9** | **Helical LoRa Spring Antenna** | Antena spiral kompak 433 MHz terintegrasi di dalam sasis casing. |
 | **10** | **Modular PCB Stacking Shields (40x60 mm)** | Tiga papan perantara bertingkat untuk interkoneksi bus I2C, SPI, dan jalur daya DC. |
 
 ---
 
 ### 2. Skematik Elektronika & Diagram Pengkabelan (Schematic & Wiring)
 
-Sistem menggunakan arsitektur dual-bus: **I2C Bus** bersama untuk sensorik biomedis (OLED, BMI160, MAX30102, MLX90614) dan **High-Speed SPI Bus** khusus untuk radio LoRa SX1278.
+Sistem menggunakan arsitektur dual-bus: **I2C Bus** bersama untuk sensorik biomedis (OLED, BMI160, MAX30105, MLX90614) dan **High-Speed SPI Bus** khusus untuk radio LoRa SX1278.
 
 <div align="center">
   <table>
@@ -151,7 +151,7 @@ Untuk mencegah salah klasifikasi saat jam tangan terpasang terbalik atau miring 
 - $g_{\text{mean}}, g_{\max}$ (Dinamika rotasi pergelangan)
 
 ### 2. Decision Tree Architecture (`triage_model.h`)
-Model dilatih menggunakan kriteria entropi dengan kedalaman maksimal 4 (*Depth 4*) dan diekspor ke fungsi C inline murni tanpa pustaka eksternal (*zero external dependency*):
+Model dilatih menggunakan kriteria entropi dengan kedalaman maksimal 4 (*Depth 4*) pada fitur `a_mean, g_mean, a_max, a_min, g_std, a_std, g_max` dan diekspor ke fungsi C inline murni tanpa pustaka eksternal (*zero external dependency*):
 ```c
 static inline int predict_triage(float a_total, float g_total, float a_max, float a_min,
                                  float g_mean, float a_std, float g_max, float a_jerk) {
@@ -164,11 +164,19 @@ static inline int predict_triage(float a_total, float g_total, float a_max, floa
         return 0;
       }
     } else {
-      return (g_total <= 32.4030f && g_max > 109.6955f) ? 0 : 1;
+      if (g_total <= 32.4030f) {
+        return (g_max <= 109.6955f) ? 1 : 0;
+      } else {
+        return 1;
+      }
     }
   } else {
     if (a_max <= 5.3635f) {
-      return (g_mean <= 178.0555f && g_max > 253.7355f) ? 3 : 1; // 3 = Merah (Jatuh)
+      if (g_mean <= 178.0555f) {
+        return (g_max <= 253.7355f) ? 1 : 3; // 3 = Merah (Jatuh)
+      } else {
+        return 1;
+      }
     } else {
       return (a_max <= 10.5539f && a_std > 2.6111f) ? 1 : 3;
     }
@@ -178,9 +186,9 @@ static inline int predict_triage(float a_total, float g_total, float a_max, floa
 
 ### 3. FSM Imobilitas Pascajatuh (Anti-False Alarm)
 Benturan keras tidak langsung memicu status Kritis (*Merah*). Sistem menjalankan *Finite State Machine (FSM)*:
-1. **Impact Detection:** Lonjakan $a_{\max} \ge 1.6\text{g}$ terdeteksi oleh TinyML.
-2. **Local Warning Window (30 Detik):** Buzzer dan getaran aktif di jam tangan pemakai. Jika korban hanya tersandung lalu bangkit bergerak, FSM mendeteksi aktivitas dinamis dan **membatalkan alarm secara otomatis**.
-3. **Immobility Latch:** Jika korban tidak bergerak selama 30 detik (indikasi cedera parah/pingsan), sistem mengunci status **TRIAGE MERAH** dan mentransmisikan paket darurat prioritas tinggi ke posko.
+1. **Impact Detection:** Lonjakan $a_{\max} \ge 2.2\text{g}$ atau gabungan prediksi TinyML `model_pred == 3` ($a_{\max} \ge 1.6\text{g}$) terdeteksi.
+2. **Countdown Window (30 Detik):** Layar OLED menampilkan hitung mundur verifikasi imobilitas dari 30 detik. Jika korban hanya tersandung lalu bangkit bergerak aktif (`g_total > 35 dps` atau `a_total > 1.4g` setelah masa tenggang 2 detik), FSM **membatalkan alarm secara otomatis**.
+3. **Immobility Latch:** Jika korban tidak bergerak selama 30 detik (indikasi cedera parah/pingsan), sistem mengunci status **TRIAGE MERAH** dan menyalakan mode *inverted OLED* (`DARURAT SOS JATUH`).
 
 ---
 
@@ -208,8 +216,9 @@ Model dievaluasi menggunakan metode validasi silang paling ketat dalam riset bio
 Dashboard frontend dibangun khusus untuk komando taktis darurat:
 - **Spatial Triage Mapping:** Visualisasi titik lokasi korban dengan kode warna internasional START (*Simple Triage and Rapid Treatment*):
   - 🟢 **Hijau (Minor):** Korban stabil, sadar, dapat bergerak mandiri.
-  - 🟡 **Kuning (Delayed):** Korban terluka / membutuhkan penanganan medis terencana.
-  - 🔴 **Merah (Immediate):** Korban mengalami benturan keras, pingsan, atau tanda vital kritis (SpO2 < 90% / denyut ekstrem).
+  - 🟡 **Kuning (Delayed):** Korban kerja aktif / bergerak intensif.
+  - 🟠 **Oranye (Waspada Dini):** Kelelahan ekstrem (HR $\ge$ baseline + 25 atau $\ge$ 115 bpm), bradikardia (< 50 bpm), hipoksia ringan (SpO2 90–94%), atau suhu $\ge 38.5^\circ\text{C} / \le 34.5^\circ\text{C}$.
+  - 🔴 **Merah (Immediate):** Korban mengalami benturan keras + imobilitas 30 detik, atau hipoksia berat (SpO2 < 88%).
 - **Asynchronous Live Feed:** Menggunakan WebSocket MQTT (`rescue/tag/data` dan `rescue/tag/alert`).
 - **Victim Telemetry Cards:** Menampilkan riwayat grafik detak jantung (*BPM*), saturasi oksigen (*%*), level baterai, dan estimasi elevasi ketinggian.
 
@@ -218,8 +227,8 @@ Dashboard frontend dibangun khusus untuk komando taktis darurat:
 ## 🚀 Quick Start Guide
 
 ### 1. Hardware Requirements
-- **Wearable Node:** STM32 Nucleo / BluePill (STM32F103/STM32L4), BMI160 IMU, MAX30102 Oximeter, SX1278 LoRa Module (915 MHz), OLED SSD1306.
-- **Gateway Node:** ESP32 DOIT DevKit V1 + SX1278 LoRa Module.
+- **Wearable Node:** STM32 BlackPill (`STM32F401CCU6`), BMI160 IMU, MAX30105 Oximeter, MLX90614 IR Temp, SX1278 LoRa Module (433 MHz), OLED SSD1306 0.96", Baterai LiPo 1500mAh 3.7V + TP4056.
+- **Relay / Gateway Node:** ESP32 DevKit V1 + SX1278 LoRa Module (433 MHz) + OLED SSD1306.
 
 ### 2. Firmware Deployment
 1. Buka folder `Pengambilan_Data_LoRa/stm32_transmitter/` menggunakan VS Code + PlatformIO.

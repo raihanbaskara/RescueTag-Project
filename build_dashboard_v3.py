@@ -334,11 +334,10 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       height: 9px;
       border-radius: 999px;
       background: linear-gradient(90deg, 
-        #9CC3EB 0%, 
-        #9CE0D8 28%, 
-        #CBE8BA 50%, 
-        #F0E09A 74%, 
-        #E59399 100%
+        #86EFAC 0%, 
+        #FDE047 36%, 
+        #FDBA74 68%, 
+        #F87171 100%
       );
       position: relative;
       cursor: pointer;
@@ -597,7 +596,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
               </div>
             </div>
             <div class="text-right">
-              <span class="font-mono text-[9px] text-[#7B7874] tracking-wider block">433.05 MHz SUB-GHZ</span>
+              <span class="font-mono text-[9px] text-[#7B7874] tracking-wider block">433 MHz SUB-GHZ</span>
               <span class="font-tech text-[10px] font-bold text-[#2D2B2A] bg-white px-2.5 py-0.5 rounded-md border border-[#E5DFD4] block mt-1 shadow-2xs">
                 SUB-GHZ &bull; OLED
               </span>
@@ -629,7 +628,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           <div class="w-full pt-3.5 border-t border-[#E5DFD4] grid grid-cols-3 divide-x divide-[#E5DFD4] text-center relative z-10">
             <div class="px-2">
               <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-[#7B7874] block font-medium">ENCLOSURE</span>
-              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">IP68 Rugged ABS</span>
+              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">Rugged ABS Case</span>
             </div>
             <div class="px-2">
               <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-[#7B7874] block font-medium">TELEMETRY</span>
@@ -637,7 +636,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             </div>
             <div class="px-2">
               <span class="font-tech text-[9px] uppercase tracking-[0.18em] text-[#7B7874] block font-medium">RELAY</span>
-              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">1-Hop P2P (18ms)</span>
+              <span class="font-outfit text-xs font-bold text-[#2D2B2A] block mt-0.5">1-Hop LoRa P2P</span>
             </div>
           </div>
 
@@ -817,8 +816,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           
           <!-- Metric Card 1: Heart Rate (MAX30105 PPG) -->
           <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[218px] relative overflow-hidden" 
-               onmouseenter="highlightSensorRing('chestRing', true)" 
-               onmouseleave="highlightSensorRing('chestRing', false)"
+               onmouseenter="highlightSensorRing('wristRing', true)" 
+               onmouseleave="highlightSensorRing('wristRing', false)"
                onclick="switchCenterView('fleet-roster')"
                title="MAX30105 Wrist Optical PPG">
             <div>
@@ -864,8 +863,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
           <!-- Metric Card 2: SpO2 Blood Oxygen -->
           <div class="metric-card p-4 pb-3 flex flex-col justify-between h-[218px] relative overflow-hidden" 
-               onmouseenter="highlightSensorRing('chestRing', true)" 
-               onmouseleave="highlightSensorRing('chestRing', false)"
+               onmouseenter="highlightSensorRing('wristRing', true)" 
+               onmouseleave="highlightSensorRing('wristRing', false)"
                onclick="switchCenterView('fleet-roster')"
                title="MAX30105 Blood Oxygen">
             <div>
@@ -1170,7 +1169,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
         <!-- Footer -->
         <div class="flex items-center justify-between text-xs text-[#7B7874] font-mono pt-2 border-t border-[#F0ECE6]">
-          <span>Sub-GHz 433.05 MHz Mesh &bull; CRC-16 Hardware Checksum</span>
+          <span>Sub-GHz 433 MHz Mesh &bull; SF7 BW 125 kHz CR 4/5</span>
           <div class="flex gap-2">
             <button onclick="testSimSOS()" class="px-3 py-1 rounded-[8px] bg-red-100 text-red-800 font-bold hover:bg-red-200 transition cursor-pointer">
               Simulate SOS Incident
@@ -1267,7 +1266,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
         <!-- Footer -->
         <div class="flex items-center justify-between text-xs text-[#7B7874] font-mono">
-          <span>Encrypted Local Audit Trail &bull; Automatic 1-Hop Hop Forwarding Log</span>
+          <span>Local JSON/CSV Audit Trail &bull; 1-Hop Relay Forwarding Log</span>
           <span>Excel Export Format: RFC-4180 CSV (UTF-8 BOM)</span>
         </div>
       </div>
@@ -1302,14 +1301,14 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             <div class="md:col-span-5 metric-card p-3.5 flex flex-col justify-between">
               <div class="bg-[#FAF6F1] rounded-2xl p-3 border border-[#F0ECE6] relative flex flex-col items-center justify-center">
                 <span class="absolute top-2 left-2 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white border border-[#E5DFD4] text-[#7B7874]">
-                  IP68 SEALED
+                  3D ABS SHELL
                 </span>
                 <span class="absolute top-2 right-2 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#EFE9E0] text-[#C68B39]">
-                  433.05 MHz
+                  433 MHz
                 </span>
                 <img id="hardwarePhotoImg" src="BASE64_IMAGE_PLACEHOLDER" alt="RescueTag Wearable Smartwatch" class="max-h-[175px] object-contain drop-shadow-md my-1" />
                 <span class="text-[10px] font-mono text-[#7B7874] mt-1">
-                  0.96" Monochrome OLED &bull; Tactical SOS Push
+                  0.96" Monochrome OLED &bull; PB1 Screen Button
                 </span>
               </div>
 
@@ -1328,8 +1327,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                   <span class="text-[11px] font-bold text-[#2D2B2A]">ABS High-Impact</span>
                 </div>
                 <div class="p-1.5 bg-[#FAF6F1] rounded-lg border border-[#F0ECE6]">
-                  <span class="text-[9px] text-[#A6A29C] block">SUBMERSIBLE</span>
-                  <span class="text-[11px] font-bold text-emerald-700">1.5m / 30 Mins</span>
+                  <span class="text-[9px] text-[#A6A29C] block">BATTERY</span>
+                  <span class="text-[11px] font-bold text-emerald-700">1500mAh 3.7V LiPo</span>
                 </div>
               </div>
             </div>
@@ -1344,11 +1343,11 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                 </div>
                 <div class="flex-1 text-xs">
                   <div class="flex items-center justify-between">
-                    <span class="font-bold text-[#2D2B2A]">STM32L431 ARM Cortex-M4 @ 80 MHz</span>
-                    <span class="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">18ms TinyML</span>
+                    <span class="font-bold text-[#2D2B2A]">STM32F401CCU6 Cortex-M4 @ 84 MHz</span>
+                    <span class="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">50 Hz TinyML</span>
                   </div>
                   <p class="text-[11px] text-[#7B7874] mt-0.5">
-                    On-device Decision Tree classifier for zero-latency subterranean shock &amp; fall triage classification.
+                    On-device Decision Tree classifier &amp; 30s immobility FSM running on 250 ms sliding windows.
                   </p>
                 </div>
               </div>
@@ -1392,11 +1391,11 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                 </div>
                 <div class="flex-1 text-xs">
                   <div class="flex items-center justify-between">
-                    <span class="font-bold text-[#2D2B2A]">SX1278 Sub-GHz 433.05 MHz Mesh</span>
+                    <span class="font-bold text-[#2D2B2A]">SX1278 Sub-GHz 433 MHz Mesh</span>
                     <span class="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200">1-Hop P2P</span>
                   </div>
                   <p class="text-[11px] text-[#7B7874] mt-0.5">
-                    Rock-penetrating Sub-GHz RF telemetry with autonomous peer relaying to surface command basecamp.
+                    Rock-penetrating Sub-GHz RF telemetry (SF7, BW 125 kHz, CR 4/5) with autonomous 1-hop relay to surface gateway.
                   </p>
                 </div>
               </div>
@@ -1404,24 +1403,24 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             </div>
           </div>
 
-          <!-- Middle Row: Subterranean Environmental Durability (3 Cards) -->
+          <!-- Middle Row: Subterranean Hardware Prototype Architecture (3 Cards) -->
           <div class="grid grid-cols-3 gap-3">
             <div class="metric-card p-3 bg-white">
               <div class="flex items-center gap-2 mb-1">
                 <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                <span class="text-[11px] font-bold text-[#2D2B2A]">Hermetic Sealing</span>
+                <span class="text-[11px] font-bold text-[#2D2B2A]">Compact ABS Enclosure</span>
               </div>
               <p class="text-[10.5px] text-[#7B7874]">
-                IP68 dust-tight gasket protects against subterranean coal dust, mud, and water ingress up to 1.5m.
+                3D-printed rigid ABS wearable casing protecting the dual-bus I2C/SPI sensor stack on the left wrist.
               </p>
             </div>
             <div class="metric-card p-3 bg-white">
               <div class="flex items-center gap-2 mb-1">
                 <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                <span class="text-[11px] font-bold text-[#2D2B2A]">Shock Resistance</span>
+                <span class="text-[11px] font-bold text-[#2D2B2A]">Impact &amp; Immobility FSM</span>
               </div>
               <p class="text-[10.5px] text-[#7B7874]">
-                Engineered to survive 2-meter freefall impact onto basalt rock; internal damping absorbs severe shockwaves.
+                &plusmn;16g 6-DOF shock acquisition with 30-second post-fall immobility verification to suppress false alarms.
               </p>
             </div>
             <div class="metric-card p-3 bg-white">
@@ -1430,7 +1429,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                 <span class="text-[11px] font-bold text-[#2D2B2A]">Power Autonomy</span>
               </div>
               <p class="text-[10.5px] text-[#7B7874]">
-                850mAh LiPo delivers 18 hours full continuous mesh duty cycle and 72 hours emergency low-power beacon.
+                1500mAh 3.7V LiPo cell with TP4056 Type-C charging and 30-second OLED auto-sleep power saving.
               </p>
             </div>
           </div>
@@ -1563,8 +1562,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
               <div class="flex items-center justify-between text-[9px] font-semibold text-[#D0CDCA] mt-2 font-mono">
                 <span onclick="setTriageDirect('HIJAU')" class="hover:text-emerald-300 cursor-pointer">HIJAU</span>
                 <span onclick="setTriageDirect('KUNING')" class="hover:text-amber-300 cursor-pointer">KUNING</span>
+                <span onclick="setTriageDirect('ORANYE')" class="hover:text-orange-300 cursor-pointer">ORANYE</span>
                 <span onclick="setTriageDirect('MERAH')" class="hover:text-red-300 cursor-pointer">MERAH</span>
-                <span onclick="setTriageDirect('HITAM')" class="hover:text-gray-200 cursor-pointer">HITAM</span>
               </div>
             </div>
           </div>
@@ -1595,8 +1594,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
               
               <!-- PPG Card (MAX30105) -->
               <div class="measure-card bg-white rounded-[13px] w-[122px] h-[74px] flex flex-col items-center justify-center shadow-md p-2" 
-                   onmouseenter="highlightRing('chestRing', true)" 
-                   onmouseleave="highlightRing('chestRing', false)"
+                   onmouseenter="highlightRing('wristRing', true)" 
+                   onmouseleave="highlightRing('wristRing', false)"
                    onclick="switchCenterView('overview')"
                    title="MAX30105 Wrist Optical PPG">
                 <span class="text-[10px] font-bold text-[#6E6B68]">PPG Pulse Sensor</span>
@@ -1606,28 +1605,28 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                 <span class="text-[9px] text-[#A6A29C] font-mono">Wrist &bull; Optical</span>
               </div>
 
-              <!-- Waist Card (BMI160 IMU) -->
+              <!-- Wrist IMU Card (BMI160 IMU) -->
               <div class="measure-card bg-white rounded-[13px] w-[122px] h-[74px] flex flex-col items-center justify-center shadow-md p-2" 
-                   onmouseenter="highlightRing('waistRing', true)" 
-                   onmouseleave="highlightRing('waistRing', false)"
+                   onmouseenter="highlightRing('wristRing', true)" 
+                   onmouseleave="highlightRing('wristRing', false)"
                    onclick="switchCenterView('overview')"
-                   title="BMI160 6-DOF IMU Kinematics">
-                <span class="text-[10px] font-bold text-[#6E6B68]">Core Kinematics</span>
+                   title="BMI160 Wrist 6-DOF IMU Kinematics">
+                <span class="text-[10px] font-bold text-[#6E6B68]">Wrist Kinematics</span>
                 <div class="flex items-center gap-1.5 mt-0.5">
                   <span class="text-[17px] font-bold text-[#242221]">BMI160 IMU</span>
                 </div>
-                <span class="text-[9px] text-[#A6A29C] font-mono">Waist &bull; 6-DOF</span>
+                <span class="text-[9px] text-[#A6A29C] font-mono">Wrist &bull; 6-DOF</span>
               </div>
 
               <!-- Wrist Card (Smartwatch Enclosure) -->
               <div class="measure-card bg-white rounded-[13px] w-[122px] h-[74px] flex flex-col items-center justify-center shadow-md p-2" 
-                   onmouseenter="highlightRing('hipRing', true)" 
-                   onmouseleave="highlightRing('hipRing', false)"
+                   onmouseenter="highlightRing('wristRing', true)" 
+                   onmouseleave="highlightRing('wristRing', false)"
                    onclick="switchCenterView('hardware-spec')"
-                   title="RescueTag Wearable Smartwatch">
+                   title="RescueTag Left Wrist Smartwatch">
                 <span class="text-[10px] font-bold text-[#6E6B68]">Smartwatch</span>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                  <span class="text-[16px] font-bold text-[#242221]">IP68 ABS</span>
+                  <span class="text-[16px] font-bold text-[#242221]">ABS Case</span>
                 </div>
                 <span class="text-[9px] text-[#C68B39] font-mono font-bold">Left Wrist OLED</span>
               </div>
@@ -1657,10 +1656,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                 </linearGradient>
               </defs>
 
-              <!-- BACK HALF OF 3D RED RINGS -->
-              <path d="M 38 112 A 67 11 0 0 1 172 112" stroke="#D9534F" stroke-width="1.7" stroke-opacity="0.75" fill="none" />
-              <path d="M 55 160 A 50 9 0 0 1 155 160" stroke="#D9534F" stroke-width="1.7" stroke-opacity="0.75" fill="none" />
-              <path d="M 48 214 A 57 10 0 0 1 162 214" stroke="#D9534F" stroke-width="1.7" stroke-opacity="0.75" fill="none" />
+              <!-- BACK HALF OF LEFT WRIST SMARTWATCH RING -->
+              <path d="M 152 212 A 14 7 0 0 1 180 212" stroke="#D9534F" stroke-width="1.7" stroke-opacity="0.75" fill="none" />
 
               <!-- FULL BODY ANATOMY -->
               <path d="M 88 52 L 86 68 L 62 76 L 148 76 L 124 68 L 122 52 Z" fill="#F7C9A6"/>
@@ -1704,18 +1701,18 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
                 <path d="M 124 408 L 134 408 L 124 412 L 134 415 L 124 418 L 134 420 L 124 421" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
               </g>
 
-              <!-- FRONT HALF OF 3D GLOWING RINGS -->
-              <g id="chestRing" class="ring-glow" onclick="switchCenterView('overview')">
-                <path d="M 38 112 A 67 11 0 0 0 172 112" stroke="#FF6B63" stroke-width="3.2" stroke-opacity="0.45" filter="url(#redGlow)" fill="none" />
-                <path d="M 38 112 A 67 11 0 0 0 172 112" stroke="#F0645A" stroke-width="1.7" fill="none" />
+              <!-- LEFT WRIST SMARTWATCH & INTEGRATED SENSOR MODULE (MAX30105 + BMI160 + OLED) -->
+              <g id="wristWatchUnit" class="cursor-pointer" onclick="switchCenterView('hardware-spec')">
+                <rect x="160" y="209" width="12" height="5" rx="1.5" fill="#2C2A2A" />
+                <rect x="162" y="206" width="8" height="11" rx="2.2" fill="#171615" stroke="#F4F1EA" stroke-width="0.8" />
+                <rect x="163.5" y="208" width="5" height="4" rx="0.6" fill="#0EA5E9" fill-opacity="0.85" />
+                <circle cx="166" cy="214.5" r="0.9" fill="#34D399" />
               </g>
-              <g id="waistRing" class="ring-glow" onclick="switchCenterView('overview')">
-                <path d="M 55 160 A 50 9 0 0 0 155 160" stroke="#FF6B63" stroke-width="3.2" stroke-opacity="0.45" filter="url(#redGlow)" fill="none" />
-                <path d="M 55 160 A 50 9 0 0 0 155 160" stroke="#F0645A" stroke-width="1.7" fill="none" />
-              </g>
-              <g id="hipRing" class="ring-glow" onclick="switchCenterView('hardware-spec')">
-                <path d="M 48 214 A 57 10 0 0 0 162 214" stroke="#FF6B63" stroke-width="3.2" stroke-opacity="0.45" filter="url(#redGlow)" fill="none" />
-                <path d="M 48 214 A 57 10 0 0 0 162 214" stroke="#F0645A" stroke-width="1.7" fill="none" />
+
+              <!-- FRONT HALF OF LEFT WRIST GLOWING INDICATOR -->
+              <g id="wristRing" class="ring-glow" onclick="switchCenterView('hardware-spec')">
+                <path d="M 152 212 A 14 7 0 0 0 180 212" stroke="#FF6B63" stroke-width="3.2" stroke-opacity="0.5" filter="url(#redGlow)" fill="none" />
+                <path d="M 152 212 A 14 7 0 0 0 180 212" stroke="#F0645A" stroke-width="1.8" fill="none" />
               </g>
             </svg>
           </div>
@@ -2058,9 +2055,9 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       if (type === 'oled') {
         c.innerHTML = `&gt; [${ts}][OLED] Pattern test PASS. SSD1306 128x64 live frame buffer verified. Contrast 100%.`;
       } else if (type === 'rf') {
-        c.innerHTML = `&gt; [${ts}][SX1278] Carrier 433.05 MHz Sub-GHz detected. RSSI: -88 dBm, SNR: +8.5 dB. Mesh roundtrip: 18ms.`;
+        c.innerHTML = `&gt; [${ts}][SX1278] Carrier 433 MHz Sub-GHz active (SF7, BW 125 kHz). RSSI: -88 dBm, SNR: +8.5 dB, Est. ToA ~154 ms.`;
       } else if (type === 'imu') {
-        c.innerHTML = `&gt; [${ts}][BMI160] Freefall &amp; impact interrupt armed. Threshold: 4.85g. FIFO buffer ready.`;
+        c.innerHTML = `&gt; [${ts}][BMI160] Freefall &amp; impact monitor armed. FSM trigger: &ge;2.2g (&plusmn;16g FIFO ready).`;
         testSimSOS();
       } else if (type === 'temp') {
         c.innerHTML = `&gt; [${ts}][MLX90614] IR Thermopile calibrated. Tamb: 28.4&deg;C, Tobj: 36.5&deg;C. Accuracy &plusmn;0.2&deg;C.`;
@@ -2301,7 +2298,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       const rfEl = document.getElementById('rosterRfQuality');
       if (rfEl) {
         const wActive = workers[currentWorker];
-        const rxStr = lastMqttRxTime ? (' • RX ' + lastMqttRxTime) : ' • 433.05 MHz';
+        const rxStr = lastMqttRxTime ? (' • RX ' + lastMqttRxTime) : ' • 433 MHz';
         rfEl.textContent = 'RSSI ' + wActive.rssi + ' dBm // SF7' + rxStr;
       }
 
@@ -2396,13 +2393,13 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         if (slSpO2) slSpO2.value = 98;
       } else if (tier === 'KUNING') {
         if (slHR) slHR.value = 106;
-        if (slSpO2) slSpO2.value = 93;
+        if (slSpO2) slSpO2.value = 96;
+      } else if (tier === 'ORANYE') {
+        if (slHR) slHR.value = 122;
+        if (slSpO2) slSpO2.value = 92;
       } else if (tier === 'MERAH') {
         if (slHR) slHR.value = 138;
         if (slSpO2) slSpO2.value = 86;
-      } else if (tier === 'HITAM') {
-        if (slHR) slHR.value = 40;
-        if (slSpO2) slSpO2.value = 70;
       }
       onSimulatorInput();
     }
@@ -2410,10 +2407,10 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     function onTriageBarClick(e) {
       const rect = e.currentTarget.getBoundingClientRect();
       const pct = (e.clientX - rect.left) / rect.width;
-      if (pct < 0.28) setTriageDirect('HIJAU');
-      else if (pct < 0.58) setTriageDirect('KUNING');
-      else if (pct < 0.85) setTriageDirect('MERAH');
-      else setTriageDirect('HITAM');
+      if (pct < 0.25) setTriageDirect('HIJAU');
+      else if (pct < 0.52) setTriageDirect('KUNING');
+      else if (pct < 0.78) setTriageDirect('ORANYE');
+      else setTriageDirect('MERAH');
     }
 
     function evaluateSTART(hr, spo2, liveTriageCode = null, accel = 1.0) {
@@ -2421,7 +2418,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       const dot = document.getElementById('triageDot');
       const badge = document.getElementById('triageBadgePill');
 
-      // Standby / watch removed in Live MQTT mode (do not misclassify HR=0 as HITAM)
+      // Standby / watch removed in Live MQTT mode
       if (liveTriageCode === 4) {
         if (pText) {
           pText.textContent = 'STANDBY';
@@ -2435,30 +2432,16 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         return;
       }
 
-      // Manual Simulator mode allows explicit HITAM test via low sliders
-      if (liveTriageCode === null && (hr <= 40 || (hr > 160 && spo2 < 75))) {
-        if (pText) {
-          pText.textContent = 'HITAM';
-          pText.className = 'text-[20px] font-extrabold text-gray-400 leading-none font-mono';
-        }
-        if (dot) dot.style.left = '92%';
-        if (badge) {
-          badge.textContent = 'Expectant';
-          badge.className = 'px-2.5 py-1 rounded-[7px] bg-gray-700 text-gray-200 text-[10px] font-bold';
-        }
-        return;
-      }
-
-      const isEmergency = (liveTriageCode === 3) || (accel >= 3.0) || (hr > 125) || (hr > 0 && hr < 48) || (spo2 > 0 && spo2 < 88);
-      const isOrangeWarn = !isEmergency && (liveTriageCode === 2);
-      const isDelayed = !isEmergency && !isOrangeWarn && ((liveTriageCode === 1) || (hr > 100) || (spo2 > 0 && spo2 < 94));
+      const isEmergency = (liveTriageCode === 3) || (accel >= 3.0) || (spo2 > 0 && spo2 < 88) || (liveTriageCode === null && (hr >= 135 || (hr > 0 && hr < 45)));
+      const isOrangeWarn = !isEmergency && ((liveTriageCode === 2) || (liveTriageCode === null && (hr >= 115 || (hr > 0 && hr < 50) || (spo2 >= 88 && spo2 <= 94))));
+      const isDelayed = !isEmergency && !isOrangeWarn && ((liveTriageCode === 1) || (hr > 100));
 
       if (isEmergency) {
         if (pText) {
           pText.textContent = 'MERAH';
           pText.className = 'text-[20px] font-extrabold text-[#EF4444] leading-none font-mono animate-pulse';
         }
-        if (dot) dot.style.left = '80%';
+        if (dot) dot.style.left = '92%';
         if (badge) {
           badge.textContent = 'Immediate SOS';
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#FAD2D4] text-[#4A1C1F] text-[10px] font-bold animate-pulse';
@@ -2469,7 +2452,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           pText.textContent = 'ORANYE';
           pText.className = 'text-[20px] font-extrabold text-[#FB923C] leading-none font-mono';
         }
-        if (dot) dot.style.left = '64%';
+        if (dot) dot.style.left = '66%';
         if (badge) {
           badge.textContent = 'Waspada Dini';
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#FFEDD5] text-[#7C2D12] text-[10px] font-bold';
@@ -2479,7 +2462,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           pText.textContent = 'KUNING';
           pText.className = 'text-[20px] font-extrabold text-[#F59E0B] leading-none font-mono';
         }
-        if (dot) dot.style.left = '50%';
+        if (dot) dot.style.left = '38%';
         if (badge) {
           badge.textContent = 'Delayed';
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#F7E8BA] text-[#453813] text-[10px] font-bold';
@@ -2489,7 +2472,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
           pText.textContent = 'HIJAU';
           pText.className = 'text-[20px] font-extrabold text-[#34D399] leading-none font-mono';
         }
-        if (dot) dot.style.left = '18%';
+        if (dot) dot.style.left = '12%';
         if (badge) {
           badge.textContent = "You're Healthy";
           badge.className = 'px-2.5 py-1 rounded-[7px] bg-[#D5F4EA] text-[#213B33] text-[10px] font-bold';
@@ -2590,8 +2573,8 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
       const ring = document.getElementById(ringId);
       if (!ring) return;
       if (isHover) {
-        ring.style.transform = 'scale(1.03)';
-        ring.style.transformOrigin = '105px center';
+        ring.style.transform = ringId === 'wristRing' ? 'scale(1.15)' : 'scale(1.03)';
+        ring.style.transformOrigin = ringId === 'wristRing' ? '166px 212px' : '105px center';
         ring.style.filter = 'drop-shadow(0 0 10px rgba(255, 95, 85, 0.95))';
       } else {
         ring.style.transform = 'scale(1)';
@@ -2752,7 +2735,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         uplinkPolyline.setStyle({ weight: 7, color: '#EF4444' });
         setTimeout(() => {
           uplinkPolyline.setStyle({ weight: 4, color: '#EA580C' });
-          appendAuditTrail('LoRa 1-Hop Mesh Transmission Success', 'Jam Tangan #01', 'Jam #02 -> Jam #01 -> Surface Gateway Basecamp (18ms)', 'teal');
+          appendAuditTrail('LoRa 1-Hop Mesh Transmission Success', 'Jam Tangan #01', 'Jam #02 -> Jam #01 -> Surface Gateway Basecamp (1-Hop Relay)', 'teal');
         }, 600);
       }, 600);
     }
