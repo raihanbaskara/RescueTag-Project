@@ -1,8 +1,8 @@
 """
 =============================================================================
-RESCUE-TAG: MQTT SIMULATOR & TEST PUBLISHER (TCP 1883 -> EMQX)
+RESCUE-TAG: MQTT SIMULATOR & TEST PUBLISHER (TCP 1883 -> LOCAL BROKER)
 =============================================================================
-Mengirimkan data telemetri JSON langsung ke broker MQTT publik (broker.emqx.io)
+Mengirimkan data telemetri JSON ke broker MQTT lokal Mosquitto (127.0.0.1:1883)
 pada topik 'rescue/tag/data' untuk menguji respon Web Command Center.
 
 Kontrol Keyboard:
@@ -21,7 +21,7 @@ import json
 import msvcrt
 import paho.mqtt.client as mqtt
 
-BROKER = "broker.emqx.io"
+BROKER = "127.0.0.1"
 PORT = 1883
 TOPIC_DATA = "rescue/tag/data"
 TOPIC_ALERT = "rescue/tag/alert"
@@ -90,7 +90,7 @@ def create_payload(triage_code):
 
 def main():
     print("=" * 70)
-    print("   RESCUE-TAG: MQTT TEST PUBLISHER (TCP 1883 -> EMQX BROKER)")
+    print("   RESCUE-TAG: MQTT TEST PUBLISHER (TCP 1883 -> LOCAL BROKER 127.0.0.1)")
     print("=" * 70)
     print(f"[*] Menghubungkan ke MQTT Broker: {BROKER}:{PORT}...")
 

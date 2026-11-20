@@ -1784,6 +1784,20 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     let mqttPacketCount = 0;
     let lastMqttRxTime = null;
     let hasLoggedFirstLiveRx = false;
+    let mqttConnectAttempts = 0;
+
+    function getLocalMqttBrokerUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const queryBroker = params.get('mqtt');
+      if (queryBroker && /^wss?:\/\//.test(queryBroker)) return queryBroker;
+      const host = window.location.hostname;
+      const isPrivateHost = host === 'localhost' || host === '127.0.0.1' ||
+        host.endsWith('.local') || /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./.test(host);
+      const targetHost = isPrivateHost ? host : '127.0.0.1';
+      return 'ws://' + targetHost + ':9001';
+    }
+
+    const LOCAL_MQTT_URL = getLocalMqttBrokerUrl();
 
     // In-memory Audit Trail Log Data for Excel Export
     const auditLogsData = [];
@@ -2368,6 +2382,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
         if (hrText) hrText.textContent = (w.hr > 0 ? w.hr : '--') + ' bpm';
         if (spText) spText.textContent = (w.spo2 > 0 ? w.spo2 : '--') + ' %';
         evaluateSTART(w.hr, w.spo2, w.triageCode, w.accel);
+        if (!mqttConnected && !mqttClient) initMQTT();
       }
       syncMqttDotVisual(false);
     }
@@ -2885,7 +2900,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
     }
 
     // -------------------------------------------------------------
-    // 10. REAL-TIME MQTT ENGINE (broker.emqx.io:8084) + FULL UI SYNC
+    // 10. REAL-TIME MQTT ENGINE (Local Broker ws://127.0.0.1:9001) + FULL UI SYNC
     // -------------------------------------------------------------
     function deriveActivityText(code, accel, summary) {
       if (summary) return summary;
@@ -3093,23 +3108,29 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
     function initMQTT() {
       try {
+        if (mqttClient) {
+          try { mqttClient.end(true); } catch (_) {}
+          mqttClient = null;
+        }
+        mqttConnectAttempts = 0;
         const clientId = 'rescuetag_cmd_' + Math.random().toString(16).substring(2, 8);
-        mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+        mqttClient = mqtt.connect(LOCAL_MQTT_URL, {
           clientId: clientId,
           clean: true,
-          connectTimeout: 5000,
-          reconnectPeriod: 3000
+          connectTimeout: 4000,
+          reconnectPeriod: 4000
         });
 
         mqttClient.on('connect', () => {
           mqttConnected = true;
-          console.log('[MQTT] Connected to broker.emqx.io:8084');
+          mqttConnectAttempts = 0;
+          console.log('[MQTT] Connected to local broker:', LOCAL_MQTT_URL);
           syncMqttDotVisual(false);
           const ind = document.getElementById('simModeIndicator');
           if (ind && !isSimulatorMode && !lastMqttRxTime) ind.textContent = 'ONLINE';
           mqttClient.subscribe('rescue/tag/data');
           mqttClient.subscribe('rescue/tag/alert');
-          appendAuditTrail('MQTT EMQX Online', 'EMQX BROKER', 'Listening to rescue/tag/data & rescue/tag/alert', 'teal');
+          appendAuditTrail('Local MQTT Online', 'LOCAL BROKER', LOCAL_MQTT_URL + ' -> rescue/tag/data & alert', 'teal');
         });
 
         mqttClient.on('message', (topic, payload) => {
@@ -3125,6 +3146,21 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
             applyTelemetryPacket(topic, data);
           } catch (err) {
             console.warn('[MQTT PARSE ERR]', err);
+          }
+        });
+
+        mqttClient.on('reconnect', () => {
+          mqttConnectAttempts++;
+        });
+
+        mqttClient.on('close', () => {
+          mqttConnected = false;
+          syncMqttDotVisual(false);
+          const ind = document.getElementById('simModeIndicator');
+          if (ind && !isSimulatorMode) ind.textContent = 'OFFLINE';
+          if (!mqttConnected && mqttConnectAttempts >= 1 && mqttClient) {
+            try { mqttClient.end(true); } catch (_) {}
+            mqttClient = null;
           }
         });
 
@@ -3186,9 +3222,10 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 
     function toggleMqttInfo() {
       alert(
-        "MQTT BROKER STATUS:\n" +
-        "Status: " + (mqttConnected ? "CONNECTED" : "CONNECTING / OFFLINE") + "\n" +
-        "Broker: wss://broker.emqx.io:8084/mqtt\n" +
+        "MQTT BROKER STATUS (100% LOCAL ZERO-CLOUD):\n" +
+        "Status: " + (mqttConnected ? "CONNECTED" : "OFFLINE (Mosquitto WS :9001 Belum Aktif)") + "\n" +
+        "WebSocket Broker: " + LOCAL_MQTT_URL + "\n" +
+        "Node-RED TCP Target: 127.0.0.1:1883\n" +
         "Topics: rescue/tag/data, rescue/tag/alert\n" +
         "Total Packets RX: " + mqttPacketCount + "\n" +
         "Last RX Time: " + (lastMqttRxTime || "Belum ada paket live dari COM14 -> Node-RED")

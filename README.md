@@ -241,17 +241,20 @@ Dashboard frontend dibangun khusus untuk komando taktis darurat:
 
 ### 3. Middleware & Dashboard Setup
 1. Hubungkan ESP32 Gateway ke port USB PC (misal `COM14`).
-2. Jalankan Node-RED:
+2. Pastikan **Mosquitto MQTT Broker lokal** aktif dengan listener **TCP `1883`** (untuk Node-RED) dan **WebSocket `9001`** (`ws://127.0.0.1:9001` untuk dashboard browser), misalnya pada `mosquitto.conf`:
+   ```conf
+   listener 1883 127.0.0.1
+   listener 9001 127.0.0.1
+   protocol websockets
+   allow_anonymous true
+   ```
+3. Jalankan Node-RED:
    ```bash
    node-red
    ```
-3. Buka browser di `http://127.0.0.1:1880`, import flow dari file [`flows_rescue_tag.json`](flows_rescue_tag.json), lalu klik **Deploy**.
-4. Buka file web dashboard di browser:
-   ```bash
-   # Akses file web dashboard
-   Raihan PTE/web stich/index.html
-   ```
-5. Indikator di pojok kanan atas akan menampilkan status **`● MQTT CONNECTED`**.
+4. Buka browser di `http://127.0.0.1:1880`, import flow dari file [`flows_rescue_tag.json`](flows_rescue_tag.json) (terhubung ke `127.0.0.1:1883`), lalu klik **Deploy**.
+5. Buka file web dashboard [`index.html`](index.html) secara lokal di browser (atau `https://www.rescuetag.web.id/` pada PC operator yang menjalankan Mosquitto lokal `ws://127.0.0.1:9001`).
+6. Indikator pada panel Simulator/Live di kanan atas akan tersambung ke broker lokal (`Live MQTT` -> **`ONLINE`**).
 
 ---
 

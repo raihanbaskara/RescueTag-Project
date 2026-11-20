@@ -26,10 +26,10 @@
     "responsetimeout": "10000"
   },
   {
-    "id": "mqtt_config_emqx",
+    "id": "mqtt_config_local_rescuetag",
     "type": "mqtt-broker",
-    "name": "EMQX Public Broker",
-    "broker": "broker.emqx.io",
+    "name": "Local Broker (127.0.0.1:1883)",
+    "broker": "127.0.0.1",
     "port": "1883",
     "clientid": "rescue_tag_nodered_gateway",
     "autoConnect": true,
@@ -179,7 +179,7 @@
     "userProps": "",
     "correl": "",
     "expiry": "",
-    "broker": "mqtt_config_emqx",
+    "broker": "mqtt_config_local_rescuetag",
     "x": 840,
     "y": 240,
     "wires": []
@@ -197,7 +197,7 @@
     "userProps": "",
     "correl": "",
     "expiry": "",
-    "broker": "mqtt_config_emqx",
+    "broker": "mqtt_config_local_rescuetag",
     "x": 840,
     "y": 320,
     "wires": []
